@@ -1,0 +1,125 @@
+# GardenCore Items Configuration
+# These are special items that execute console commands when right-clicked.
+# command: The console command to execute. Use %player% as a placeholder for the player's name.
+# lore: Supports color codes and hex colors.
+
+items:
+  ticket_fiber_5:
+    name: "&#FFD700&lEvent Ticket: &e+5% Fiber"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#FFD700+5% Fiber Amount &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start fiber_5"
+
+  ticket_fiber_10:
+    name: "&#FFD700&lEvent Ticket: &e+10% Fiber"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#FFD700+10% Fiber Amount &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start fiber_10"
+
+  ticket_fiber_25:
+    name: "&#FFD700&lEvent Ticket: &e+25% Fiber"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#FFD700+25% Fiber Amount &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start fiber_25"
+
+  ticket_fiber_50:
+    name: "&#FFD700&lEvent Ticket: &e+50% Fiber"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#FFD700+50% Fiber Amount &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start fiber_50"
+
+  ticket_material_amount_5:
+    name: "&#a8ff78&lEvent Ticket: &a+5% Material Amount"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#a8ff78+5% Material Amount &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start material_amount_5"
+
+  ticket_material_amount_10:
+    name: "&#a8ff78&lEvent Ticket: &a+10% Material Amount"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#a8ff78+10% Material Amount &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start material_amount_10"
+
+  ticket_material_amount_25:
+    name: "&#a8ff78&lEvent Ticket: &a+25% Material Amount"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#a8ff78+25% Material Amount &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start material_amount_25"
+
+  ticket_material_chance_025:
+    name: "&#78c8ff&lEvent Ticket: &b+0.25% Material Chance"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#78c8ff+0.25% Material Chance &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start material_chance_025"
+
+  ticket_material_chance_05:
+    name: "&#78c8ff&lEvent Ticket: &b+0.5% Material Chance"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#78c8ff+0.5% Material Chance &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start material_chance_05"
+
+  ticket_xp_10:
+    name: "&#a8d8ff&lEvent Ticket: &b+10% XP"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#a8d8ff+10% XP &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start xp_10"
+
+  ticket_xp_25:
+    name: "&#a8d8ff&lEvent Ticket: &b+25% XP"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#a8d8ff+25% XP &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start xp_25"
+
+  ticket_xp_50:
+    name: "&#a8d8ff&lEvent Ticket: &b+50% XP"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a global"
+      - "&#a8d8ff+50% XP &7event!"
+      - ""
+      - "&8Single-use item."
+    command: "gca event start xp_50"

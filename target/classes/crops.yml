@@ -1,0 +1,140 @@
+# GardenCore Crops Configuration
+# crop-cooldown: Time in seconds before a broken crop respawns (default: 0.1)
+crop-cooldown: 0.1
+
+# xp: How much XP the crop gives per break
+# level-required: Minimum level required to farm this crop
+
+crops:
+  SHORT_GRASS:
+    display-name: "Small Grass"
+    material: SHORT_GRASS
+    fiber: 1.0
+    xp: 1.0
+    level-required: 1
+
+  FERN:
+    display-name: "Fern"
+    material: FERN
+    fiber: 1.0
+    xp: 6.0
+    level-required: 1
+
+  BUSH:
+    display-name: "Bush"
+    material: BUSH
+    fiber: 1.0
+    xp: 1.0
+    level-required: 1
+
+  SHORT_DRY_GRASS:
+    display-name: "Short Dry Grass"
+    material: SHORT_DRY_GRASS
+    fiber: 5.0
+    xp: 1.0
+    level-required: 10
+
+  DEAD_BUSH:
+    display-name: "Dead Bush"
+    material: DEAD_BUSH
+    fiber: 5.0
+    xp: 1.0
+    level-required: 10
+
+  PINK_TULIP:
+    display-name: "Pink Tulip"
+    material: PINK_TULIP
+    fiber: 7.5
+    xp: 1.0
+    level-required: 75
+
+  RED_TULIP:
+    display-name: "Red Tulip"
+    material: RED_TULIP
+    fiber: 7.5
+    xp: 1.0
+    level-required: 75
+
+  ORANGE_TULIP:
+    display-name: "Orange Tulip"
+    material: ORANGE_TULIP
+    fiber: 7.5
+    xp: 1.0
+    level-required: 75
+
+  WHITE_TULIP:
+    display-name: "White Tulip"
+    material: WHITE_TULIP
+    fiber: 7.5
+    xp: 1.0
+    level-required: 75
+
+  CORNFLOWER:
+    display-name: "Cornflower"
+    material: CORNFLOWER
+    fiber: 7.5
+    xp: 1.0
+    level-required: 75
+
+  WARPED_ROOTS:
+    display-name: "Warped Roots"
+    material: WARPED_ROOTS
+    fiber: 10.0
+    xp: 1.0
+    level-required: 200
+
+  CRIMSON_ROOTS:
+    display-name: "Crimson Roots"
+    material: CRIMSON_ROOTS
+    fiber: 10.0
+    xp: 1.0
+    level-required: 200
+
+  WARPED_FUNGUS:
+    display-name: "Warped Fungus"
+    material: WARPED_FUNGUS
+    fiber: 10.0
+    xp: 1.0
+    level-required: 200
+
+  CRIMSON_FUNGUS:
+    display-name: "Crimson Fungus"
+    material: CRIMSON_FUNGUS
+    fiber: 10.0
+    xp: 1.0
+    level-required: 200
+
+  TUBE_CORAL:
+    display-name: "Tube Coral"
+    material: TUBE_CORAL
+    fiber: 25.0
+    xp: 1.0
+    level-required: 400
+
+  BRAIN_CORAL:
+    display-name: "Brain Coral"
+    material: BRAIN_CORAL
+    fiber: 25.0
+    xp: 1.0
+    level-required: 400
+
+  FIRE_CORAL:
+    display-name: "Fire Coral"
+    material: FIRE_CORAL
+    fiber: 25.0
+    xp: 1.0
+    level-required: 400
+
+  HORN_CORAL:
+    display-name: "Horn Coral"
+    material: HORN_CORAL
+    fiber: 25.0
+    xp: 1.0
+    level-required: 400
+
+  FIREFLY_BUSH:
+    display-name: "Firefly Bush"
+    material: FIREFLY_BUSH
+    fiber: 50.0
+    xp: 1.0
+    level-required: 1000

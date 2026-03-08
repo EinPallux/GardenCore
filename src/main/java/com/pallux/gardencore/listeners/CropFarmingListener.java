@@ -1,0 +1,65 @@
+package com.pallux.gardencore.listeners;
+
+import com.pallux.gardencore.GardenCore;
+import com.pallux.gardencore.models.CropData;
+import com.pallux.gardencore.utils.MessageUtil;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class CropFarmingListener implements Listener {
+
+    private final GardenCore plugin;
+    private final Map<UUID, Long> lastBreakTime = new ConcurrentHashMap<>();
+
+    public CropFarmingListener(GardenCore plugin) {
+        this.plugin = plugin;
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        Optional<CropData> optCrop = plugin.getCropManager().getCropData(event.getBlock().getType());
+        if (optCrop.isEmpty()) return;
+
+        CropData crop = optCrop.get();
+        int playerLevel = plugin.getLevelManager().getLevel(player.getUniqueId());
+
+        if (playerLevel < crop.getLevelRequired()) {
+            event.setCancelled(true);
+            MessageUtil.send(player, "crop.level-required", Map.of(
+                    "level", String.valueOf(crop.getLevelRequired()),
+                    "crop", crop.getDisplayName()
+            ));
+            return;
+        }
+
+        UUID uuid = player.getUniqueId();
+        double cooldownSeconds = plugin.getUpgradeManager().getEffectiveCropCooldown(player);
+        long cooldownMillis = (long) (cooldownSeconds * 1000);
+        long now = System.currentTimeMillis();
+        long last = lastBreakTime.getOrDefault(uuid, 0L);
+
+        if (now - last < cooldownMillis) {
+            return;
+        }
+
+        lastBreakTime.put(uuid, now);
+
+        plugin.getFiberManager().addFiberFromCrop(player, crop.getFiber());
+        plugin.getLevelManager().addXp(player, crop.getXp());
+
+        if (plugin.getConfigManager().isFeatureEnabled("material-drops")) {
+            plugin.getMaterialManager().rollDrops(player);
+        }
+
+        plugin.getDataManager().saveAsync();
+    }
+}

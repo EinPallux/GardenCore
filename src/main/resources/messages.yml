@@ -1,0 +1,52 @@
+# GardenCore Messages
+# Supports legacy color codes (&a, &c, &l etc.) and hex codes (&#FFFFFF)
+
+no-permission: "&cYou don't have permission to use this command."
+player-not-found: "&cPlayer &e{player} &cwas not found."
+invalid-number: "&cPlease enter a valid number."
+invalid-arguments: "&cInvalid arguments. Usage: &e{usage}"
+command-console-only: "&cThis command cannot be used from the console."
+
+fiber:
+  set: "&7Fiber for &e{player} &7set to &a{amount}&7."
+  give: "&7Given &a{amount} &7Fiber to &e{player}&7."
+  take: "&7Taken &a{amount} &7Fiber from &e{player}&7."
+
+upgrades:
+  max-reached: "&cYou've already reached the maximum level for this upgrade!"
+  not-enough-fiber: "&cYou don't have enough Fiber!"
+  set: "&7Upgrade &e{upgrade} &7for &e{player} &7set to level &a{level}&7."
+  reset-upgrades: "&7Upgrades for &e{player} &7have been reset."
+  reset-fiber: "&7Fiber for &e{player} &7has been reset."
+  reset-all: "&7All data for &e{player} &7has been reset."
+
+level:
+  broadcast: "&#a8ff78&l✦ &e{player} &7has reached &a&lLevel {level}&7! &8[&aGardenCore&8]"
+
+events:
+  start: "&#FFD700&l⚡ Event Started! &e{event} &7is now active for &a5 minutes&7!"
+  end: "&#FF6B6B&l✦ Event Ended! &7The event &e{event} &7has concluded."
+  bossbar-none: "&#a8ff78Current Event: &fNone"
+  bossbar-active: "&#FFD700⚡ Event: &f{event} &7| &eTime Left: &f{time}s"
+
+admin:
+  reset-confirm-title: "&c&lConfirm Reset"
+  reset-confirm-lore: "&7Click to confirm the reset."
+  reset-cancel-lore: "&7Click to cancel."
+
+alias:
+  not-found: "&cAlias command not found."
+
+crop:
+  level-required: "&cYou need Level &e{level} &cto farm &e{crop}&c!"
+
+research:
+  started: "&#FFD700Research started! &7Come back in &f{time}&7."
+  completed: "&#a8ff78Research complete! &7You now have &f+{fiber_multi}x Fiber &7and &f+{material_multi}x Material&7."
+  cancelled: "&#ff7a7aResearch cancelled."
+  already-active: "&#ff7a7aYou already have a research in progress!"
+  already-completed: "&#ff7a7aYou have already completed this research."
+  locked: "&#ff7a7aComplete the previous research first."
+  not-enough-fiber: "&cYou need &e{cost} Fiber &cto start this research. You only have &e{balance}&c."
+
+command-player-only: "&cThis command can only be used by players."

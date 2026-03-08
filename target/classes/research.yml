@@ -1,0 +1,76 @@
+# GardenCore Research Configuration
+
+research:
+  # Title of the research GUI
+  gui-title: "&8Research Menu"
+
+  # How many researches exist in total
+  total-researches: 28
+
+  # Base duration in minutes for the first research. Each subsequent adds this value.
+  # Research I = 5min, Research II = 10min, Research III = 15min, etc.
+  base-duration-minutes: 5
+
+  # Fiber cost for research. Each research costs: base-cost + (index * cost-per-level)
+  # Research I = 500, Research II = 1000, Research III = 1500, etc.
+  base-cost: 500
+  cost-per-level: 500
+
+  # Multiplier bonus per completed research (upgrades, does NOT stack)
+  # e.g. research 1 = +0.1x, research 2 = +0.2x, etc.
+  fiber-amount-per-research: 0.1
+  material-amount-per-research: 0.1
+
+  # Item name for each research state (supports color codes)
+  name-completed: "&#a8ff78&l{name} &7[Completed]"
+  name-ready: "&#FFD700&l{name} &e[Click to Research]"
+  name-in-progress: "&#FFD700&l{name} &e[In Progress]"
+  name-locked: "&#ff7a7a&l{name} &7[Locked]"
+
+  # Lore lines for each state. Placeholders: {index}, {fiber_multi}, {material_multi}, {time}, {time_remaining}
+  lore-completed:
+    - ""
+    - "&7Fiber Multiplier: &#a8ff78+{fiber_multi}x"
+    - "&7Material Multiplier: &#a8ff78+{material_multi}x"
+    - ""
+    - "&#a8ff78✔ Already Researched"
+
+  lore-ready:
+    - ""
+    - "&7Fiber Multiplier: &#FFD700+{fiber_multi}x"
+    - "&7Material Multiplier: &#FFD700+{material_multi}x"
+    - ""
+    - "&7Research Time: &f{time}"
+    - "&7Cost: &#FFD700{cost} Fiber"
+    - ""
+    - "&#FFD700▶ Click to start research!"
+
+  lore-in-progress:
+    - ""
+    - "&7Fiber Multiplier: &#FFD700+{fiber_multi}x"
+    - "&7Material Multiplier: &#FFD700+{material_multi}x"
+    - ""
+    - "&7Time Remaining: &f{time_remaining}"
+    - ""
+    - "&#FFD700⟳ Research in progress..."
+
+  lore-locked:
+    - ""
+    - "&7Fiber Multiplier: &#ff7a7a+{fiber_multi}x"
+    - "&7Material Multiplier: &#ff7a7a+{material_multi}x"
+    - ""
+    - "&7Research Time: &f{time}"
+    - "&7Cost: &#ff7a7a{cost} Fiber"
+    - ""
+    - "&#ff7a7a✖ Complete previous research first"
+
+  # Cancel button (slot 49 in bottom bar)
+  cancel-name: "&#ff7a7a&lCancel Research"
+  cancel-lore:
+    - "&7Click to cancel your active research."
+    - "&cYou will lose all progress!"
+
+  # No active research placeholder for slot 49
+  no-research-name: "&7No Research Active"
+  no-research-lore:
+    - "&7Start a research to see it here."

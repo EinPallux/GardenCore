@@ -1,0 +1,30 @@
+# GardenCore Configuration
+prefix: "&#28CA75&lG&#2BC66B&lA&#2EC262&lR&#31BD58&lD&#34B94F&lE&#37B545&lN &7➠&r"
+
+features:
+  no-drop: true
+  no-fall-damage: true
+  no-hunger: true
+  no-block-drops: true
+
+# It's advised you do NOT change any of the values below to false,
+# if you don't 100% know what you are doing! (This can break the whole plugin)
+  instant-replant: true
+  alias-commands: true
+  fiber-currency: true
+  leveling: true
+  crop-farming: true
+  material-drops: true
+  multipliers: true
+  upgrades: true
+  events: true
+
+events:
+  # Interval in minutes between random events
+  interval-minutes: 30
+  # Duration of each event in minutes
+  duration-minutes: 5
+
+broadcast:
+  # Every X levels a broadcast is sent (default 10)
+  level-milestone: 10

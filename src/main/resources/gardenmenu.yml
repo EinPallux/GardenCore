@@ -1,0 +1,104 @@
+# GardenCore Garden Menu Configuration
+# Color codes: &a, &c, &#FFFFFF etc.
+# Player head lore placeholders:
+#   {player}, {level}, {xp},
+#   {fiber}, {fiber_raw},
+#   {multi_fiber}, {multi_material}, {multi_material_chance},
+#   {upgrade_fiber}, {upgrade_material}, {upgrade_material_chance}, {upgrade_cooldown},
+#   {research_completed}, {research_active},
+#   {driftwood}, {moss}, {reed}, {clover}
+
+garden-menu:
+  title: "&8Garden Menu"
+  size: 54
+
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+
+  # Player head - slot 4, top center
+  player-head:
+    slot: 4
+    name: "&#a8ff78&l{player}'s Stats"
+    lore:
+      - ""
+      - "&8--- &7Economy &8---"
+      - "&7Fiber: &#FFD700{fiber}"
+      - ""
+      - "&8--- &7Progress &8---"
+      - "&7Level: &#a8ff78{level}"
+      - "&7XP: &f{xp}"
+      - ""
+      - "&8--- &7Multipliers &8---"
+      - "&7Fiber Amount: &#FFD700{multi_fiber}"
+      - "&7Material Amount: &#a8ff78{multi_material}"
+      - "&7Material Chance: &#78c8ff{multi_material_chance}"
+      - ""
+      - "&8--- &7Upgrades &8---"
+      - "&7Fiber Amount: &e{upgrade_fiber}"
+      - "&7Material Amount: &e{upgrade_material}"
+      - "&7Material Chance: &e{upgrade_material_chance}"
+      - "&7Crop Cooldown: &e{upgrade_cooldown}"
+      - ""
+      - "&8--- &7Research &8---"
+      - "&7Completed: &#a8ff78{research_completed}"
+      - "&7Active: &f{research_active}"
+      - ""
+      - "&8--- &7Materials &8---"
+      - "&7Driftwood: &f{driftwood}"
+      - "&7Moss: &f{moss}"
+      - "&7Reed: &f{reed}"
+      - "&7Clover: &f{clover}"
+
+  # Feature buttons
+  # command: the command executed as the player when the button is clicked (without leading /)
+  # Add as many buttons as you like — any slot, any command.
+  buttons:
+    upgrades:
+      slot: 19
+      material: TALL_GRASS
+      name: "&#FFD700&lUpgrades"
+      command: "upgrade"
+      lore:
+        - "&7View and purchase"
+        - "&7upgrades for your garden."
+        - ""
+        - "&eClick to open!"
+
+    research:
+      slot: 20
+      material: CLOCK
+      name: "&#a8ff78&lResearch"
+      command: "research"
+      lore:
+        - "&7Unlock permanent multipliers"
+        - "&7through research."
+        - ""
+        - "&eClick to open!"
+
+  # Placeholder items for future features (gray dye)
+  placeholders:
+    - slot: 21
+    - slot: 22
+    - slot: 23
+    - slot: 24
+    - slot: 25
+    - slot: 28
+    - slot: 29
+    - slot: 30
+    - slot: 31
+    - slot: 32
+    - slot: 33
+    - slot: 34
+
+  placeholder-item:
+    material: GRAY_DYE
+    name: "&8???"
+    lore: []
+
+  # Close button
+  close-button:
+    slot: 49
+    material: BARRIER
+    name: "&#ff7a7a&lClose Menu"
+    lore:
+      - "&7Click to close this menu."
