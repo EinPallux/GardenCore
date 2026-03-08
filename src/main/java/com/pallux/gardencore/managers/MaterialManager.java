@@ -2,7 +2,9 @@ package com.pallux.gardencore.managers;
 
 import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.models.PlayerData;
+import com.pallux.gardencore.utils.ColorUtil;
 import com.pallux.gardencore.utils.NumberUtil;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import java.util.Random;
@@ -44,14 +46,15 @@ public class MaterialManager {
         double chanceMultiplier = plugin.getMultiplierManager().getTotalMaterialChanceMultiplier(uuid);
         double amountMultiplier = plugin.getMultiplierManager().getTotalMaterialAmountMultiplier(uuid);
 
-        tryDrop(uuid, driftwoodChance * chanceMultiplier, driftwoodAmount * amountMultiplier, "driftwood");
-        tryDrop(uuid, mossChance * chanceMultiplier, mossAmount * amountMultiplier, "moss");
-        tryDrop(uuid, reedChance * chanceMultiplier, reedAmount * amountMultiplier, "reed");
-        tryDrop(uuid, cloverChance * chanceMultiplier, cloverAmount * amountMultiplier, "clover");
+        tryDrop(player, driftwoodChance * chanceMultiplier, driftwoodAmount * amountMultiplier, "driftwood");
+        tryDrop(player, mossChance * chanceMultiplier, mossAmount * amountMultiplier, "moss");
+        tryDrop(player, reedChance * chanceMultiplier, reedAmount * amountMultiplier, "reed");
+        tryDrop(player, cloverChance * chanceMultiplier, cloverAmount * amountMultiplier, "clover");
     }
 
-    private void tryDrop(UUID uuid, double chance, double amount, String material) {
+    private void tryDrop(Player player, double chance, double amount, String material) {
         if (random.nextDouble() * 100 < chance) {
+            UUID uuid = player.getUniqueId();
             PlayerData data = plugin.getDataManager().getPlayerData(uuid);
             switch (material) {
                 case "driftwood" -> data.addDriftwood(amount);
@@ -59,7 +62,24 @@ public class MaterialManager {
                 case "reed" -> data.addReed(amount);
                 case "clover" -> data.addClover(amount);
             }
+            sendMaterialActionBar(player, material, amount);
         }
+    }
+
+    private void sendMaterialActionBar(Player player, String material, double amount) {
+        String amountStr = (amount == Math.floor(amount))
+                ? String.valueOf((int) amount)
+                : NumberUtil.formatRaw(amount);
+
+        String displayName = plugin.getConfigManager().getMaterials()
+                .getString("materials." + material + ".display-name", material);
+
+        String template = plugin.getConfigManager().getMessage("material.found-actionbar");
+        String message = ColorUtil.translate(template
+                .replace("{amount}", amountStr)
+                .replace("{material}", displayName));
+
+        player.sendActionBar(LegacyComponentSerializer.legacySection().deserialize(message));
     }
 
     public String formatRaw(UUID uuid, String material) {

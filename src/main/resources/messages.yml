@@ -11,6 +11,10 @@ fiber:
   set: "&7Fiber for &e{player} &7set to &a{amount}&7."
   give: "&7Given &a{amount} &7Fiber to &e{player}&7."
   take: "&7Taken &a{amount} &7Fiber from &e{player}&7."
+  # Title shown when a player harvests a crop. Placeholders: {amount}
+  harvest-title: "&#FFD700+{amount} Fiber"
+  # Subtitle shown below the harvest title. Leave empty for no subtitle.
+  harvest-subtitle: ""
 
 upgrades:
   max-reached: "&cYou've already reached the maximum level for this upgrade!"
@@ -39,6 +43,10 @@ alias:
 
 crop:
   level-required: "&cYou need Level &e{level} &cto farm &e{crop}&c!"
+
+# Action bar message shown when a player finds a material. Placeholders: {amount}, {material}
+material:
+  found-actionbar: "&#FFD700+{amount} &r{material}"
 
 research:
   started: "&#FFD700Research started! &7Come back in &f{time}&7."

@@ -2,7 +2,9 @@ package com.pallux.gardencore.listeners;
 
 import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.models.CropData;
+import com.pallux.gardencore.utils.ColorUtil;
 import com.pallux.gardencore.utils.MessageUtil;
+import com.pallux.gardencore.utils.NumberUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -53,6 +55,9 @@ public class CropFarmingListener implements Listener {
 
         lastBreakTime.put(uuid, now);
 
+        double totalMultiplier = plugin.getMultiplierManager().getTotalFiberMultiplier(uuid);
+        double earned = crop.getFiber() * totalMultiplier;
+
         plugin.getFiberManager().addFiberFromCrop(player, crop.getFiber());
         plugin.getLevelManager().addXp(player, crop.getXp());
 
@@ -60,6 +65,22 @@ public class CropFarmingListener implements Listener {
             plugin.getMaterialManager().rollDrops(player);
         }
 
+        sendFiberTitle(player, earned);
+
         plugin.getDataManager().saveAsync();
+    }
+
+    private void sendFiberTitle(Player player, double earned) {
+        String amountStr = (earned == Math.floor(earned))
+                ? String.valueOf((int) earned)
+                : NumberUtil.formatRaw(earned);
+
+        String titleTemplate = plugin.getConfigManager().getMessage("fiber.harvest-title");
+        String subtitleTemplate = plugin.getConfigManager().getMessage("fiber.harvest-subtitle");
+
+        String title = ColorUtil.translate(titleTemplate.replace("{amount}", amountStr));
+        String subtitle = ColorUtil.translate(subtitleTemplate.replace("{amount}", amountStr));
+
+        player.sendTitle(title, subtitle, 2, 18, 6);
     }
 }
