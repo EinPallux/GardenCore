@@ -1,9 +1,0 @@
-# GardenCore Alias Commands Configuration
-# Format:
-# alias: the command players type (without /)
-# command: the command that gets executed (without /)
-
-aliases:
-  # Example:
-  # afk:
-  #   command: "warp afk"
