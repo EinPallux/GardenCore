@@ -18,8 +18,8 @@ research:
 
   # Multiplier bonus per completed research (upgrades, does NOT stack)
   # e.g. research 1 = +0.1x, research 2 = +0.2x, etc.
-  fiber-amount-per-research: 0.1
-  material-amount-per-research: 0.1
+  fiber-amount-per-research: 5.0
+  material-amount-per-research: 5.0
 
   # Item name for each research state (supports color codes)
   name-completed: "&#a8ff78&l{name} &7[Completed]"
