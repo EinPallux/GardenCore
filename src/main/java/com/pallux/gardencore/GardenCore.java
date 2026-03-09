@@ -2,6 +2,7 @@ package com.pallux.gardencore;
 
 import com.pallux.gardencore.commands.AdminCommand;
 import com.pallux.gardencore.commands.GardenCommand;
+import com.pallux.gardencore.commands.IslandCommand;
 import com.pallux.gardencore.commands.ResearchCommand;
 import com.pallux.gardencore.commands.UpgradeCommand;
 import com.pallux.gardencore.config.ConfigManager;
@@ -139,6 +140,11 @@ public final class GardenCore extends JavaPlugin {
         if (gardenCmd != null) {
             gardenCmd.setExecutor(new GardenCommand(this));
         }
+
+        var islandCmd = getCommand("islands");
+        if (islandCmd != null) {
+            islandCmd.setExecutor(new IslandCommand(this));
+        }
     }
 
     private void registerPlaceholders() {
@@ -152,20 +158,20 @@ public final class GardenCore extends JavaPlugin {
         return instance;
     }
 
-    public ConfigManager getConfigManager() { return configManager; }
-    public DataManager getDataManager() { return dataManager; }
-    public FiberManager getFiberManager() { return fiberManager; }
-    public LevelManager getLevelManager() { return levelManager; }
-    public CropManager getCropManager() { return cropManager; }
-    public MaterialManager getMaterialManager() { return materialManager; }
+    public ConfigManager getConfigManager()       { return configManager; }
+    public DataManager getDataManager()           { return dataManager; }
+    public FiberManager getFiberManager()         { return fiberManager; }
+    public LevelManager getLevelManager()         { return levelManager; }
+    public CropManager getCropManager()           { return cropManager; }
+    public MaterialManager getMaterialManager()   { return materialManager; }
     public MultiplierManager getMultiplierManager() { return multiplierManager; }
-    public UpgradeManager getUpgradeManager() { return upgradeManager; }
-    public EventManager getEventManager() { return eventManager; }
-    public AliasManager getAliasManager() { return aliasManager; }
-    public ItemManager getItemManager() { return itemManager; }
-    public AfkZoneManager getAfkZoneManager() { return afkZoneManager; }
-    public ResearchManager getResearchManager() { return researchManager; }
-    public ResearchGui getResearchGui() { return researchGui; }
+    public UpgradeManager getUpgradeManager()     { return upgradeManager; }
+    public EventManager getEventManager()         { return eventManager; }
+    public AliasManager getAliasManager()         { return aliasManager; }
+    public ItemManager getItemManager()           { return itemManager; }
+    public AfkZoneManager getAfkZoneManager()     { return afkZoneManager; }
+    public ResearchManager getResearchManager()   { return researchManager; }
+    public ResearchGui getResearchGui()           { return researchGui; }
 
     public int getPlayerResearchPage(Player player) {
         return researchPageMap.getOrDefault(player.getUniqueId(), 0);

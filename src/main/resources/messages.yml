@@ -57,4 +57,7 @@ research:
   locked: "&#ff7a7aComplete the previous research first."
   not-enough-fiber: "&cYou need &e{cost} Fiber &cto start this research. You only have &e{balance}&c."
 
+islands:
+  level-required: "&cYou need Level &e{level} &cto travel to this island!"
+
 command-player-only: "&cThis command can only be used by players."

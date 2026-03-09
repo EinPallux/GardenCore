@@ -46,3 +46,7 @@ commands:
     description: Open the Garden main menu
     usage: /garden
     permission: gc.player
+  islands:
+    description: Open the Island travel menu
+    usage: /islands
+    permission: gc.player

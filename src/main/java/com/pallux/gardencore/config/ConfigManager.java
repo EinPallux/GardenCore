@@ -20,6 +20,7 @@ public class ConfigManager {
     private FileConfiguration afkZone;
     private FileConfiguration research;
     private FileConfiguration gardenMenu;
+    private FileConfiguration islandMenu;
 
     public ConfigManager(GardenCore plugin) {
         this.plugin = plugin;
@@ -29,16 +30,17 @@ public class ConfigManager {
         plugin.saveDefaultConfig();
         config = plugin.getConfig();
 
-        messages = loadOrCreate("messages.yml");
-        crops = loadOrCreate("crops.yml");
-        materials = loadOrCreate("materials.yml");
-        events = loadOrCreate("events.yml");
-        aliases = loadOrCreate("aliascommands.yml");
-        guis = loadOrCreate("guis.yml");
-        items = loadOrCreate("items.yml");
-        afkZone = loadOrCreate("afkzone.yml");
-        research = loadOrCreate("research.yml");
+        messages   = loadOrCreate("messages.yml");
+        crops      = loadOrCreate("crops.yml");
+        materials  = loadOrCreate("materials.yml");
+        events     = loadOrCreate("events.yml");
+        aliases    = loadOrCreate("aliascommands.yml");
+        guis       = loadOrCreate("guis.yml");
+        items      = loadOrCreate("items.yml");
+        afkZone    = loadOrCreate("afkzone.yml");
+        research   = loadOrCreate("research.yml");
         gardenMenu = loadOrCreate("gardenmenu.yml");
+        islandMenu = loadOrCreate("islandmenu.yml");
     }
 
     private FileConfiguration loadOrCreate(String name) {
@@ -52,16 +54,18 @@ public class ConfigManager {
     public void reloadAll() {
         plugin.reloadConfig();
         config = plugin.getConfig();
-        messages = loadOrCreate("messages.yml");
-        crops = loadOrCreate("crops.yml");
-        materials = loadOrCreate("materials.yml");
-        events = loadOrCreate("events.yml");
-        aliases = loadOrCreate("aliascommands.yml");
-        guis = loadOrCreate("guis.yml");
-        items = loadOrCreate("items.yml");
-        afkZone = loadOrCreate("afkzone.yml");
-        research = loadOrCreate("research.yml");
+
+        messages   = loadOrCreate("messages.yml");
+        crops      = loadOrCreate("crops.yml");
+        materials  = loadOrCreate("materials.yml");
+        events     = loadOrCreate("events.yml");
+        aliases    = loadOrCreate("aliascommands.yml");
+        guis       = loadOrCreate("guis.yml");
+        items      = loadOrCreate("items.yml");
+        afkZone    = loadOrCreate("afkzone.yml");
+        research   = loadOrCreate("research.yml");
         gardenMenu = loadOrCreate("gardenmenu.yml");
+        islandMenu = loadOrCreate("islandmenu.yml");
     }
 
     public boolean isFeatureEnabled(String feature) {
@@ -89,15 +93,16 @@ public class ConfigManager {
         return config.getInt("broadcast.level-milestone", 10);
     }
 
-    public FileConfiguration getConfig() { return config; }
-    public FileConfiguration getMessages() { return messages; }
-    public FileConfiguration getCrops() { return crops; }
-    public FileConfiguration getMaterials() { return materials; }
-    public FileConfiguration getEventsConfig() { return events; }
-    public FileConfiguration getAliases() { return aliases; }
-    public FileConfiguration getGuis() { return guis; }
-    public FileConfiguration getItems() { return items; }
-    public FileConfiguration getAfkZone() { return afkZone; }
+    public FileConfiguration getConfig()         { return config; }
+    public FileConfiguration getMessages()       { return messages; }
+    public FileConfiguration getCrops()          { return crops; }
+    public FileConfiguration getMaterials()      { return materials; }
+    public FileConfiguration getEventsConfig()   { return events; }
+    public FileConfiguration getAliases()        { return aliases; }
+    public FileConfiguration getGuis()           { return guis; }
+    public FileConfiguration getItems()          { return items; }
+    public FileConfiguration getAfkZone()        { return afkZone; }
     public FileConfiguration getResearchConfig() { return research; }
-    public FileConfiguration getGardenMenu() { return gardenMenu; }
+    public FileConfiguration getGardenMenu()     { return gardenMenu; }
+    public FileConfiguration getIslandMenu()     { return islandMenu; }
 }
