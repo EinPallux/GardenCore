@@ -2,6 +2,7 @@ package com.pallux.gardencore.commands;
 
 import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.gui.ConfirmGui;
+import com.pallux.gardencore.managers.ElderManager;
 import com.pallux.gardencore.managers.UpgradeManager;
 import com.pallux.gardencore.models.PlayerData;
 import com.pallux.gardencore.utils.MessageUtil;
@@ -16,9 +17,12 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class AdminCommand implements CommandExecutor, TabCompleter {
+
+    private static final List<String> MATERIAL_TYPES = List.of("driftwood", "moss", "reed", "clover");
+    private static final List<String> SET_GIVE_TAKE_TYPES = List.of("fiber", "xp", "level", "driftwood", "moss", "reed", "clover");
+    private static final List<String> ELDER_PERK_TYPES = List.of("fiber_amount", "material_amount", "xp_gain", "material_chance");
 
     private final GardenCore plugin;
 
@@ -38,24 +42,25 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        String sub = args[0].toLowerCase();
-
-        switch (sub) {
-            case "set" -> handleSet(sender, args);
-            case "give" -> handleGive(sender, args);
-            case "take" -> handleTake(sender, args);
+        switch (args[0].toLowerCase()) {
+            case "set"      -> handleSet(sender, args);
+            case "give"     -> handleGive(sender, args);
+            case "take"     -> handleTake(sender, args);
             case "upgrades" -> handleUpgrades(sender, args);
-            case "reset" -> handleReset(sender, args);
-            case "multi" -> handleMulti(sender, args);
-            case "event" -> handleEvent(sender, args);
-            case "reload" -> handleReload(sender);
-            case "item" -> handleItem(sender, args);
-            case "afkzone" -> handleAfkZone(sender, args);
-            default -> sendUsage(sender);
+            case "elder"    -> handleElder(sender, args);
+            case "reset"    -> handleReset(sender, args);
+            case "multi"    -> handleMulti(sender, args);
+            case "event"    -> handleEvent(sender, args);
+            case "reload"   -> handleReload(sender);
+            case "item"     -> handleItem(sender, args);
+            case "afkzone"  -> handleAfkZone(sender, args);
+            default         -> sendUsage(sender);
         }
 
         return true;
     }
+
+    // ── /gca set ──────────────────────────────────────────────
 
     private void handleSet(CommandSender sender, String[] args) {
         if (args.length < 4) { sendUsage(sender); return; }
@@ -86,9 +91,19 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 plugin.getDataManager().saveAsync();
                 MessageUtil.sendRaw(sender, "&7Level for &e" + nameOf(target, args[2]) + " &7set to &a" + amount);
             }
+            case "driftwood", "moss", "reed", "clover" -> {
+                double amount;
+                try { amount = Double.parseDouble(args[3]); } catch (NumberFormatException e) { MessageUtil.send(sender, "invalid-number"); return; }
+                amount = Math.max(0, amount);
+                setMaterial(plugin.getDataManager().getPlayerData(target.getUniqueId()), type, amount);
+                plugin.getDataManager().saveAsync();
+                MessageUtil.sendRaw(sender, "&7" + capitalize(type) + " for &e" + nameOf(target, args[2]) + " &7set to &a" + amount);
+            }
             default -> sendUsage(sender);
         }
     }
+
+    // ── /gca give ─────────────────────────────────────────────
 
     private void handleGive(CommandSender sender, String[] args) {
         if (args.length < 4) { sendUsage(sender); return; }
@@ -120,9 +135,19 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 plugin.getDataManager().saveAsync();
                 MessageUtil.sendRaw(sender, "&7Given &a" + amount + " &7level(s) to &e" + nameOf(target, args[2]));
             }
+            case "driftwood", "moss", "reed", "clover" -> {
+                double amount;
+                try { amount = Double.parseDouble(args[3]); } catch (NumberFormatException e) { MessageUtil.send(sender, "invalid-number"); return; }
+                if (amount < 0) { MessageUtil.send(sender, "invalid-number"); return; }
+                addMaterial(plugin.getDataManager().getPlayerData(target.getUniqueId()), type, amount);
+                plugin.getDataManager().saveAsync();
+                MessageUtil.sendRaw(sender, "&7Given &a" + amount + " &7" + capitalize(type) + " to &e" + nameOf(target, args[2]));
+            }
             default -> sendUsage(sender);
         }
     }
+
+    // ── /gca take ─────────────────────────────────────────────
 
     private void handleTake(CommandSender sender, String[] args) {
         if (args.length < 4) { sendUsage(sender); return; }
@@ -155,9 +180,20 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 plugin.getDataManager().saveAsync();
                 MessageUtil.sendRaw(sender, "&7Taken &a" + amount + " &7level(s) from &e" + nameOf(target, args[2]));
             }
+            case "driftwood", "moss", "reed", "clover" -> {
+                double amount;
+                try { amount = Double.parseDouble(args[3]); } catch (NumberFormatException e) { MessageUtil.send(sender, "invalid-number"); return; }
+                if (amount < 0) { MessageUtil.send(sender, "invalid-number"); return; }
+                var data = plugin.getDataManager().getPlayerData(target.getUniqueId());
+                takeMaterial(data, type, amount);
+                plugin.getDataManager().saveAsync();
+                MessageUtil.sendRaw(sender, "&7Taken &a" + amount + " &7" + capitalize(type) + " from &e" + nameOf(target, args[2]));
+            }
             default -> sendUsage(sender);
         }
     }
+
+    // ── /gca upgrades set ─────────────────────────────────────
 
     private void handleUpgrades(CommandSender sender, String[] args) {
         if (args.length < 5 || !args[1].equalsIgnoreCase("set")) { sendUsage(sender); return; }
@@ -178,10 +214,10 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         PlayerData data = plugin.getDataManager().getPlayerData(target.getUniqueId());
 
         switch (type) {
-            case FIBER_AMOUNT -> data.setFiberAmountUpgrade(level);
+            case FIBER_AMOUNT    -> data.setFiberAmountUpgrade(level);
             case MATERIAL_AMOUNT -> data.setMaterialAmountUpgrade(level);
             case MATERIAL_CHANCE -> data.setMaterialChanceUpgrade(level);
-            case CROP_COOLDOWN -> data.setCropCooldownUpgrade(level);
+            case CROP_COOLDOWN   -> data.setCropCooldownUpgrade(level);
         }
 
         plugin.getDataManager().saveAsync();
@@ -191,6 +227,45 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 "level", String.valueOf(level)
         ));
     }
+
+    // ── /gca elder set ────────────────────────────────────────
+
+    private void handleElder(CommandSender sender, String[] args) {
+        if (args.length < 5 || !args[1].equalsIgnoreCase("set")) { sendUsage(sender); return; }
+
+        ElderManager.ElderPerkType type = ElderManager.fromString(args[2]);
+        if (type == null) {
+            MessageUtil.sendRaw(sender, "&cUnknown Elder perk type: &e" + args[2]
+                    + "&c. Valid types: fiber_amount, material_amount, xp_gain, material_chance");
+            return;
+        }
+
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[3]);
+        if (!hasData(sender, target)) return;
+
+        int level;
+        try { level = Integer.parseInt(args[4]); } catch (NumberFormatException e) {
+            MessageUtil.send(sender, "invalid-number");
+            return;
+        }
+
+        int max = plugin.getElderManager().getMaxLevel(type);
+        level = Math.max(0, Math.min(level, max));
+        PlayerData data = plugin.getDataManager().getPlayerData(target.getUniqueId());
+
+        switch (type) {
+            case FIBER_AMOUNT    -> data.setElderFiberLevel(level);
+            case MATERIAL_AMOUNT -> data.setElderMaterialAmountLevel(level);
+            case XP_GAIN         -> data.setElderXpGainLevel(level);
+            case MATERIAL_CHANCE -> data.setElderMaterialChanceLevel(level);
+        }
+
+        plugin.getDataManager().saveAsync();
+        MessageUtil.sendRaw(sender, "&7Elder perk &e" + plugin.getElderManager().getDisplayName(type)
+                + " &7for &e" + nameOf(target, args[3]) + " &7set to level &a" + level);
+    }
+
+    // ── /gca reset ────────────────────────────────────────────
 
     private void handleReset(CommandSender sender, String[] args) {
         if (args.length < 3) { sendUsage(sender); return; }
@@ -216,6 +291,21 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 plugin.getDataManager().saveAsync();
                 MessageUtil.send(player, "upgrades.reset-fiber", Map.of("player", nameOf(target, args[2])));
             };
+            case "material" -> () -> {
+                plugin.getDataManager().getPlayerData(target.getUniqueId()).resetMaterials();
+                plugin.getDataManager().saveAsync();
+                MessageUtil.send(player, "admin.reset-material", Map.of("player", nameOf(target, args[2])));
+            };
+            case "research" -> () -> {
+                plugin.getDataManager().getPlayerData(target.getUniqueId()).resetResearch();
+                plugin.getDataManager().saveAsync();
+                MessageUtil.send(player, "admin.reset-research", Map.of("player", nameOf(target, args[2])));
+            };
+            case "elder" -> () -> {
+                plugin.getDataManager().getPlayerData(target.getUniqueId()).resetElder();
+                plugin.getDataManager().saveAsync();
+                MessageUtil.send(player, "admin.reset-elder", Map.of("player", nameOf(target, args[2])));
+            };
             case "all" -> () -> {
                 plugin.getDataManager().getPlayerData(target.getUniqueId()).resetAll();
                 plugin.getDataManager().saveAsync();
@@ -228,6 +318,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
 
         new ConfirmGui(plugin, player, title, action).open();
     }
+
+    // ── /gca multi ────────────────────────────────────────────
 
     private void handleMulti(CommandSender sender, String[] args) {
         if (args.length < 5 || !args[1].equalsIgnoreCase("add")) { sendUsage(sender); return; }
@@ -247,21 +339,23 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         PlayerData data = plugin.getDataManager().getPlayerData(target.getUniqueId());
 
         switch (type) {
-            case FIBER_AMOUNT -> data.addBonusFiberMultiplier(percent);
+            case FIBER_AMOUNT    -> data.addBonusFiberMultiplier(percent);
             case MATERIAL_AMOUNT -> data.addBonusMaterialAmountMultiplier(percent);
             case MATERIAL_CHANCE -> data.addBonusMaterialChanceMultiplier(percent);
+            case CROP_COOLDOWN   -> { /* no bonus multiplier for cooldown */ }
         }
 
         plugin.getDataManager().saveAsync();
-        MessageUtil.sendRaw(sender, "&7Added &a+" + percent + "% &7" + plugin.getUpgradeManager().getDisplayName(type) + " multiplier to &e" + nameOf(target, args[3]));
+        MessageUtil.sendRaw(sender, "&7Added &a+" + percent + "% &7"
+                + plugin.getUpgradeManager().getDisplayName(type) + " multiplier to &e" + nameOf(target, args[3]));
     }
+
+    // ── /gca event ────────────────────────────────────────────
 
     private void handleEvent(CommandSender sender, String[] args) {
         if (args.length < 2) { sendUsage(sender); return; }
 
-        String action = args[1].toLowerCase();
-
-        switch (action) {
+        switch (args[1].toLowerCase()) {
             case "start" -> {
                 if (args.length < 3) { sendUsage(sender); return; }
                 String key = args[2];
@@ -284,10 +378,14 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    // ── /gca reload ───────────────────────────────────────────
+
     private void handleReload(CommandSender sender) {
         plugin.getConfigManager().reloadAll();
         MessageUtil.sendRaw(sender, "&aAll GardenCore config files have been reloaded.");
     }
+
+    // ── /gca afkzone ──────────────────────────────────────────
 
     private void handleAfkZone(CommandSender sender, String[] args) {
         if (args.length < 2 || !args[1].equalsIgnoreCase("set")) { sendUsage(sender); return; }
@@ -332,6 +430,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    // ── /gca item ─────────────────────────────────────────────
+
     private void handleItem(CommandSender sender, String[] args) {
         if (args.length < 4 || !args[1].equalsIgnoreCase("give")) { sendUsage(sender); return; }
 
@@ -356,6 +456,42 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         MessageUtil.sendRaw(sender, "&7Given &a" + amount + "x &e" + key + " &7to &a" + target.getName());
     }
 
+    // ── Material helpers ──────────────────────────────────────
+
+    private void setMaterial(PlayerData data, String type, double amount) {
+        switch (type) {
+            case "driftwood" -> data.setDriftwood(amount);
+            case "moss"      -> data.setMoss(amount);
+            case "reed"      -> data.setReed(amount);
+            case "clover"    -> data.setClover(amount);
+        }
+    }
+
+    private void addMaterial(PlayerData data, String type, double amount) {
+        switch (type) {
+            case "driftwood" -> data.addDriftwood(amount);
+            case "moss"      -> data.addMoss(amount);
+            case "reed"      -> data.addReed(amount);
+            case "clover"    -> data.addClover(amount);
+        }
+    }
+
+    private void takeMaterial(PlayerData data, String type, double amount) {
+        switch (type) {
+            case "driftwood" -> data.setDriftwood(Math.max(0, data.getDriftwood() - amount));
+            case "moss"      -> data.setMoss(Math.max(0, data.getMoss() - amount));
+            case "reed"      -> data.setReed(Math.max(0, data.getReed() - amount));
+            case "clover"    -> data.setClover(Math.max(0, data.getClover() - amount));
+        }
+    }
+
+    private String capitalize(String s) {
+        if (s == null || s.isEmpty()) return s;
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+    }
+
+    // ── Misc helpers ──────────────────────────────────────────
+
     private String nameOf(OfflinePlayer p, String fallback) {
         return p.getName() != null ? p.getName() : fallback;
     }
@@ -373,11 +509,12 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(new String[]{
                 com.pallux.gardencore.utils.ColorUtil.translate("&8&m                                &r"),
                 com.pallux.gardencore.utils.ColorUtil.translate("&#a8ff78&lGardenCore Admin Commands"),
-                com.pallux.gardencore.utils.ColorUtil.translate("&e/gca set <fiber|xp|level> <player> <amount>"),
-                com.pallux.gardencore.utils.ColorUtil.translate("&e/gca give <fiber|xp|level> <player> <amount>"),
-                com.pallux.gardencore.utils.ColorUtil.translate("&e/gca take <fiber|xp|level> <player> <amount>"),
+                com.pallux.gardencore.utils.ColorUtil.translate("&e/gca set <fiber|xp|level|driftwood|moss|reed|clover> <player> <amount>"),
+                com.pallux.gardencore.utils.ColorUtil.translate("&e/gca give <fiber|xp|level|driftwood|moss|reed|clover> <player> <amount>"),
+                com.pallux.gardencore.utils.ColorUtil.translate("&e/gca take <fiber|xp|level|driftwood|moss|reed|clover> <player> <amount>"),
                 com.pallux.gardencore.utils.ColorUtil.translate("&e/gca upgrades set <type> <player> <level>"),
-                com.pallux.gardencore.utils.ColorUtil.translate("&e/gca reset <upgrades|fiber|all> <player>"),
+                com.pallux.gardencore.utils.ColorUtil.translate("&e/gca elder set <type> <player> <level>"),
+                com.pallux.gardencore.utils.ColorUtil.translate("&e/gca reset <upgrades|fiber|material|research|elder|all> <player>"),
                 com.pallux.gardencore.utils.ColorUtil.translate("&e/gca multi add <type> <player> <percent>"),
                 com.pallux.gardencore.utils.ColorUtil.translate("&e/gca event start <event>"),
                 com.pallux.gardencore.utils.ColorUtil.translate("&e/gca event stop"),
@@ -388,31 +525,27 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         });
     }
 
+    // ── Tab completion ────────────────────────────────────────
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("gc.admin")) return List.of();
 
         if (args.length == 1) {
-            return List.of("set", "give", "take", "upgrades", "reset", "multi", "event", "item", "afkzone", "reload").stream()
-                    .filter(s -> s.startsWith(args[0].toLowerCase())).toList();
+            return filter(List.of("set", "give", "take", "upgrades", "elder", "reset", "multi",
+                    "event", "item", "afkzone", "reload"), args[0]);
         }
 
         if (args.length == 2) {
             return switch (args[0].toLowerCase()) {
-                case "set", "give", "take" -> List.of("fiber", "xp", "level").stream()
-                        .filter(s -> s.startsWith(args[1].toLowerCase())).toList();
-                case "upgrades" -> List.of("set").stream()
-                        .filter(s -> s.startsWith(args[1].toLowerCase())).toList();
-                case "reset" -> List.of("upgrades", "fiber", "all").stream()
-                        .filter(s -> s.startsWith(args[1].toLowerCase())).toList();
-                case "multi" -> List.of("add").stream()
-                        .filter(s -> s.startsWith(args[1].toLowerCase())).toList();
-                case "event" -> List.of("start", "stop").stream()
-                        .filter(s -> s.startsWith(args[1].toLowerCase())).toList();
-                case "item" -> List.of("give").stream()
-                        .filter(s -> s.startsWith(args[1].toLowerCase())).toList();
-                case "afkzone" -> List.of("set").stream()
-                        .filter(s -> s.startsWith(args[1].toLowerCase())).toList();
+                case "set", "give", "take" -> filter(SET_GIVE_TAKE_TYPES, args[1]);
+                case "upgrades"            -> filter(List.of("set"), args[1]);
+                case "elder"               -> filter(List.of("set"), args[1]);
+                case "reset"               -> filter(List.of("upgrades", "fiber", "material", "research", "elder", "all"), args[1]);
+                case "multi"               -> filter(List.of("add"), args[1]);
+                case "event"               -> filter(List.of("start", "stop"), args[1]);
+                case "item"                -> filter(List.of("give"), args[1]);
+                case "afkzone"             -> filter(List.of("set"), args[1]);
                 default -> List.of();
             };
         }
@@ -420,19 +553,20 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         if (args.length == 3) {
             return switch (args[0].toLowerCase()) {
                 case "set", "give", "take", "reset" -> getOnlinePlayers(args[2]);
-                case "upgrades", "multi" -> List.of("fiber_amount", "material_amount", "material_chance", "crop_cooldown").stream()
-                        .filter(s -> s.startsWith(args[2].toLowerCase())).toList();
+                case "upgrades", "multi" -> filter(List.of("fiber_amount", "material_amount", "material_chance", "crop_cooldown"), args[2]);
+                case "elder" -> {
+                    if (args[1].equalsIgnoreCase("set")) yield filter(ELDER_PERK_TYPES, args[2]);
+                    yield List.of();
+                }
                 case "event" -> {
                     if (args[1].equalsIgnoreCase("start")) {
-                        yield plugin.getEventManager().getAvailableEventKeys().stream()
-                                .filter(s -> s.startsWith(args[2].toLowerCase())).toList();
+                        yield filter(plugin.getEventManager().getAvailableEventKeys(), args[2]);
                     }
                     yield List.of();
                 }
                 case "item" -> {
                     if (args[1].equalsIgnoreCase("give")) {
-                        yield plugin.getItemManager().getItemKeys().stream()
-                                .filter(s -> s.startsWith(args[2].toLowerCase())).toList();
+                        yield filter(new ArrayList<>(plugin.getItemManager().getItemKeys()), args[2]);
                     }
                     yield List.of();
                 }
@@ -443,6 +577,10 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         if (args.length == 4) {
             return switch (args[0].toLowerCase()) {
                 case "upgrades", "multi" -> getOnlinePlayers(args[3]);
+                case "elder" -> {
+                    if (args[1].equalsIgnoreCase("set")) yield getOnlinePlayers(args[3]);
+                    yield List.of();
+                }
                 case "item" -> {
                     if (args[1].equalsIgnoreCase("give")) yield getOnlinePlayers(args[3]);
                     yield List.of();
@@ -452,6 +590,10 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         }
 
         return List.of();
+    }
+
+    private List<String> filter(List<String> list, String prefix) {
+        return list.stream().filter(s -> s.startsWith(prefix.toLowerCase())).toList();
     }
 
     private List<String> getOnlinePlayers(String prefix) {

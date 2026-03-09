@@ -1,13 +1,10 @@
 package com.pallux.gardencore;
 
-import com.pallux.gardencore.commands.AdminCommand;
-import com.pallux.gardencore.commands.GardenCommand;
-import com.pallux.gardencore.commands.IslandCommand;
-import com.pallux.gardencore.commands.ResearchCommand;
-import com.pallux.gardencore.commands.UpgradeCommand;
+import com.pallux.gardencore.commands.*;
 import com.pallux.gardencore.config.ConfigManager;
 import com.pallux.gardencore.data.DataManager;
 import com.pallux.gardencore.events.EventManager;
+import com.pallux.gardencore.gui.ElderGui;
 import com.pallux.gardencore.gui.ResearchGui;
 import com.pallux.gardencore.hooks.PlaceholderHook;
 import com.pallux.gardencore.listeners.*;
@@ -37,6 +34,8 @@ public final class GardenCore extends JavaPlugin {
     private AfkZoneManager afkZoneManager;
     private ResearchManager researchManager;
     private ResearchGui researchGui;
+    private ElderManager elderManager;
+    private ElderGui elderGui;
     private final Map<UUID, Integer> researchPageMap = new ConcurrentHashMap<>();
 
     @Override
@@ -61,6 +60,8 @@ public final class GardenCore extends JavaPlugin {
         afkZoneManager = new AfkZoneManager(this);
         researchManager = new ResearchManager(this);
         researchGui = new ResearchGui(this);
+        elderManager = new ElderManager(this);
+        elderGui = new ElderGui(this);
 
         registerListeners();
         registerCommands();
@@ -117,6 +118,7 @@ public final class GardenCore extends JavaPlugin {
         pm.registerEvents(new CustomItemListener(this), this);
         pm.registerEvents(new AfkZoneListener(this), this);
         pm.registerEvents(new ResearchListener(this), this);
+        pm.registerEvents(new ElderListener(this), this);
     }
 
     private void registerCommands() {
@@ -148,6 +150,11 @@ public final class GardenCore extends JavaPlugin {
         if (islandCmd != null) {
             islandCmd.setExecutor(new IslandCommand(this));
         }
+
+        var elderCmd = getCommand("elder");
+        if (elderCmd != null) {
+            elderCmd.setExecutor(new ElderCommand(this));
+        }
     }
 
     private void registerPlaceholders() {
@@ -161,20 +168,22 @@ public final class GardenCore extends JavaPlugin {
         return instance;
     }
 
-    public ConfigManager getConfigManager()       { return configManager; }
-    public DataManager getDataManager()           { return dataManager; }
-    public FiberManager getFiberManager()         { return fiberManager; }
-    public LevelManager getLevelManager()         { return levelManager; }
-    public CropManager getCropManager()           { return cropManager; }
-    public MaterialManager getMaterialManager()   { return materialManager; }
+    public ConfigManager getConfigManager()         { return configManager; }
+    public DataManager getDataManager()             { return dataManager; }
+    public FiberManager getFiberManager()           { return fiberManager; }
+    public LevelManager getLevelManager()           { return levelManager; }
+    public CropManager getCropManager()             { return cropManager; }
+    public MaterialManager getMaterialManager()     { return materialManager; }
     public MultiplierManager getMultiplierManager() { return multiplierManager; }
-    public UpgradeManager getUpgradeManager()     { return upgradeManager; }
-    public EventManager getEventManager()         { return eventManager; }
-    public AliasManager getAliasManager()         { return aliasManager; }
-    public ItemManager getItemManager()           { return itemManager; }
-    public AfkZoneManager getAfkZoneManager()     { return afkZoneManager; }
-    public ResearchManager getResearchManager()   { return researchManager; }
-    public ResearchGui getResearchGui()           { return researchGui; }
+    public UpgradeManager getUpgradeManager()       { return upgradeManager; }
+    public EventManager getEventManager()           { return eventManager; }
+    public AliasManager getAliasManager()           { return aliasManager; }
+    public ItemManager getItemManager()             { return itemManager; }
+    public AfkZoneManager getAfkZoneManager()       { return afkZoneManager; }
+    public ResearchManager getResearchManager()     { return researchManager; }
+    public ResearchGui getResearchGui()             { return researchGui; }
+    public ElderManager getElderManager()           { return elderManager; }
+    public ElderGui getElderGui()                   { return elderGui; }
 
     public int getPlayerResearchPage(Player player) {
         return researchPageMap.getOrDefault(player.getUniqueId(), 0);

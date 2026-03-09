@@ -20,6 +20,9 @@ upgrade-gui:
         - "&7Current Cooldown: &a{value}s"
         - "&7Cost: &e{cost} &7Fiber"
         - ""
+        - "&7Base: &f1.0s &7→ Min: &f0.2s"
+        - "&7(&f-0.05s &7per level)"
+        - ""
         - "&aClick to upgrade!"
 
     fiber_amount:

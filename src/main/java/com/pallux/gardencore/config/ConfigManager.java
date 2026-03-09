@@ -21,6 +21,7 @@ public class ConfigManager {
     private FileConfiguration research;
     private FileConfiguration gardenMenu;
     private FileConfiguration islandMenu;
+    private FileConfiguration elder;
 
     public ConfigManager(GardenCore plugin) {
         this.plugin = plugin;
@@ -41,6 +42,7 @@ public class ConfigManager {
         research    = loadOrCreate("guis/researchmenu.yml");
         gardenMenu  = loadOrCreate("guis/gardenmenu.yml");
         islandMenu  = loadOrCreate("guis/islandmenu.yml");
+        elder       = loadOrCreate("guis/eldermenu.yml");
     }
 
     private FileConfiguration loadOrCreate(String name) {
@@ -67,6 +69,7 @@ public class ConfigManager {
         research    = loadOrCreate("guis/researchmenu.yml");
         gardenMenu  = loadOrCreate("guis/gardenmenu.yml");
         islandMenu  = loadOrCreate("guis/islandmenu.yml");
+        elder       = loadOrCreate("guis/eldermenu.yml");
     }
 
     public boolean isFeatureEnabled(String feature) {
@@ -106,4 +109,5 @@ public class ConfigManager {
     public FileConfiguration getResearchConfig() { return research; }
     public FileConfiguration getGardenMenu()     { return gardenMenu; }
     public FileConfiguration getIslandMenu()     { return islandMenu; }
+    public FileConfiguration getElderConfig()    { return elder; }
 }

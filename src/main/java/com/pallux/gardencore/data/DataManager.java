@@ -58,6 +58,11 @@ public class DataManager {
                 data.setCompletedResearches(dataConfig.getInt(path + "research.completed", 0));
                 data.setActiveResearchIndex(dataConfig.getInt(path + "research.active-index", -1));
                 data.setActiveResearchStart(dataConfig.getLong(path + "research.active-start", 0));
+                // Elder perks
+                data.setElderFiberLevel(dataConfig.getInt(path + "elder.fiber-level", 0));
+                data.setElderMaterialAmountLevel(dataConfig.getInt(path + "elder.material-amount-level", 0));
+                data.setElderXpGainLevel(dataConfig.getInt(path + "elder.xp-gain-level", 0));
+                data.setElderMaterialChanceLevel(dataConfig.getInt(path + "elder.material-chance-level", 0));
 
                 playerDataMap.put(uuid, data);
             } catch (IllegalArgumentException ignored) {}
@@ -94,6 +99,11 @@ public class DataManager {
         dataConfig.set(path + "research.completed", data.getCompletedResearches());
         dataConfig.set(path + "research.active-index", data.getActiveResearchIndex());
         dataConfig.set(path + "research.active-start", data.getActiveResearchStart());
+        // Elder perks
+        dataConfig.set(path + "elder.fiber-level", data.getElderFiberLevel());
+        dataConfig.set(path + "elder.material-amount-level", data.getElderMaterialAmountLevel());
+        dataConfig.set(path + "elder.xp-gain-level", data.getElderXpGainLevel());
+        dataConfig.set(path + "elder.material-chance-level", data.getElderMaterialChanceLevel());
     }
 
     public void saveAsync() {

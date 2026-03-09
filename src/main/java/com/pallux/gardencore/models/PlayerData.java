@@ -28,6 +28,12 @@ public class PlayerData {
     private int activeResearchIndex;
     private long activeResearchStart;
 
+    // Elder perks
+    private int elderFiberLevel;
+    private int elderMaterialAmountLevel;
+    private int elderXpGainLevel;
+    private int elderMaterialChanceLevel;
+
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
         this.fiber = 0;
@@ -47,6 +53,10 @@ public class PlayerData {
         this.completedResearches = 0;
         this.activeResearchIndex = -1;
         this.activeResearchStart = 0;
+        this.elderFiberLevel = 0;
+        this.elderMaterialAmountLevel = 0;
+        this.elderXpGainLevel = 0;
+        this.elderMaterialChanceLevel = 0;
     }
 
     public UUID getUuid() { return uuid; }
@@ -114,6 +124,21 @@ public class PlayerData {
 
     public boolean hasActiveResearch() { return activeResearchIndex >= 0; }
 
+    // Elder perk getters/setters
+    public int getElderFiberLevel() { return elderFiberLevel; }
+    public void setElderFiberLevel(int v) { this.elderFiberLevel = v; }
+
+    public int getElderMaterialAmountLevel() { return elderMaterialAmountLevel; }
+    public void setElderMaterialAmountLevel(int v) { this.elderMaterialAmountLevel = v; }
+
+    public int getElderXpGainLevel() { return elderXpGainLevel; }
+    public void setElderXpGainLevel(int v) { this.elderXpGainLevel = v; }
+
+    public int getElderMaterialChanceLevel() { return elderMaterialChanceLevel; }
+    public void setElderMaterialChanceLevel(int v) { this.elderMaterialChanceLevel = v; }
+
+    // ── Reset helpers ──────────────────────────────────────────
+
     public void resetUpgrades() {
         fiberAmountUpgrade = 0;
         materialAmountUpgrade = 0;
@@ -125,23 +150,36 @@ public class PlayerData {
         fiber = 0;
     }
 
-    public void resetAll() {
-        fiber = 0;
-        xp = 0;
-        level = 1;
-        fiberAmountUpgrade = 0;
-        materialAmountUpgrade = 0;
-        materialChanceUpgrade = 0;
-        cropCooldownUpgrade = 0;
-        bonusFiberMultiplier = 0;
-        bonusMaterialAmountMultiplier = 0;
-        bonusMaterialChanceMultiplier = 0;
+    public void resetMaterials() {
         driftwood = 0;
         moss = 0;
         reed = 0;
         clover = 0;
+    }
+
+    public void resetResearch() {
         completedResearches = 0;
         activeResearchIndex = -1;
         activeResearchStart = 0;
+    }
+
+    public void resetElder() {
+        elderFiberLevel = 0;
+        elderMaterialAmountLevel = 0;
+        elderXpGainLevel = 0;
+        elderMaterialChanceLevel = 0;
+    }
+
+    public void resetAll() {
+        fiber = 0;
+        xp = 0;
+        level = 1;
+        resetUpgrades();
+        bonusFiberMultiplier = 0;
+        bonusMaterialAmountMultiplier = 0;
+        bonusMaterialChanceMultiplier = 0;
+        resetMaterials();
+        resetResearch();
+        resetElder();
     }
 }

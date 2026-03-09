@@ -53,3 +53,7 @@ commands:
     description: Open the Island travel menu
     usage: /islands
     permission: gc.player
+  elder:
+    description: Open the Elder Council perk menu
+    usage: /elder
+    permission: gc.player

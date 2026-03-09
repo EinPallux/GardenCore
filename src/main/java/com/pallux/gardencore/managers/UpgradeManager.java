@@ -9,11 +9,11 @@ public class UpgradeManager {
     public static final int MAX_FIBER_AMOUNT = 1000;
     public static final int MAX_MATERIAL_AMOUNT = 500;
     public static final int MAX_MATERIAL_CHANCE = 100;
-    public static final int MAX_CROP_COOLDOWN = 15;
+    public static final int MAX_CROP_COOLDOWN = 16;
 
-    public static final double BASE_CROP_COOLDOWN = 2.0;
-    public static final double MIN_CROP_COOLDOWN = 0.5;
-    public static final double COOLDOWN_REDUCTION_PER_LEVEL = 0.1;
+    public static final double BASE_CROP_COOLDOWN = 1.0;
+    public static final double MIN_CROP_COOLDOWN = 0.2;
+    public static final double COOLDOWN_REDUCTION_PER_LEVEL = 0.05;
 
     public enum UpgradeType {
         FIBER_AMOUNT,

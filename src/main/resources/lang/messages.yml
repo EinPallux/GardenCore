@@ -42,6 +42,9 @@ admin:
   reset-confirm-title: "&c&lConfirm Reset"
   reset-confirm-lore: "&7Click to confirm the reset."
   reset-cancel-lore: "&7Click to cancel."
+  reset-material: "&7Materials for &e{player} &7have been reset."
+  reset-research: "&7Research progress for &e{player} &7has been reset."
+  reset-elder: "&7Elder perks for &e{player} &7have been reset."
 
 alias:
   not-found: "&cAlias command not found."
@@ -60,5 +63,14 @@ research:
 
 islands:
   level-required: "&cYou need Level &e{level} &cto travel to this island!"
+
+elder:
+  purchased: "&#d4a8ff&l⚗ Elder Perk! &7{perk} is now level &d{level}&7! Total bonus: &#a8ff78+{bonus}%&7."
+  max-reached: "&#ff7a7a{perk} is already fully upgraded!"
+  not-enough-fiber: "&cYou don't have enough Fiber for this perk!"
+  not-enough-driftwood: "&cYou don't have enough Driftwood for this perk!"
+  not-enough-moss: "&cYou don't have enough Moss for this perk!"
+  not-enough-reed: "&cYou don't have enough Reed for this perk!"
+  not-enough-clover: "&cYou don't have enough Clover for this perk!"
 
 command-player-only: "&cThis command can only be used by players."

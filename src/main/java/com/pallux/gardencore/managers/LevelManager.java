@@ -5,7 +5,6 @@ import com.pallux.gardencore.models.PlayerData;
 import com.pallux.gardencore.utils.MessageUtil;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
 import java.util.UUID;
 
 public class LevelManager {
@@ -22,16 +21,9 @@ public class LevelManager {
 
     public void addXp(Player player, double xp) {
         PlayerData data = plugin.getDataManager().getPlayerData(player.getUniqueId());
-        double multiplied = xp * getXpEventMultiplier();
+        double multiplied = xp * plugin.getMultiplierManager().getTotalXpMultiplier(player.getUniqueId());
         data.addXp(multiplied);
         checkLevelUp(player, data);
-    }
-
-    private double getXpEventMultiplier() {
-        var eventManager = plugin.getEventManager();
-        if (eventManager == null) return 1.0;
-        double bonus = eventManager.getTotalEventBonus(com.pallux.gardencore.models.EventData.EventType.XP_AMOUNT);
-        return 1.0 + (bonus / 100.0);
     }
 
     public void addXpDirect(Player player, double xp) {

@@ -33,12 +33,6 @@ garden-menu:
       - "&7Material Amount: &#a8ff78{multi_material}"
       - "&7Material Chance: &#78c8ff{multi_material_chance}"
       - ""
-      - "&8--- &7Upgrades &8---"
-      - "&7Fiber Amount: &e{upgrade_fiber}"
-      - "&7Material Amount: &e{upgrade_material}"
-      - "&7Material Chance: &e{upgrade_material_chance}"
-      - "&7Crop Cooldown: &e{upgrade_cooldown}"
-      - ""
       - "&8--- &7Research &8---"
       - "&7Completed: &#a8ff78{research_completed}"
       - "&7Active: &f{research_active}"
@@ -75,6 +69,17 @@ garden-menu:
         - ""
         - "&eClick to open!"
 
+    elder:
+      slot: 21
+      material: TOTEM_OF_UNDYING
+      name: "&#d4a8ff&lElder Council"
+      command: "elder"
+      lore:
+        - "&7Spend materials and fiber"
+        - "&7on permanent Elder perks."
+        - ""
+        - "&eClick to open!"
+
     islands:
       slot: 34
       material: GRASS_BLOCK
@@ -88,7 +93,6 @@ garden-menu:
 
   # Placeholder items for future features (gray dye)
   placeholders:
-    - slot: 21
     - slot: 22
     - slot: 23
     - slot: 24
