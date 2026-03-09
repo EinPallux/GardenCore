@@ -75,6 +75,17 @@ garden-menu:
         - ""
         - "&eClick to open!"
 
+    islands:
+      slot: 34
+      material: GRASS_BLOCK
+      name: "&a&lIslands"
+      command: "islands"
+      lore:
+        - "&7Teleport around different islands"
+        - "&7for better crops."
+        - ""
+        - "&eClick to open!"
+
   # Placeholder items for future features (gray dye)
   placeholders:
     - slot: 21
@@ -88,7 +99,6 @@ garden-menu:
     - slot: 31
     - slot: 32
     - slot: 33
-    - slot: 34
 
   placeholder-item:
     material: GRAY_DYE

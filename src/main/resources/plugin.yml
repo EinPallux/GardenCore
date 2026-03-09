@@ -2,7 +2,7 @@ name: GardenCore
 version: '${project.version}'
 main: com.pallux.gardencore.GardenCore
 api-version: '1.21'
-description: Core plugin for Garden Simulator Tycoon
+description: Core plugin for Garden Simulator Tycoon Server by Pallux
 authors: [ Pallux ]
 softdepend: [ PlaceholderAPI, WorldEdit, FastAsyncWorldEdit ]
 
@@ -27,6 +27,9 @@ permissions:
     default: op
   gc.bypass.instantreplant:
     description: Bypass the instant-replant feature
+    default: op
+  gc.bypass.noncropsbreak:
+    description: Bypass the no-non-crop-break feature (allows breaking any block)
     default: op
 
 commands:

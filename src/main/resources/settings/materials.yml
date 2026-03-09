@@ -5,20 +5,20 @@
 materials:
   driftwood:
     display-name: "&#C4A882Driftwood"
-    drop-chance: 15.0
+    drop-chance: 5.0
     base-amount: 1
 
   moss:
     display-name: "&#5A8A3C Moss"
-    drop-chance: 8.0
+    drop-chance: 2.5
     base-amount: 1
 
   reed:
     display-name: "&#8BC34A Reed"
-    drop-chance: 4.0
+    drop-chance: 1.0
     base-amount: 1
 
   clover:
     display-name: "&#2E7D32 Clover"
-    drop-chance: 1.5
+    drop-chance: 0.1
     base-amount: 1

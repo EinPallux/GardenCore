@@ -6,9 +6,10 @@ features:
   no-fall-damage: true
   no-hunger: true
   no-block-drops: true
+  no-non-crop-break: true
 
-# It's advised you do NOT change any of the values below to false,
-# if you don't 100% know what you are doing! (This can break the whole plugin)
+  # It's advised you do NOT change any of the values below to false,
+  # if you don't 100% know what you are doing! (This can break the whole plugin)
   instant-replant: true
   alias-commands: true
   fiber-currency: true

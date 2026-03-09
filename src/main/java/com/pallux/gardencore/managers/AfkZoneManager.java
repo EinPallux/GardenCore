@@ -4,7 +4,6 @@ import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.utils.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -165,7 +164,7 @@ public class AfkZoneManager {
     }
 
     private void saveZone() {
-        File file = new File(plugin.getDataFolder(), "afkzone.yml");
+        File file = new File(plugin.getDataFolder(), "settings/afkzone.yml");
         FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
         cfg.set("afkzone.zone.world", worldName);
@@ -179,7 +178,7 @@ public class AfkZoneManager {
         try {
             cfg.save(file);
         } catch (IOException e) {
-            plugin.getLogger().severe("Could not save afkzone.yml: " + e.getMessage());
+            plugin.getLogger().severe("Could not save settings/afkzone.yml: " + e.getMessage());
         }
     }
 

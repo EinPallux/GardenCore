@@ -30,22 +30,23 @@ public class ConfigManager {
         plugin.saveDefaultConfig();
         config = plugin.getConfig();
 
-        messages   = loadOrCreate("messages.yml");
-        crops      = loadOrCreate("crops.yml");
-        materials  = loadOrCreate("materials.yml");
-        events     = loadOrCreate("events.yml");
-        aliases    = loadOrCreate("aliascommands.yml");
-        guis       = loadOrCreate("guis.yml");
-        items      = loadOrCreate("items.yml");
-        afkZone    = loadOrCreate("afkzone.yml");
-        research   = loadOrCreate("research.yml");
-        gardenMenu = loadOrCreate("gardenmenu.yml");
-        islandMenu = loadOrCreate("islandmenu.yml");
+        messages    = loadOrCreate("lang/messages.yml");
+        crops       = loadOrCreate("settings/crops.yml");
+        materials   = loadOrCreate("settings/materials.yml");
+        events      = loadOrCreate("settings/events.yml");
+        aliases     = loadOrCreate("settings/aliascommands.yml");
+        items       = loadOrCreate("settings/items.yml");
+        afkZone     = loadOrCreate("settings/afkzone.yml");
+        guis        = loadOrCreate("guis/upgradesmenu.yml");
+        research    = loadOrCreate("guis/researchmenu.yml");
+        gardenMenu  = loadOrCreate("guis/gardenmenu.yml");
+        islandMenu  = loadOrCreate("guis/islandmenu.yml");
     }
 
     private FileConfiguration loadOrCreate(String name) {
         File file = new File(plugin.getDataFolder(), name);
         if (!file.exists()) {
+            file.getParentFile().mkdirs();
             plugin.saveResource(name, false);
         }
         return YamlConfiguration.loadConfiguration(file);
@@ -55,17 +56,17 @@ public class ConfigManager {
         plugin.reloadConfig();
         config = plugin.getConfig();
 
-        messages   = loadOrCreate("messages.yml");
-        crops      = loadOrCreate("crops.yml");
-        materials  = loadOrCreate("materials.yml");
-        events     = loadOrCreate("events.yml");
-        aliases    = loadOrCreate("aliascommands.yml");
-        guis       = loadOrCreate("guis.yml");
-        items      = loadOrCreate("items.yml");
-        afkZone    = loadOrCreate("afkzone.yml");
-        research   = loadOrCreate("research.yml");
-        gardenMenu = loadOrCreate("gardenmenu.yml");
-        islandMenu = loadOrCreate("islandmenu.yml");
+        messages    = loadOrCreate("lang/messages.yml");
+        crops       = loadOrCreate("settings/crops.yml");
+        materials   = loadOrCreate("settings/materials.yml");
+        events      = loadOrCreate("settings/events.yml");
+        aliases     = loadOrCreate("settings/aliascommands.yml");
+        items       = loadOrCreate("settings/items.yml");
+        afkZone     = loadOrCreate("settings/afkzone.yml");
+        guis        = loadOrCreate("guis/upgradesmenu.yml");
+        research    = loadOrCreate("guis/researchmenu.yml");
+        gardenMenu  = loadOrCreate("guis/gardenmenu.yml");
+        islandMenu  = loadOrCreate("guis/islandmenu.yml");
     }
 
     public boolean isFeatureEnabled(String feature) {

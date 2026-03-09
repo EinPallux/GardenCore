@@ -22,12 +22,15 @@ public class DataManager {
     }
 
     public void load() {
-        dataFile = new File(plugin.getDataFolder(), "playerdata.yml");
+        File dataFolder = new File(plugin.getDataFolder(), "data");
+        dataFolder.mkdirs();
+
+        dataFile = new File(dataFolder, "playerdata.yml");
         if (!dataFile.exists()) {
             try {
                 dataFile.createNewFile();
             } catch (IOException e) {
-                plugin.getLogger().severe("Could not create playerdata.yml: " + e.getMessage());
+                plugin.getLogger().severe("Could not create data/playerdata.yml: " + e.getMessage());
             }
         }
         dataConfig = YamlConfiguration.loadConfiguration(dataFile);
@@ -68,7 +71,7 @@ public class DataManager {
         try {
             dataConfig.save(dataFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Could not save playerdata.yml: " + e.getMessage());
+            plugin.getLogger().severe("Could not save data/playerdata.yml: " + e.getMessage());
         }
     }
 
@@ -122,7 +125,7 @@ public class DataManager {
             try {
                 dataConfig.save(dataFile);
             } catch (IOException e) {
-                plugin.getLogger().severe("Could not save playerdata.yml on quit: " + e.getMessage());
+                plugin.getLogger().severe("Could not save data/playerdata.yml on quit: " + e.getMessage());
             }
         });
     }

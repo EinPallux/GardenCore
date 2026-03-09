@@ -103,6 +103,9 @@ public final class GardenCore extends JavaPlugin {
         if (configManager.isFeatureEnabled("no-block-drops")) {
             pm.registerEvents(new NoBlockDropsListener(this), this);
         }
+        if (configManager.isFeatureEnabled("no-non-crop-break")) {
+            pm.registerEvents(new NoNonCropBreakListener(this), this);
+        }
         if (configManager.isFeatureEnabled("instant-replant")) {
             pm.registerEvents(new InstantReplantListener(this), this);
         }
