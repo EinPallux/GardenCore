@@ -105,15 +105,25 @@ public class DataManager {
         return playerDataMap.containsKey(uuid);
     }
 
+    /**
+     * Saves and unloads a player's data asynchronously.
+     * The data is written to the config on the main thread (to avoid concurrent map access),
+     * then the file write is dispatched async to avoid blocking on quit.
+     */
     public void removePlayerData(UUID uuid) {
         PlayerData data = playerDataMap.remove(uuid);
-        if (data != null) {
-            save(data);
+        if (data == null) return;
+
+        // Update the in-memory YAML config synchronously (safe — main thread)
+        save(data);
+
+        // Write to disk asynchronously so the main thread is not blocked on quit
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 dataConfig.save(dataFile);
             } catch (IOException e) {
-                plugin.getLogger().severe("Could not save playerdata.yml: " + e.getMessage());
+                plugin.getLogger().severe("Could not save playerdata.yml on quit: " + e.getMessage());
             }
-        }
+        });
     }
 }

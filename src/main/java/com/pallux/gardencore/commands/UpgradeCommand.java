@@ -24,7 +24,7 @@ public class UpgradeCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            MessageUtil.send(sender, "command-console-only");
+            MessageUtil.send(sender, "command-player-only");
             return true;
         }
 

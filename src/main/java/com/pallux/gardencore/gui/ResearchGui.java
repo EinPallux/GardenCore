@@ -39,7 +39,11 @@ public class ResearchGui {
         FileConfiguration cfg = plugin.getConfigManager().getResearchConfig();
         String title = ColorUtil.translate(cfg.getString("research.gui-title", "&8Research Menu"));
 
-        Inventory inv = Bukkit.createInventory(null, 54, title);
+        // Use a custom holder so ResearchListener can detect this inventory reliably
+        ResearchHolder holder = new ResearchHolder();
+        Inventory inv = Bukkit.createInventory(holder, 54, title);
+        holder.setInventory(inv);
+
         PlayerData data = plugin.getDataManager().getPlayerData(player.getUniqueId());
 
         int total = plugin.getResearchManager().getTotalResearches();
@@ -101,7 +105,7 @@ public class ResearchGui {
         double fiberPerResearch = cfg.getDouble("research.fiber-amount-per-research", 0.1);
         double materialPerResearch = cfg.getDouble("research.material-amount-per-research", 0.1);
 
-        // The bonus THIS research unlocks (its own level, not cumulative display)
+        // Cumulative bonus after this research is completed
         double thisFiber = (index + 1) * fiberPerResearch;
         double thisMaterial = (index + 1) * materialPerResearch;
 
@@ -117,7 +121,6 @@ public class ResearchGui {
         boolean isCompleted = index < completed;
         boolean isActive = data.hasActiveResearch() && data.getActiveResearchIndex() == index;
         boolean isReady = !isCompleted && !isActive && index == completed;
-        // locked: index > completed and not active
 
         if (isCompleted) {
             String displayName = cfg.getString("research.name-completed", "&#a8ff78&l{name} &7[Completed]")

@@ -2,7 +2,7 @@ package com.pallux.gardencore.listeners;
 
 import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.gui.ResearchGui;
-import com.pallux.gardencore.utils.ColorUtil;
+import com.pallux.gardencore.gui.ResearchHolder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,13 +22,9 @@ public class ResearchListener implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) return;
 
         Inventory inv = event.getInventory();
-        if (inv.getSize() != 54) return;
 
-        String guiTitle = ColorUtil.translate(
-                plugin.getConfigManager().getResearchConfig()
-                        .getString("research.gui-title", "&8Research Menu"));
-
-        if (!event.getView().getTitle().equals(guiTitle)) return;
+        // Use the custom holder for reliable GUI detection — no fragile title comparison
+        if (!(inv.getHolder() instanceof ResearchHolder)) return;
 
         event.setCancelled(true);
 

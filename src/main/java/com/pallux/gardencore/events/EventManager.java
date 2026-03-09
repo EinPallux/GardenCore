@@ -92,7 +92,7 @@ public class EventManager {
         launchEvent(SCHEDULED_EVENT_ID, chosen, true);
     }
 
-    private void launchEvent(String id, EventData data, boolean showIdle) {
+    private void launchEvent(String id, EventData data, boolean wasIdle) {
         if (activeEvents.containsKey(id)) {
             endEventById(id, false);
         }
@@ -105,7 +105,6 @@ public class EventManager {
         }
 
         ActiveEvent active = new ActiveEvent(data, bar, durationSeconds);
-
         updateActiveBossBar(active);
 
         active.timer = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
@@ -118,7 +117,10 @@ public class EventManager {
 
         activeEvents.put(id, active);
 
-        if (showIdle) idleBossBar.setVisible(false);
+        // Hide idle bar now that at least one event is active
+        if (wasIdle) {
+            idleBossBar.setVisible(false);
+        }
 
         String startMsg = plugin.getConfigManager().getMessage("events.start")
                 .replace("{event}", data.getDisplayName());
@@ -154,6 +156,7 @@ public class EventManager {
         if (activeEvents.isEmpty()) {
             idleBossBar.addPlayer(player);
         } else {
+            // Player joins during active events — show all active event bars, not the idle one
             for (ActiveEvent active : activeEvents.values()) {
                 active.bossBar.addPlayer(player);
             }
@@ -203,7 +206,8 @@ public class EventManager {
         if (event == null) return false;
 
         String id = fromTicket ? "ticket_" + key + "_" + System.currentTimeMillis() : SCHEDULED_EVENT_ID;
-        launchEvent(id, event, activeEvents.isEmpty());
+        boolean wasIdle = activeEvents.isEmpty();
+        launchEvent(id, event, wasIdle);
         return true;
     }
 
