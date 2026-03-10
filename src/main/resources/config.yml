@@ -1,31 +1,34 @@
-# GardenCore Configuration
+# ──────────────────────────────────────────────
+#  GardenCore  —  Main Configuration
+# ──────────────────────────────────────────────
+
+# Prefix shown before every plugin message.
 prefix: "&#28CA75&lG&#2BC66B&lA&#2EC262&lR&#31BD58&lD&#34B94F&lE&#37B545&lN &7➠&r"
 
+# ── Features ───────────────────────────────────
+# Set any feature to false to disable it server-wide.
 features:
-  no-drop: true
-  no-fall-damage: true
-  no-hunger: true
-  no-block-drops: true
-  no-non-crop-break: true
+  no-drop: true            # Prevents players from dropping items
+  no-fall-damage: true     # Disables fall damage
+  no-hunger: true          # Freezes the hunger bar
+  no-block-drops: true     # Crops don't drop physical items when broken
+  no-non-crop-break: true  # Players can only break registered crop blocks
 
-  # It's advised you do NOT change any of the values below to false,
-  # if you don't 100% know what you are doing! (This can break the whole plugin)
-  instant-replant: true
-  alias-commands: true
-  fiber-currency: true
-  leveling: true
-  crop-farming: true
-  material-drops: true
-  multipliers: true
-  upgrades: true
-  events: true
+# Do not change any of the features below if you don't know what you are doing.
+# You might break the whole plugin if you change something here.
+  instant-replant: true    # Crops respawn automatically after being broken
+  alias-commands: true     # Register custom command aliases (see aliascommands.yml)
+  crop-farming: true       # Core farming loop — earn fiber by breaking crops
+  material-drops: true     # Crops have a chance to drop crafting materials
+  multipliers: true        # Multiplier system (upgrades, research, elder, events)
+  upgrades: true           # /upgrade command and upgrade GUI
+  events: true             # Scheduled and manual bonus events
 
+# ── Events ─────────────────────────────────────
 events:
-  # Interval in minutes between random events
-  interval-minutes: 30
-  # Duration of each event in minutes
-  duration-minutes: 5
+  interval-minutes: 30   # How often a random event starts automatically
+  duration-minutes: 5    # How long each event lasts
 
+# ── Leveling ───────────────────────────────────
 broadcast:
-  # Every X levels a broadcast is sent (default 10)
-  level-milestone: 10
+  level-milestone: 10    # Broadcast to all players every X levels (e.g. every 10 levels)

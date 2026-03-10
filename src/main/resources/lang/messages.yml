@@ -1,77 +1,83 @@
-# GardenCore Messages
-# Supports legacy color codes (&a, &c, &l etc.) and hex codes (&#FFFFFF)
+# ──────────────────────────────────────────────
+#  GardenCore  —  Messages
+#  Color codes: &a &c &l etc.  Hex: &#RRGGBB
+# ──────────────────────────────────────────────
 
 no-permission: "&cYou don't have permission to use this command."
 player-not-found: "&cPlayer &e{player} &cwas not found."
 invalid-number: "&cPlease enter a valid number."
 invalid-arguments: "&cInvalid arguments. Usage: &e{usage}"
+command-player-only: "&cThis command can only be used by players."
 command-console-only: "&cThis command cannot be used from the console."
 
+# ── Fiber ──────────────────────────────────────
 fiber:
-  set: "&7Fiber for &e{player} &7set to &a{amount}&7."
+  set:  "&7Fiber for &e{player} &7set to &a{amount}&7."
   give: "&7Given &a{amount} &7Fiber to &e{player}&7."
   take: "&7Taken &a{amount} &7Fiber from &e{player}&7."
-
-  # Title shown when a player harvests a crop. {amount} is K/M/B/T formatted.
-  harvest-title: "&#698763+{amount} Fiber"
-  # Subtitle shown below the harvest title. Leave empty for no subtitle.
+  # Title shown on-screen when a crop is harvested. {amount} is auto-formatted (e.g. 6.84M).
+  harvest-title:    "&#698763+{amount} Fiber"
   harvest-subtitle: ""
 
-# Action bar message shown when a player finds a material. Placeholders: {amount}, {material}
+# ── Materials ──────────────────────────────────
 material:
-  found-actionbar: "&c&lMATERIAL: &#698763+{amount} &r{material}"
+  # Action bar shown when a material drops. Placeholders: {amount}, {material}
+  found-actionbar: "&c&lMATERIAL FOUND! &#698763+{amount} &r{material}"
 
+# ── Upgrades ───────────────────────────────────
 upgrades:
-  max-reached: "&cYou've already reached the maximum level for this upgrade!"
+  max-reached:      "&cYou've already reached the maximum level for this upgrade!"
   not-enough-fiber: "&cYou don't have enough Fiber!"
-  set: "&7Upgrade &e{upgrade} &7for &e{player} &7set to level &a{level}&7."
-  reset-upgrades: "&7Upgrades for &e{player} &7have been reset."
-  reset-fiber: "&7Fiber for &e{player} &7has been reset."
-  reset-all: "&7All data for &e{player} &7has been reset."
+  set:              "&7Upgrade &e{upgrade} &7for &e{player} &7set to level &a{level}&7."
+  reset-upgrades:   "&7Upgrades for &e{player} &7have been reset."
+  reset-fiber:      "&7Fiber for &e{player} &7has been reset."
+  reset-all:        "&7All data for &e{player} &7has been reset."
 
+# ── Leveling ───────────────────────────────────
 level:
   broadcast: "&#a8ff78&l✦ &e{player} &7has reached &a&lLevel {level}&7!"
 
+# ── Events ─────────────────────────────────────
 events:
-  start: "&#FFD700&l⚡ Event Started! &e{event} &7is now active for &a5 minutes&7!"
-  end: "&#FF6B6B&l✦ Event Ended! &7The event &e{event} &7has concluded."
-  bossbar-none: "&#a8ff78Current Event: &fNone"
-  bossbar-active: "&#FFD700⚡ Event: &f{event} &7| &eTime Left: &f{time}s"
+  start:          "&#FFD700&l⚡ Event Started! &e{event} &7is now active!"
+  end:            "&#FF6B6B&l✦ Event Ended! &7The &e{event} &7event has concluded."
+  bossbar-none:   "&#a8ff78Current Event: &fNone"
+  bossbar-active: "&#FFD700⚡ Event: &f{event} &7| &eEnds in: &f{time}s"
 
-admin:
-  reset-confirm-title: "&c&lConfirm Reset"
-  reset-confirm-lore: "&7Click to confirm the reset."
-  reset-cancel-lore: "&7Click to cancel."
-  reset-material: "&7Materials for &e{player} &7have been reset."
-  reset-research: "&7Research progress for &e{player} &7has been reset."
-  reset-elder: "&7Elder perks for &e{player} &7have been reset."
-
-alias:
-  not-found: "&cAlias command not found."
-
+# ── Crops ──────────────────────────────────────
 crop:
   level-required: "&cYou need Level &e{level} &cto farm &e{crop}&c!"
 
+# ── Research ───────────────────────────────────
 research:
-  started: "&#FFD700Research started! &7Come back in &f{time}&7."
-  completed: "&#a8ff78Research complete! &7You now have &f+{fiber_multi}x Fiber &7and &f+{material_multi}x Material&7."
-  cancelled: "&#ff7a7aResearch cancelled."
-  already-active: "&#ff7a7aYou already have a research in progress!"
+  started:           "&#FFD700Research started! &7Come back in &f{time}&7."
+  completed:         "&#a8ff78Research complete! &7New bonuses: &f+{fiber_multi}x Fiber &7and &f+{material_multi}x Material&7."
+  cancelled:         "&#ff7a7aResearch cancelled."
+  already-active:    "&#ff7a7aYou already have a research in progress!"
   already-completed: "&#ff7a7aYou have already completed this research."
-  locked: "&#ff7a7aComplete the previous research first."
-  not-enough-fiber: "&cYou need &e{cost} Fiber &cto start this research. You only have &e{balance}&c."
+  locked:            "&#ff7a7aComplete the previous research first."
+  not-enough-fiber:  "&cYou need &e{cost} Fiber &cto start this. You only have &e{balance}&c."
 
+# ── Islands ────────────────────────────────────
 islands:
   level-required: "&cYou need Level &e{level} &cto travel to this island!"
 
+# ── Elder Council ──────────────────────────────
+# {bonus} is a multiplier value (e.g. "+100x" at level 1 of Fiber Amount)
 elder:
-  # {bonus} is in multiplier units (e.g. +100x at level 1 for fiber_amount)
-  purchased: "&#d4a8ff&l⚗ Elder Perk! &7{perk} is now level &d{level}&7! Total bonus: &#a8ff78+{bonus}x&7."
-  max-reached: "&#ff7a7a{perk} is already fully upgraded!"
-  not-enough-fiber: "&cYou don't have enough Fiber for this perk!"
+  purchased:            "&#d4a8ff&l⚗ Elder Perk! &7{perk} is now level &d{level}&7! Total bonus: &#a8ff78+{bonus}x&7."
+  max-reached:          "&#ff7a7a{perk} is already fully upgraded!"
+  not-enough-fiber:     "&cYou don't have enough Fiber for this perk!"
   not-enough-driftwood: "&cYou don't have enough Driftwood for this perk!"
-  not-enough-moss: "&cYou don't have enough Moss for this perk!"
-  not-enough-reed: "&cYou don't have enough Reed for this perk!"
-  not-enough-clover: "&cYou don't have enough Clover for this perk!"
+  not-enough-moss:      "&cYou don't have enough Moss for this perk!"
+  not-enough-reed:      "&cYou don't have enough Reed for this perk!"
+  not-enough-clover:    "&cYou don't have enough Clover for this perk!"
 
-command-player-only: "&cThis command can only be used by players."
+# ── Admin ──────────────────────────────────────
+admin:
+  reset-confirm-title: "&c&lConfirm Reset"
+  reset-confirm-lore:  "&7Click to confirm the reset."
+  reset-cancel-lore:   "&7Click to cancel."
+  reset-material:      "&7Materials for &e{player} &7have been reset."
+  reset-research:      "&7Research progress for &e{player} &7has been reset."
+  reset-elder:         "&7Elder perks for &e{player} &7have been reset."

@@ -1,32 +1,37 @@
-# GardenCore Elder Menu Configuration
+# ──────────────────────────────────────────────
+#  GardenCore  —  Elder Council Menu
+# ──────────────────────────────────────────────
+# Elder perks are permanent endgame upgrades that cost both
+# Fiber and crafting materials. Each level gives a flat multiplier bonus.
 #
-# ── Philosophy ────────────────────────────────────────────────────────────────
-# Elder is the long-term endgame grind. Each level gives a flat, readable
-# bonus that players immediately understand. The cost curve grows steeply
-# so maxing Elder takes hundreds of hours — it is THE prestige goal.
+# Cost formula per level:  round( <material>-base × level^<material>-exponent )
+#   A base of 0 means that material is NOT required for that perk.
 #
-# ── fiber_amount: 200 levels, flat +100x per level ───────────────────────────
-#   Every single level adds exactly +100x to the fiber multiplier.
-#   L1: +100x  L10: +1,000x  L50: +5,000x  L100: +10,000x  L200: +20,000x
-#   Cost = 500 × level^2.2
-#   L1: 500    L10: 79K    L50: 2.73M    L100: 12.6M    L200: 57.7M
-#   Total all 200 levels ≈ 3,636M fiber
-#
-# ── Total max multiplier (all systems fully maxed) ───────────────────────────
-#   Base 1 + Upgrades 5,000 + Research 14,000 + Elder 20,000 = 39,001x
-#   Displayed as "x39K" — Firefly Bush gives "+9.75M Fiber" per break ✓
-# ─────────────────────────────────────────────────────────────────────────────
+# Lore placeholders:
+#   {level}          Current perk level
+#   {max_level}      Maximum perk level
+#   {bonus}          Total bonus at current level (multiplier units, e.g. 300 = +300x)
+#   {next_bonus}     Bonus added by the next level
+#   {fiber_cost}     Fiber cost for the next level
+#   {driftwood_cost} Driftwood cost (shows 0 if not required)
+#   {moss_cost}      Moss cost
+#   {reed_cost}      Reed cost
+#   {clover_cost}    Clover cost
+#   {has_fiber}      ✔ or ✘ depending on whether the player can afford fiber
+#   {has_driftwood}  ✔ or ✘
+#   {has_moss}       ✔ or ✘
+#   {has_reed}       ✔ or ✘
+#   {has_clover}     ✔ or ✘
+# ──────────────────────────────────────────────
 
 elder-menu:
-  title: "&8Elder Menu"
+  title: "&8Elder Council"
   size: 36
 
   filler:
     material: GRAY_STAINED_GLASS_PANE
-
   top-border:
     material: PURPLE_STAINED_GLASS_PANE
-
   border:
     material: BLACK_STAINED_GLASS_PANE
 
@@ -36,18 +41,10 @@ elder-menu:
     name: "&#d4a8ff&l⚗ Elder Council"
     lore:
       - ""
-      - "&7Spend &fMaterials &7and &fFiber"
-      - "&7for massive permanent bonuses."
-      - ""
-      - "&8Fiber Amount  · Material Amount"
-      - "&8XP Gain       · Material Chance"
+      - "&7Spend &fFiber &7and &fMaterials &7for"
+      - "&7permanent multiplier bonuses."
 
-  # ── Perk item templates ────────────────────────────────────────────────────
-  # Placeholders: {perk}, {level}, {max_level}, {bonus}, {next_bonus}
-  #   {fiber_cost}, {driftwood_cost}, {moss_cost}, {reed_cost}, {clover_cost}
-  #   {has_fiber}, {has_driftwood}, {has_moss}, {has_reed}, {has_clover}
-  #   {has_*} → &#a8ff78✔  or  &#ff7a7a✘
-
+  # ── Perk item templates ────────────────────────
   perk-name:       "&#d4a8ff&l{perk}"
   perk-name-maxed: "&#d4a8ff&l{perk} &#a8ff78[MAX]"
 
@@ -55,9 +52,9 @@ elder-menu:
     - ""
     - "&7Level: &#d4a8ff{level}&7/&#d4a8ff{max_level}"
     - "&7Current Bonus: &#a8ff78+{bonus}x"
-    - "&7Next Level Adds: &#FFD700+{next_bonus}x"
+    - "&7Next Level:    &#FFD700+{next_bonus}x"
     - ""
-    - "&8── Cost to upgrade ──"
+    - "&8─── Upgrade Cost ───"
     - "&7Fiber:     {has_fiber} &#FFD700{fiber_cost}"
     - "&7Driftwood: {has_driftwood} &#C4A882{driftwood_cost}"
     - "&7Moss:      {has_moss} &#5A8A3C{moss_cost}"
@@ -73,6 +70,7 @@ elder-menu:
     - ""
     - "&#a8ff78✔ Fully upgraded!"
 
+  # ── Resource display ───────────────────────────
   info:
     slot: 31
     material: AMETHYST_SHARD
@@ -90,21 +88,20 @@ elder-menu:
     material: BARRIER
     name: "&#ff7a7a&lClose"
     lore:
-      - "&7Click to close this menu."
+      - "&7Click to close."
 
-  # ══════════════════════════════════════════════════════════════════════════════
-  # Perk definitions
-  # ══════════════════════════════════════════════════════════════════════════════
+  # ════════════════════════════════════════════════
+  #  Perk Definitions
+  #  Cost formula: round( <mat>-base × level^<mat>-exponent )
+  #  bonus-per-level is in multiplier units (e.g. 100.0 = +100x per level)
+  # ════════════════════════════════════════════════
 
   perks:
 
-    # ── Fiber Amount ──────────────────────────────────────────────────────────
-    # 200 levels, flat +100x per level = +20,000x total
-    # Every purchase: player sees exactly "+100x added to multiplier" — clean & satisfying
-    # Cost = 500 × level^2.2  (same curve as Material Chance upgrade)
-    #   L1: 500   L10: 79K   L50: 2.73M   L100: 12.6M   L200: 57.7M
-    # Driftwood cost = 5 × level^1.5
-    #   L1: 5   L10: 158   L50: 1,768   L100: 5,000   L200: 14,142
+    # ── Fiber Amount ────────────────────────────
+    # 200 levels · +100x per level · max +20,000x total
+    # Fiber cost  = 500  × level^2.2   (L1: 500,  L50: 2.73M, L200: 57.7M)
+    # Driftwood   = 5    × level^1.5   (L1: 5,    L50: 1,768, L200: 14,142)
     fiber_amount:
       slot: 10
       max-level: 200
@@ -120,10 +117,12 @@ elder-menu:
       clover-base: 0
       clover-exponent: 0.0
 
-    # ── Material Amount ────────────────────────────────────────────────────────
-    # 100 levels, flat +10x per level = +1,000x total
-    # Cost = 200 × level^2.0
-    #   L1: 200   L10: 20K   L50: 500K   L100: 2M
+    # ── Material Amount ─────────────────────────
+    # 100 levels · +10x per level · max +1,000x total
+    # Fiber cost  = 200  × level^2.0
+    # Driftwood   = 10   × level^1.3
+    # Moss        = 5    × level^1.3
+    # Reed        = 2    × level^1.3
     material_amount:
       slot: 12
       max-level: 100
@@ -139,9 +138,13 @@ elder-menu:
       clover-base: 0
       clover-exponent: 0.0
 
-    # ── XP Gain ───────────────────────────────────────────────────────────────
-    # 50 levels, flat +5x per level = +250x total
-    # Cost = 100 × level^2.0
+    # ── XP Gain ─────────────────────────────────
+    # 50 levels · +5x per level · max +250x XP multiplier
+    # Fiber cost  = 100  × level^2.0
+    # Driftwood   = 5    × level^1.2
+    # Moss        = 3    × level^1.2
+    # Reed        = 1    × level^1.2
+    # Clover      = 1    × level^1.1
     xp_gain:
       slot: 14
       max-level: 50
@@ -157,13 +160,14 @@ elder-menu:
       clover-base: 1
       clover-exponent: 1.1
 
-    # ── Material Chance ────────────────────────────────────────────────────────
-    # 25 levels, flat +0.1x per level = +2.5x total
-    # Combined with upgrade max (+2x): total chance multi ≈ 5.5x
-    # Driftwood 5% × 5.5x = 27.5% max — still not every break ✓
-    # Clover 0.1% × 5.5x = 0.55% — very rare ✓
-    # Very expensive: prestige sink
-    # Cost = 5000 × level^2.2
+    # ── Material Chance ─────────────────────────
+    # 25 levels · +0.1x per level · max +2.5x chance multiplier
+    # Very expensive — prestige sink
+    # Fiber cost  = 5000 × level^2.2
+    # Driftwood   = 100  × level^1.5
+    # Moss        = 50   × level^1.5
+    # Reed        = 20   × level^1.5
+    # Clover      = 5    × level^1.5
     material_chance:
       slot: 16
       max-level: 25

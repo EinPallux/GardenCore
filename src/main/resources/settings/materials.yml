@@ -1,24 +1,34 @@
-# GardenCore Materials Configuration
-# Chances are in percentage (0.0 - 100.0)
-# Driftwood is most common, Clover is most rare.
+# ──────────────────────────────────────────────
+#  GardenCore  —  Materials
+# ──────────────────────────────────────────────
+# Materials drop randomly when a player breaks a crop.
+# The actual drop chance and amount are scaled by the player's
+# Material Chance and Material Amount multipliers respectively.
+#
+# Per material:
+#   display-name: Name shown in action bar / GUI
+#   drop-chance:  Base percentage chance to drop per crop break (0.0 – 100.0)
+#   base-amount:  Base quantity dropped when the roll succeeds
+# ──────────────────────────────────────────────
 
 materials:
+
   driftwood:
     display-name: "&#C4A882Driftwood"
     drop-chance: 5.0
     base-amount: 1
 
   moss:
-    display-name: "&#5A8A3C Moss"
+    display-name: "&#5A8A3CMoss"
     drop-chance: 2.5
     base-amount: 1
 
   reed:
-    display-name: "&#8BC34A Reed"
+    display-name: "&#8BC34AReed"
     drop-chance: 1.0
     base-amount: 1
 
   clover:
-    display-name: "&#2E7D32 Clover"
+    display-name: "&#2E7D32Clover"
     drop-chance: 0.1
     base-amount: 1

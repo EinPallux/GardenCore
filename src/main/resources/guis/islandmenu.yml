@@ -1,19 +1,23 @@
-# GardenCore Island Menu Configuration
-# Color codes: &a, &c, &#FFFFFF etc.
+# ──────────────────────────────────────────────
+#  GardenCore  —  Island Menu  (/islands)
+# ──────────────────────────────────────────────
+# Each island button teleports a player to a warp (or runs any command).
+# Locked islands show a different appearance until the player meets the
+# required level.
 #
-# Each island button supports:
-#   slot:            Inventory slot (0–26 for a 27-slot GUI)
-#   material:        Material shown when the island is UNLOCKED
-#   locked-material: (optional) Override the root locked-material for this button only
-#   name:            Display name when unlocked (color codes supported)
-#   lore:            Lore lines when unlocked. Placeholder: {level_required}
-#   command:         Command executed AS the player on click (without leading /)
-#   level-required:  Minimum player level needed to travel here
+# Per island:
+#   slot:           Inventory slot
+#   material:       Item shown when the island is unlocked
+#   name:           Display name when unlocked
+#   lore:           Lore when unlocked. Placeholder: {level_required}
+#   command:        Command run as the player on click (no leading /)
+#   level-required: Minimum player level to use this island
 #
-# Root-level locked display settings apply to ALL locked buttons unless overridden:
-#   locked-material: Material used for every locked button
-#   locked-name:     Name template — {name} is replaced with the island's display name (stripped of color)
-#   locked-lore:     Lore lines for locked buttons. Placeholder: {level_required}
+# Root-level locked settings apply to all locked buttons:
+#   locked-material: Item shown when locked
+#   locked-name:     Name template — {name} is replaced with the island's name
+#   locked-lore:     Lore when locked. Placeholder: {level_required}
+# ──────────────────────────────────────────────
 
 island-menu:
   title: "&8Island Menu"
@@ -22,7 +26,6 @@ island-menu:
   filler:
     material: GRAY_STAINED_GLASS_PANE
 
-  # Default appearance for locked island buttons
   locked-material: BLACK_STAINED_GLASS_PANE
   locked-name: "&#ff7a7a&l{name} &7[Locked]"
   locked-lore:
@@ -30,12 +33,14 @@ island-menu:
     - "&#ff7a7a✖ Requires Level {level_required}"
     - "&7Keep farming to unlock this island!"
 
-  # ── Island buttons ──────────────────────────────────────────
   islands:
+
     plains:
       slot: 10
       material: LIME_STAINED_GLASS_PANE
       name: "&#a8ff78&lPlains"
+      command: "warp plains"
+      level-required: 1
       lore:
         - ""
         - "&7A peaceful meadow filled"
@@ -44,28 +49,28 @@ island-menu:
         - "&7Required Level: &#a8ff78{level_required}"
         - ""
         - "&#a8ff78▶ Click to travel!"
-      command: "warp plains"
-      level-required: 1
 
     savanna:
       slot: 11
       material: YELLOW_STAINED_GLASS_PANE
       name: "&#FFD700&lSavanna"
+      command: "warp savanna"
+      level-required: 10
       lore:
         - ""
-        - "&7A dry, golden savanna"
+        - "&7A dry golden savanna"
         - "&7teeming with tough plants."
         - ""
         - "&7Required Level: &#FFD700{level_required}"
         - ""
         - "&#FFD700▶ Click to travel!"
-      command: "warp savanna"
-      level-required: 10
 
     flowerfield:
       slot: 12
       material: PINK_STAINED_GLASS_PANE
       name: "&#FFB6C1&lFlower Field"
+      command: "warp flowerfield"
+      level-required: 75
       lore:
         - ""
         - "&7A colourful field bursting"
@@ -74,28 +79,28 @@ island-menu:
         - "&7Required Level: &#FFB6C1{level_required}"
         - ""
         - "&#FFB6C1▶ Click to travel!"
-      command: "warp flowerfield"
-      level-required: 75
 
     netherforest:
       slot: 13
       material: RED_STAINED_GLASS_PANE
       name: "&#FF6B6B&lNether Forest"
+      command: "warp netherforest"
+      level-required: 200
       lore:
         - ""
         - "&7A blazing nether forest"
-        - "&7with all kinds of fungi."
+        - "&7full of exotic fungi."
         - ""
         - "&7Required Level: &#FF6B6B{level_required}"
         - ""
         - "&#FF6B6B▶ Click to travel!"
-      command: "warp netherforest"
-      level-required: 200
 
     coralreef:
       slot: 14
       material: BLUE_STAINED_GLASS_PANE
       name: "&#C4A882&lCoral Reef"
+      command: "warp coralreef"
+      level-required: 400
       lore:
         - ""
         - "&7A vibrant underwater reef"
@@ -104,37 +109,33 @@ island-menu:
         - "&7Required Level: &#C4A882{level_required}"
         - ""
         - "&#C4A882▶ Click to travel!"
-      command: "warp coralreef"
-      level-required: 400
 
     mysticforest:
       slot: 15
       material: BROWN_STAINED_GLASS_PANE
       name: "&#78c8ff&lMystic Forest"
+      command: "warp mysticforest"
+      level-required: 1000
       lore:
         - ""
-        - "&7A mysterious glowing crop"
-        - "&7what could it hide?"
+        - "&7A mysterious glowing forest."
+        - "&7What could it hide?"
         - ""
         - "&7Required Level: &#78c8ff{level_required}"
         - ""
         - "&#78c8ff▶ Click to travel!"
-      command: "warp mysticforest"
-      level-required: 1000
-
-  # ── Placeholder slots (gray dye = coming soon) ──────────────
-  placeholders:
-    - slot: 16
 
   placeholder-item:
     material: GRAY_DYE
     name: "&8???"
     lore: []
 
-  # ── Close button ─────────────────────────────────────────────
+  placeholders:
+    - slot: 16
+
   close-button:
     slot: 22
     material: BARRIER
-    name: "&#ff7a7a&lClose Menu"
+    name: "&#ff7a7a&lClose"
     lore:
-      - "&7Click to close this menu."
+      - "&7Click to close."

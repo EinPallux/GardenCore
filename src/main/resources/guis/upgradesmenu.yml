@@ -1,21 +1,23 @@
-# GardenCore GUI — Upgrades Menu
-# Placeholders: {level}, {max_level}, {cost}, {value}
-#
-# ── Balance summary ──────────────────────────────────────────────────────────
-# Crop Cooldown:    8 levels · 1.0s → 0.2s    · cost = 200  × level^1.9
-# Fiber Amount:   200 levels · +25x each       · cost = 50   × level^1.9   (total 82M)
-# Material Amount:100 levels · +0.15x each     · cost = 150  × level^1.9   (total 33M)
-# Material Chance: 50 levels · +0.04x each     · cost = 500  × level^2.2   (total 44M)
-# ─────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────
+#  GardenCore  —  Upgrades Menu
+# ──────────────────────────────────────────────
+# Lore placeholders:
+#   {level}     Current upgrade level
+#   {max_level} Maximum upgrade level
+#   {cost}      Fiber cost for the next level
+#   {value}     Current effective value (multiplier or cooldown)
+# ──────────────────────────────────────────────
 
 upgrade-gui:
-  title: "&8Upgrades Menu"
+  title: "&8Upgrades"
   size: 27
+
   filler:
     enabled: true
     material: GRAY_STAINED_GLASS_PANE
 
   upgrades:
+
     crop_cooldown:
       slot: 10
       material: CLOCK
@@ -23,10 +25,10 @@ upgrade-gui:
       lore:
         - "&7Level: &e{level}&7/&e{max_level}"
         - "&7Current Cooldown: &a{value}s"
-        - "&7Cost: &e{cost} &7Fiber"
+        - "&7Next Level Cost: &e{cost} Fiber"
         - ""
-        - "&7Base: &f1.0s &7→ Min: &f0.2s"
-        - "&7(&f-0.1s &7per level, 8 levels)"
+        - "&7Reduces harvest cooldown by &f0.1s &7per level."
+        - "&7Base: &f1.0s &8→ &7Min: &f0.2s &8(8 levels)"
         - ""
         - "&aClick to upgrade!"
 
@@ -37,10 +39,10 @@ upgrade-gui:
       lore:
         - "&7Level: &e{level}&7/&e{max_level}"
         - "&7Multiplier: &a{value}"
-        - "&7Cost: &e{cost} &7Fiber"
+        - "&7Next Level Cost: &e{cost} Fiber"
         - ""
-        - "&7+&f25x &7per level · 200 levels · max &f+5,000x"
-        - "&8Research & Elder add thousands more!"
+        - "&7Adds &f+25x &7to your fiber multiplier per level."
+        - "&8Max: +5,000x (200 levels)"
         - ""
         - "&aClick to upgrade!"
 
@@ -51,9 +53,10 @@ upgrade-gui:
       lore:
         - "&7Level: &e{level}&7/&e{max_level}"
         - "&7Multiplier: &a{value}"
-        - "&7Cost: &e{cost} &7Fiber"
+        - "&7Next Level Cost: &e{cost} Fiber"
         - ""
-        - "&7+&f0.15x &7per level · 100 levels · max &f+15x"
+        - "&7Adds &f+0.15x &7to your material amount multiplier per level."
+        - "&8Max: +15x (100 levels)"
         - ""
         - "&aClick to upgrade!"
 
@@ -64,9 +67,9 @@ upgrade-gui:
       lore:
         - "&7Level: &e{level}&7/&e{max_level}"
         - "&7Multiplier: &a{value}"
-        - "&7Cost: &e{cost} &7Fiber"
+        - "&7Next Level Cost: &e{cost} Fiber"
         - ""
-        - "&7+&f0.04x &7per level · 50 levels · max &f+2x"
-        - "&8Materials won't drop every break."
+        - "&7Adds &f+0.04x &7to your material drop chance per level."
+        - "&8Max: +2x (50 levels)"
         - ""
         - "&aClick to upgrade!"

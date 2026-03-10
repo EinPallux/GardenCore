@@ -1,12 +1,25 @@
-# GardenCore Garden Menu Configuration
-# Color codes: &a, &c, &#FFFFFF etc.
-# Player head lore placeholders:
-#   {player}, {level}, {xp},
-#   {fiber}, {fiber_raw},
-#   {multi_fiber}, {multi_material}, {multi_material_chance},
-#   {upgrade_fiber}, {upgrade_material}, {upgrade_material_chance}, {upgrade_cooldown},
-#   {research_completed}, {research_active},
-#   {driftwood}, {moss}, {reed}, {clover}
+# ──────────────────────────────────────────────
+#  GardenCore  —  Garden Main Menu  (/garden)
+# ──────────────────────────────────────────────
+# Player-head lore placeholders:
+#   {player}               Player name
+#   {level}                Player level
+#   {xp}                   XP progress as a percentage
+#   {fiber}                Formatted fiber balance
+#   {multi_fiber}          Total fiber multiplier
+#   {multi_material}       Total material amount multiplier
+#   {multi_material_chance} Total material chance multiplier
+#   {upgrade_fiber}        Fiber Amount upgrade level
+#   {upgrade_material}     Material Amount upgrade level
+#   {upgrade_material_chance} Material Chance upgrade level
+#   {upgrade_cooldown}     Crop Cooldown upgrade level
+#   {research_completed}   Number of completed researches
+#   {research_active}      Active research name + time remaining, or "None"
+#   {driftwood} {moss} {reed} {clover}  Material balances
+#
+# Button commands run as the player (without leading /).
+# Use {player} in the command string if needed.
+# ──────────────────────────────────────────────
 
 garden-menu:
   title: "&8Garden Menu"
@@ -15,37 +28,33 @@ garden-menu:
   filler:
     material: GRAY_STAINED_GLASS_PANE
 
-  # Player head - slot 4, top center
   player-head:
     slot: 4
     name: "&#a8ff78&l{player}'s Stats"
     lore:
       - ""
-      - "&8--- &7Economy &8---"
+      - "&8─── Economy ───"
       - "&7Fiber: &#FFD700{fiber}"
       - ""
-      - "&8--- &7Progress &8---"
+      - "&8─── Progress ───"
       - "&7Level: &#a8ff78{level}"
-      - "&7XP: &f{xp}"
+      - "&7XP:    &f{xp}"
       - ""
-      - "&8--- &7Multipliers &8---"
-      - "&7Fiber Amount: &#FFD700{multi_fiber}"
-      - "&7Material Amount: &#a8ff78{multi_material}"
-      - "&7Material Chance: &#78c8ff{multi_material_chance}"
+      - "&8─── Multipliers ───"
+      - "&7Fiber Amount:     &#FFD700{multi_fiber}"
+      - "&7Material Amount:  &#a8ff78{multi_material}"
+      - "&7Material Chance:  &#78c8ff{multi_material_chance}"
       - ""
-      - "&8--- &7Research &8---"
+      - "&8─── Research ───"
       - "&7Completed: &#a8ff78{research_completed}"
-      - "&7Active: &f{research_active}"
+      - "&7Active:    &f{research_active}"
       - ""
-      - "&8--- &7Materials &8---"
+      - "&8─── Materials ───"
       - "&7Driftwood: &f{driftwood}"
-      - "&7Moss: &f{moss}"
-      - "&7Reed: &f{reed}"
-      - "&7Clover: &f{clover}"
+      - "&7Moss:      &f{moss}"
+      - "&7Reed:      &f{reed}"
+      - "&7Clover:    &f{clover}"
 
-  # Feature buttons
-  # command: the command executed as the player when the button is clicked (without leading /)
-  # Add as many buttons as you like — any slot, any command.
   buttons:
     upgrades:
       slot: 19
@@ -53,8 +62,8 @@ garden-menu:
       name: "&#FFD700&lUpgrades"
       command: "upgrade"
       lore:
-        - "&7View and purchase"
-        - "&7upgrades for your garden."
+        - "&7Purchase upgrades to increase"
+        - "&7your fiber and material gains."
         - ""
         - "&eClick to open!"
 
@@ -64,8 +73,8 @@ garden-menu:
       name: "&#a8ff78&lResearch"
       command: "research"
       lore:
-        - "&7Unlock permanent multipliers"
-        - "&7through research."
+        - "&7Unlock permanent multiplier"
+        - "&7bonuses through research."
         - ""
         - "&eClick to open!"
 
@@ -75,8 +84,8 @@ garden-menu:
       name: "&#d4a8ff&lElder Council"
       command: "elder"
       lore:
-        - "&7Spend materials and fiber"
-        - "&7on permanent Elder perks."
+        - "&7Spend materials and fiber on"
+        - "&7powerful permanent perks."
         - ""
         - "&eClick to open!"
 
@@ -86,12 +95,17 @@ garden-menu:
       name: "&a&lIslands"
       command: "islands"
       lore:
-        - "&7Teleport around different islands"
-        - "&7for better crops."
+        - "&7Travel to different islands"
+        - "&7to farm better crops."
         - ""
         - "&eClick to open!"
 
-  # Placeholder items for future features (gray dye)
+  # Placeholder items (shown as "???" for future features)
+  placeholder-item:
+    material: GRAY_DYE
+    name: "&8???"
+    lore: []
+
   placeholders:
     - slot: 22
     - slot: 23
@@ -104,15 +118,9 @@ garden-menu:
     - slot: 32
     - slot: 33
 
-  placeholder-item:
-    material: GRAY_DYE
-    name: "&8???"
-    lore: []
-
-  # Close button
   close-button:
     slot: 49
     material: BARRIER
-    name: "&#ff7a7a&lClose Menu"
+    name: "&#ff7a7a&lClose"
     lore:
-      - "&7Click to close this menu."
+      - "&7Click to close."

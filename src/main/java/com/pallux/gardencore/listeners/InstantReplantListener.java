@@ -24,10 +24,13 @@ public class InstantReplantListener implements Listener {
 
         Block block = event.getBlock();
         Material type = block.getType();
-
         if (!plugin.getCropManager().isCrop(type)) return;
 
-        long delayTicks = Math.round(plugin.getConfigManager().getCrops().getDouble("crop-cooldown", 0.1) * 20);
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> block.setType(type), Math.max(1, delayTicks));
+        double delaySecs = plugin.getConfigManager().getCrops()
+                .getDouble("replant-delay", 1.0);
+        long delayTicks = Math.max(1, Math.round(delaySecs * 20));
+
+        plugin.getServer().getScheduler().runTaskLater(plugin,
+                () -> block.setType(type), delayTicks);
     }
 }

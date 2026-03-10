@@ -1,91 +1,94 @@
-# GardenCore Research Configuration
+# ──────────────────────────────────────────────
+#  GardenCore  —  Research Menu
+# ──────────────────────────────────────────────
+# Research is a sequential unlock system. Players start one research
+# at a time, wait for it to complete, then unlock the next.
+# Every completed research adds a flat bonus to the player's multipliers.
 #
-# ── Philosophy ────────────────────────────────────────────────────────────────
-# Every research gives a flat +500x fiber multiplier bonus.
-# Costs grow exponentially so early researches feel fast and rewarding,
-# while the final few require serious late-game fiber income.
+# Cost formula:  base-cost × cost-growth^(research index, 0-based)
+#   Research 1  =    500 Fiber
+#   Research 5  =  2,210 Fiber
+#   Research 10 = 14,167 Fiber
+#   Research 28 = ~11.4M Fiber
 #
-# Bonus per research: flat +500x each → all 28 completed = +14,000x total
+# Duration formula: base-duration-minutes × research number (1-based)
+#   Research 1  =  10 min
+#   Research 10 = 100 min
+#   Research 28 = 280 min (~4h 40m)
 #
-# Cost formula: 500 × 1.45^(index)
-#   R1  =       500 fiber    R5  =     2,210 fiber
-#   R10 =    14,167 fiber    R14 =    62,626 fiber
-#   R20 =   582,052 fiber    R25 = 3,730,801 fiber
-#   R28 = 11,373,813 fiber   (~11.4M for the last one)
-#   Total all 28 ≈ 36.6M fiber
-# ─────────────────────────────────────────────────────────────────────────────
+# Lore placeholders:
+#   {fiber_multi}    Cumulative fiber multiplier bonus after this research
+#   {material_multi} Cumulative material multiplier bonus after this research
+#   {cost}           Fiber cost for this research
+#   {time}           Total research duration
+#   {time_remaining} Time remaining on the active research
+# ──────────────────────────────────────────────
 
 research:
-  gui-title: "&8Research Menu"
+  gui-title: "&8Research"
 
   total-researches: 28
 
-  # R1 = 10min, R2 = 20min ... R28 = 280min (4h 40m)
+  # Duration: base × research-number (minutes)
   base-duration-minutes: 10
 
-  # Exponential cost: base-cost × cost-growth^(researchIndex)
+  # Cost: base-cost × cost-growth^index
   base-cost: 500
   cost-growth: 1.45
 
-  # Each completed research adds this flat value to the fiber multiplier.
-  # +500x per research × 28 researches = +14,000x total.
+  # Flat bonus added to multipliers per completed research
   fiber-amount-per-research: 500.0
   material-amount-per-research: 1.0
 
-  # Legacy fields kept for compatibility
-  fiber-amount-base: 500.0
-  fiber-amount-exponent: 0.0
-
-  # ── State display names ────────────────────────────────────────────────────
+  # ── Item display names ─────────────────────────
   name-completed:   "&#a8ff78&l{name} &7[Completed]"
-  name-ready:       "&#FFD700&l{name} &e[Click to Research]"
+  name-ready:       "&#FFD700&l{name} &e[Click to Start]"
   name-in-progress: "&#FFD700&l{name} &e[In Progress]"
   name-locked:      "&#ff7a7a&l{name} &7[Locked]"
 
-  # Placeholders supported by the plugin: {fiber_multi}, {material_multi},
-  #   {time}, {time_remaining}, {cost}
-  # {fiber_multi} = cumulative fiber bonus AFTER this research completes.
+  # ── Lore templates ─────────────────────────────
   lore-completed:
     - ""
-    - "&7Fiber Bonus: &#a8ff78+{fiber_multi}x"
+    - "&7Fiber Bonus:    &#a8ff78+{fiber_multi}x"
     - "&7Material Bonus: &#a8ff78+{material_multi}x"
     - ""
     - "&#a8ff78✔ Already Researched"
 
   lore-ready:
     - ""
-    - "&7Fiber Bonus After: &#FFD700+{fiber_multi}x"
+    - "&7Fiber Bonus After:    &#FFD700+{fiber_multi}x"
     - "&7Material Bonus After: &#FFD700+{material_multi}x"
     - ""
-    - "&7Research Time: &f{time}"
-    - "&7Cost: &#FFD700{cost} Fiber"
+    - "&7Duration: &f{time}"
+    - "&7Cost:     &#FFD700{cost} Fiber"
     - ""
     - "&#FFD700▶ Click to start!"
 
   lore-in-progress:
     - ""
-    - "&7Fiber Bonus After: &#FFD700+{fiber_multi}x"
+    - "&7Fiber Bonus After:    &#FFD700+{fiber_multi}x"
     - "&7Material Bonus After: &#FFD700+{material_multi}x"
     - ""
     - "&7Time Remaining: &f{time_remaining}"
     - ""
-    - "&#FFD700⟳ Research in progress..."
+    - "&#FFD700⟳ In progress..."
 
   lore-locked:
     - ""
-    - "&7Fiber Bonus After: &#ff7a7a+{fiber_multi}x"
+    - "&7Fiber Bonus After:    &#ff7a7a+{fiber_multi}x"
     - "&7Material Bonus After: &#ff7a7a+{material_multi}x"
     - ""
-    - "&7Research Time: &f{time}"
-    - "&7Cost: &#ff7a7a{cost} Fiber"
+    - "&7Duration: &f{time}"
+    - "&7Cost:     &#ff7a7a{cost} Fiber"
     - ""
     - "&#ff7a7a✖ Complete previous research first"
 
+  # ── Cancel / empty slot ─────────────────────────
   cancel-name: "&#ff7a7a&lCancel Research"
   cancel-lore:
-    - "&7Click to cancel your active research."
-    - "&cYou will lose all progress and fiber!"
+    - "&7Cancels your active research."
+    - "&cYou will lose all progress and the fiber cost!"
 
-  no-research-name: "&7No Research Active"
+  no-research-name: "&7No Active Research"
   no-research-lore:
-    - "&7Start a research to see it here."
+    - "&7Click any available research to begin."

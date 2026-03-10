@@ -1,9 +1,18 @@
-# GardenCore Alias Commands Configuration
+# ──────────────────────────────────────────────
+#  GardenCore  —  Alias Commands
+# ──────────────────────────────────────────────
+# Create short command aliases that run another command.
+# The alias is registered as a real slash-command.
+#
 # Format:
-# alias: the command players type (without /)
-# command: the command that gets executed (without /)
+#   <alias>:
+#     command: "<command to run, without leading />"
+#
+# Example — typing /afk runs /warp afk:
+#   afk:
+#     command: "warp afk"
+# ──────────────────────────────────────────────
 
 aliases:
-  # Example:
-  # afk:
-  #   command: "warp afk"
+# afk:
+#   command: "warp afk"

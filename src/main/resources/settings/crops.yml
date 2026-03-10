@@ -1,160 +1,156 @@
-# GardenCore Crops Configuration
+# ──────────────────────────────────────────────
+#  GardenCore  —  Crops
+# ──────────────────────────────────────────────
+# Each crop entry requires:
+#   material:       Minecraft block material name
+#   display-name:   Name shown in messages
+#   fiber:          Base fiber earned per break (multiplied by the player's fiber multiplier)
+#   xp:             Base XP earned per break (multiplied by the player's XP multiplier)
+#   level-required: Minimum player level needed to farm this crop
 #
-# ── Philosophy ────────────────────────────────────────────────────────────────
-# Base fiber values are intentionally SMALL. The multiplier systems
-# (Upgrades, Research, Elder) are what drive fiber numbers into the millions.
-# This means every upgrade feels like a massive power spike on the title screen.
-#
-# crop-cooldown: BASE respawn time in seconds.
-#   Crop Cooldown upgrade reduces this by 0.1s/level → minimum 0.2s (8 levels).
-crop-cooldown: 1.0
-#
-# ── Progression table ────────────────────────────────────────────────────────
-#  Stage        Level   Crop             Base   ×Multi  Fiber/break
-#  Early        1-10    Grass/Fern       1-2    ×1          ~1-2
-#  Mid-early    10-75   Dead Bush        5      ×50         ~250
-#  Mid          75-200  Tulips           15     ×500        ~7,500
-#  Late         200-400 Nether roots     40     ×5,000      ~200,000
-#  Very late    400-1000 Coral           100    ×50,000     ~5,000,000
-#  End game     1000+   Firefly Bush     250    ×27,351     ~6,837,750
-# ─────────────────────────────────────────────────────────────────────────────
+# replant-delay: How long (in seconds) before a broken crop respawns.
+#   The Crop Cooldown upgrade also applies a separate per-player harvest cooldown.
+# ──────────────────────────────────────────────
+
+replant-delay: 1.0
 
 crops:
-  # ── Tier 1 — Plains (level 1) ───────────────────────────────────────────────
+
+  # ── Tier 1 — Plains (Level 1) ────────────────
   SHORT_GRASS:
-    display-name: "Small Grass"
     material: SHORT_GRASS
+    display-name: "Small Grass"
     fiber: 1.0
     xp: 2.0
     level-required: 1
 
   FERN:
-    display-name: "Fern"
     material: FERN
+    display-name: "Fern"
     fiber: 2.0
     xp: 3.0
     level-required: 1
 
   BUSH:
-    display-name: "Bush"
     material: BUSH
+    display-name: "Bush"
     fiber: 1.0
     xp: 2.0
     level-required: 1
 
-  # ── Tier 2 — Savanna (level 10) ─────────────────────────────────────────────
+  # ── Tier 2 — Savanna (Level 10) ──────────────
   SHORT_DRY_GRASS:
-    display-name: "Short Dry Grass"
     material: SHORT_DRY_GRASS
+    display-name: "Short Dry Grass"
     fiber: 5.0
     xp: 8.0
     level-required: 10
 
   DEAD_BUSH:
-    display-name: "Dead Bush"
     material: DEAD_BUSH
+    display-name: "Dead Bush"
     fiber: 5.0
     xp: 8.0
     level-required: 10
 
-  # ── Tier 3 — Flower Field (level 75) ────────────────────────────────────────
+  # ── Tier 3 — Flower Field (Level 75) ─────────
   PINK_TULIP:
-    display-name: "Pink Tulip"
     material: PINK_TULIP
+    display-name: "Pink Tulip"
     fiber: 15.0
     xp: 20.0
     level-required: 75
 
   RED_TULIP:
-    display-name: "Red Tulip"
     material: RED_TULIP
+    display-name: "Red Tulip"
     fiber: 15.0
     xp: 20.0
     level-required: 75
 
   ORANGE_TULIP:
-    display-name: "Orange Tulip"
     material: ORANGE_TULIP
+    display-name: "Orange Tulip"
     fiber: 15.0
     xp: 20.0
     level-required: 75
 
   WHITE_TULIP:
-    display-name: "White Tulip"
     material: WHITE_TULIP
+    display-name: "White Tulip"
     fiber: 15.0
     xp: 20.0
     level-required: 75
 
   CORNFLOWER:
-    display-name: "Cornflower"
     material: CORNFLOWER
+    display-name: "Cornflower"
     fiber: 15.0
     xp: 20.0
     level-required: 75
 
-  # ── Tier 4 — Nether Forest (level 200) ──────────────────────────────────────
+  # ── Tier 4 — Nether Forest (Level 200) ───────
   WARPED_ROOTS:
-    display-name: "Warped Roots"
     material: WARPED_ROOTS
+    display-name: "Warped Roots"
     fiber: 40.0
     xp: 50.0
     level-required: 200
 
   CRIMSON_ROOTS:
-    display-name: "Crimson Roots"
     material: CRIMSON_ROOTS
+    display-name: "Crimson Roots"
     fiber: 40.0
     xp: 50.0
     level-required: 200
 
   WARPED_FUNGUS:
-    display-name: "Warped Fungus"
     material: WARPED_FUNGUS
+    display-name: "Warped Fungus"
     fiber: 40.0
     xp: 50.0
     level-required: 200
 
   CRIMSON_FUNGUS:
-    display-name: "Crimson Fungus"
     material: CRIMSON_FUNGUS
+    display-name: "Crimson Fungus"
     fiber: 40.0
     xp: 50.0
     level-required: 200
 
-  # ── Tier 5 — Coral Reef (level 400) ─────────────────────────────────────────
+  # ── Tier 5 — Coral Reef (Level 400) ──────────
   TUBE_CORAL:
-    display-name: "Tube Coral"
     material: TUBE_CORAL
+    display-name: "Tube Coral"
     fiber: 100.0
     xp: 120.0
     level-required: 400
 
   BRAIN_CORAL:
-    display-name: "Brain Coral"
     material: BRAIN_CORAL
+    display-name: "Brain Coral"
     fiber: 100.0
     xp: 120.0
     level-required: 400
 
   FIRE_CORAL:
-    display-name: "Fire Coral"
     material: FIRE_CORAL
+    display-name: "Fire Coral"
     fiber: 100.0
     xp: 120.0
     level-required: 400
 
   HORN_CORAL:
-    display-name: "Horn Coral"
     material: HORN_CORAL
+    display-name: "Horn Coral"
     fiber: 100.0
     xp: 120.0
     level-required: 400
 
-  # ── Tier 6 — Mystic Forest (level 1000) ─────────────────────────────────────
+  # ── Tier 6 — Mystic Forest (Level 1000) ──────
   FIREFLY_BUSH:
-    display-name: "Firefly Bush"
     material: FIREFLY_BUSH
+    display-name: "Firefly Bush"
     fiber: 250.0
-    xp: 300.0
+    xp: 200.0
     level-required: 1000

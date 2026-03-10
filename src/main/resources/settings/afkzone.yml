@@ -1,23 +1,32 @@
-# GardenCore AFK Zone Configuration
+# ──────────────────────────────────────────────
+#  GardenCore  —  AFK Zone
+# ──────────────────────────────────────────────
+# Players standing inside the AFK zone earn a reward
+# on a fixed interval. Set the zone in-game with:
+#   /gca afkzone set  (requires a WorldEdit selection)
+# ──────────────────────────────────────────────
 
 afkzone:
   enabled: true
 
-  # Reward interval in seconds
+  # Seconds between each reward payout
   reward-interval: 60
 
-  # Command executed by console when reward triggers. Use %player% for the player's name.
+  # Console command executed each time a reward is paid out.
+  # Use %player% as a placeholder for the player's name.
   reward-command: "gems give %player% 1"
 
-  # Title shown while inside the zone. Use {time} for seconds until next reward.
-  title: "&#a8ff78&lAFK Zone"
-  subtitle: "&#7a7a7a Next Reward in: &#a8ff78{time}s"
+  # On-screen title while the player is inside the zone.
+  # {time} = seconds until the next reward.
+  title:    "&#a8ff78&lAFK Zone"
+  subtitle: "&7Next Reward in: &#a8ff78{time}s"
 
-  # Action bar messages
+  # Action bar flashes on zone enter / leave.
   actionbar-enter: "&#a8ff78✦ Entered the AFK Zone"
   actionbar-leave: "&#ff7a7a✦ Left the AFK Zone"
 
-  # Zone bounds (set via /gca afkzone set using a WorldEdit selection)
+  # Zone boundaries — set automatically by /gca afkzone set.
+  # You can also fill these in manually if you prefer.
   zone:
     world: ""
     min-x: 0
