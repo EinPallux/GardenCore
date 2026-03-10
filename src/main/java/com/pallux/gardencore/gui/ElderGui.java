@@ -60,12 +60,10 @@ public class ElderGui {
         Material borderMat = parseMaterial(sec.getString("border.material"), Material.BLACK_STAINED_GLASS_PANE);
         ItemStack border = GuiUtil.createFiller(borderMat);
         int rows = size / 9;
-        // Side columns for middle rows (not top, not bottom)
         for (int row = 1; row < rows - 1; row++) {
-            inv.setItem(row * 9,         border);
-            inv.setItem(row * 9 + 8,     border);
+            inv.setItem(row * 9,     border);
+            inv.setItem(row * 9 + 8, border);
         }
-        // Bottom row
         for (int i = (rows - 1) * 9; i < size; i++) inv.setItem(i, border);
 
         // ── Header item ────────────────────────────────────────
@@ -128,8 +126,11 @@ public class ElderGui {
         double moss       = em.getMossCost(type, current);
         double reed       = em.getReedCost(type, current);
         double clover     = em.getCloverCost(type, current);
-        double totalBonus = em.getTotalBonus(uuid, type) * 100;
-        double nextBonus  = em.getBonusPerLevel(type) * 100;
+
+        // Bonus values are already in "x" units (e.g. 100.0 = +100x per level).
+        // Do NOT multiply by 100 — that would turn "+100x" into "+10000x" which is wrong.
+        double totalBonus = em.getTotalBonus(uuid, type);   // e.g. level 3 × 100 = 300
+        double nextBonus  = em.getBonusPerLevel(type);       // e.g. 100 per level
 
         Material mat = parseMaterial(
                 sec.getConfigurationSection("perks." + em.configKey(type)) != null
@@ -137,8 +138,8 @@ public class ElderGui {
                         : null,
                 perkMaterialFallback(type));
 
-        String nameKey = maxed ? "perk-name-maxed" : "perk-name";
-        String rawName = (sec.getString(nameKey, maxed ? "&#d4a8ff&l{perk} &#a8ff78[MAX]" : "&#d4a8ff&l{perk}"))
+        String nameKey  = maxed ? "perk-name-maxed" : "perk-name";
+        String rawName  = (sec.getString(nameKey, maxed ? "&#d4a8ff&l{perk} &#a8ff78[MAX]" : "&#d4a8ff&l{perk}"))
                 .replace("{perk}", em.getDisplayName(type));
 
         List<String> loreTemplate = sec.getStringList(maxed ? "perk-lore-maxed" : "perk-lore");

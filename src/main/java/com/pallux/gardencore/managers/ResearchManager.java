@@ -47,9 +47,9 @@ public class ResearchManager {
         plugin.getDataManager().saveAsync();
 
         double fiberPerResearch = plugin.getConfigManager().getResearchConfig()
-                .getDouble("research.fiber-amount-per-research", 0.1);
+                .getDouble("research.fiber-amount-per-research", 500.0);
         double materialPerResearch = plugin.getConfigManager().getResearchConfig()
-                .getDouble("research.material-amount-per-research", 0.1);
+                .getDouble("research.material-amount-per-research", 1.0);
 
         double fiberBonus = (index + 1) * fiberPerResearch;
         double materialBonus = (index + 1) * materialPerResearch;
@@ -116,7 +116,7 @@ public class ResearchManager {
 
     public long getDurationMs(int index) {
         int baseMinutes = plugin.getConfigManager().getResearchConfig()
-                .getInt("research.base-duration-minutes", 5);
+                .getInt("research.base-duration-minutes", 10);
         long minutes = (long) baseMinutes * (index + 1);
         return minutes * 60 * 1000;
     }
@@ -128,12 +128,20 @@ public class ResearchManager {
         return Math.max(0, durationMs - elapsed);
     }
 
+    /**
+     * Cost formula: base-cost × cost-growth^index
+     * Matches researchmenu.yml: base-cost: 500, cost-growth: 1.45
+     *   R1  (index 0) =   500
+     *   R5  (index 4) = 2,210
+     *   R10 (index 9) = 14,167
+     *   R28 (index 27) ≈ 11,373,813
+     */
     public double getCost(int index) {
-        double base = plugin.getConfigManager().getResearchConfig()
-                .getDouble("research.base-cost", 500);
-        double perLevel = plugin.getConfigManager().getResearchConfig()
-                .getDouble("research.cost-per-level", 500);
-        return base + (index * perLevel);
+        double base   = plugin.getConfigManager().getResearchConfig()
+                .getDouble("research.base-cost", 500.0);
+        double growth = plugin.getConfigManager().getResearchConfig()
+                .getDouble("research.cost-growth", 1.45);
+        return Math.round(base * Math.pow(growth, index));
     }
 
     public String formatDuration(long totalSeconds) {

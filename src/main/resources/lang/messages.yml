@@ -12,7 +12,7 @@ fiber:
   give: "&7Given &a{amount} &7Fiber to &e{player}&7."
   take: "&7Taken &a{amount} &7Fiber from &e{player}&7."
 
-  # Title shown when a player harvests a crop. Placeholders: {amount}
+  # Title shown when a player harvests a crop. {amount} is K/M/B/T formatted.
   harvest-title: "&#698763+{amount} Fiber"
   # Subtitle shown below the harvest title. Leave empty for no subtitle.
   harvest-subtitle: ""
@@ -65,7 +65,8 @@ islands:
   level-required: "&cYou need Level &e{level} &cto travel to this island!"
 
 elder:
-  purchased: "&#d4a8ff&l⚗ Elder Perk! &7{perk} is now level &d{level}&7! Total bonus: &#a8ff78+{bonus}%&7."
+  # {bonus} is in multiplier units (e.g. +100x at level 1 for fiber_amount)
+  purchased: "&#d4a8ff&l⚗ Elder Perk! &7{perk} is now level &d{level}&7! Total bonus: &#a8ff78+{bonus}x&7."
   max-reached: "&#ff7a7a{perk} is already fully upgraded!"
   not-enough-fiber: "&cYou don't have enough Fiber for this perk!"
   not-enough-driftwood: "&cYou don't have enough Driftwood for this perk!"

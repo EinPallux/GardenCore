@@ -71,14 +71,14 @@ public class CropFarmingListener implements Listener {
     }
 
     private void sendFiberTitle(Player player, double earned) {
-        String amountStr = (earned == Math.floor(earned))
-                ? String.valueOf((int) earned)
-                : NumberUtil.formatRaw(earned);
+        // Always use NumberUtil.formatRaw so large numbers get K/M/B/T suffixes.
+        // Never cast to int — that silently truncates anything above ~2.1B.
+        String amountStr = NumberUtil.formatRaw(earned);
 
-        String titleTemplate = plugin.getConfigManager().getMessage("fiber.harvest-title");
+        String titleTemplate    = plugin.getConfigManager().getMessage("fiber.harvest-title");
         String subtitleTemplate = plugin.getConfigManager().getMessage("fiber.harvest-subtitle");
 
-        String title = ColorUtil.translate(titleTemplate.replace("{amount}", amountStr));
+        String title    = ColorUtil.translate(titleTemplate.replace("{amount}", amountStr));
         String subtitle = ColorUtil.translate(subtitleTemplate.replace("{amount}", amountStr));
 
         player.sendTitle(title, subtitle, 2, 18, 6);

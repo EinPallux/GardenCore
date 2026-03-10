@@ -3,6 +3,7 @@ package com.pallux.gardencore.gui;
 import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.models.PlayerData;
 import com.pallux.gardencore.utils.ColorUtil;
+import com.pallux.gardencore.utils.NumberUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,9 +26,9 @@ public class ResearchGui {
     };
 
     // Bottom bar navigation slots
-    private static final int SLOT_PREV = 45;
+    private static final int SLOT_PREV   = 45;
     private static final int SLOT_CANCEL = 49;
-    private static final int SLOT_NEXT = 53;
+    private static final int SLOT_NEXT   = 53;
 
     private final GardenCore plugin;
 
@@ -39,14 +40,13 @@ public class ResearchGui {
         FileConfiguration cfg = plugin.getConfigManager().getResearchConfig();
         String title = ColorUtil.translate(cfg.getString("research.gui-title", "&8Research Menu"));
 
-        // Use a custom holder so ResearchListener can detect this inventory reliably
         ResearchHolder holder = new ResearchHolder();
         Inventory inv = Bukkit.createInventory(holder, 54, title);
         holder.setInventory(inv);
 
         PlayerData data = plugin.getDataManager().getPlayerData(player.getUniqueId());
 
-        int total = plugin.getResearchManager().getTotalResearches();
+        int total   = plugin.getResearchManager().getTotalResearches();
         int perPage = RESEARCH_SLOTS.length; // 28 per page
         int maxPage = Math.max(0, (total - 1) / perPage);
         page = Math.max(0, Math.min(page, maxPage));
@@ -102,25 +102,25 @@ public class ResearchGui {
 
     private ItemStack buildResearchItem(int index, PlayerData data, FileConfiguration cfg) {
         String name = plugin.getResearchManager().getResearchName(index);
-        double fiberPerResearch = cfg.getDouble("research.fiber-amount-per-research", 0.1);
-        double materialPerResearch = cfg.getDouble("research.material-amount-per-research", 0.1);
 
-        // Cumulative bonus after this research is completed
-        double thisFiber = (index + 1) * fiberPerResearch;
+        double fiberPerResearch    = cfg.getDouble("research.fiber-amount-per-research",    500.0);
+        double materialPerResearch = cfg.getDouble("research.material-amount-per-research",   1.0);
+
+        // Cumulative bonus after this research completes — use suffix formatting (K/M/B)
+        double thisFiber    = (index + 1) * fiberPerResearch;
         double thisMaterial = (index + 1) * materialPerResearch;
-
-        String fiberStr = String.format("%.1f", thisFiber);
-        String materialStr = String.format("%.1f", thisMaterial);
+        String fiberStr    = NumberUtil.formatRaw(thisFiber);
+        String materialStr = NumberUtil.formatRaw(thisMaterial);
 
         long durationSec = plugin.getResearchManager().getDurationMs(index) / 1000;
-        String timeStr = plugin.getResearchManager().formatDuration(durationSec);
-        double cost = plugin.getResearchManager().getCost(index);
-        String costStr = com.pallux.gardencore.utils.NumberUtil.formatRaw(cost);
+        String timeStr   = plugin.getResearchManager().formatDuration(durationSec);
+        double cost      = plugin.getResearchManager().getCost(index);
+        String costStr   = NumberUtil.formatRaw(cost);
 
         int completed = data.getCompletedResearches();
         boolean isCompleted = index < completed;
-        boolean isActive = data.hasActiveResearch() && data.getActiveResearchIndex() == index;
-        boolean isReady = !isCompleted && !isActive && index == completed;
+        boolean isActive    = data.hasActiveResearch() && data.getActiveResearchIndex() == index;
+        boolean isReady     = !isCompleted && !isActive && index == completed;
 
         if (isCompleted) {
             String displayName = cfg.getString("research.name-completed", "&#a8ff78&l{name} &7[Completed]")
@@ -132,7 +132,7 @@ public class ResearchGui {
         }
 
         if (isActive) {
-            long remainMs = plugin.getResearchManager().getTimeRemainingMs(data);
+            long remainMs  = plugin.getResearchManager().getTimeRemainingMs(data);
             String remaining = plugin.getResearchManager().formatDuration(remainMs / 1000);
             String displayName = cfg.getString("research.name-in-progress", "&#FFD700&l{name} &e[In Progress]")
                     .replace("{name}", name);
@@ -165,17 +165,17 @@ public class ResearchGui {
                                                String timeStr, String remaining, String costStr) {
         return lines.stream()
                 .map(l -> l
-                        .replace("{fiber_multi}", fiberStr)
+                        .replace("{fiber_multi}",    fiberStr)
                         .replace("{material_multi}", materialStr)
-                        .replace("{time}", timeStr)
+                        .replace("{time}",           timeStr)
                         .replace("{time_remaining}", remaining)
-                        .replace("{cost}", costStr))
+                        .replace("{cost}",           costStr))
                 .map(ColorUtil::translate)
                 .collect(Collectors.toList());
     }
 
     public int[] getResearchSlots() { return RESEARCH_SLOTS; }
-    public int getSlotCancel() { return SLOT_CANCEL; }
-    public int getSlotPrev() { return SLOT_PREV; }
-    public int getSlotNext() { return SLOT_NEXT; }
+    public int getSlotCancel()      { return SLOT_CANCEL; }
+    public int getSlotPrev()        { return SLOT_PREV; }
+    public int getSlotNext()        { return SLOT_NEXT; }
 }
