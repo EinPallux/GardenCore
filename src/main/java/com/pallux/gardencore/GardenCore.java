@@ -37,6 +37,7 @@ public final class GardenCore extends JavaPlugin {
     private ElderManager elderManager;
     private ElderGui elderGui;
     private PetManager petManager;
+    private PetCosmeticManager petCosmeticManager;
     private final Map<UUID, Integer> researchPageMap = new ConcurrentHashMap<>();
 
     @Override
@@ -64,6 +65,7 @@ public final class GardenCore extends JavaPlugin {
         elderManager = new ElderManager(this);
         elderGui = new ElderGui(this);
         petManager = new PetManager(this);
+        petCosmeticManager = new PetCosmeticManager(this);
 
         registerListeners();
         registerCommands();
@@ -76,6 +78,9 @@ public final class GardenCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (petCosmeticManager != null) {
+            petCosmeticManager.shutdown();
+        }
         if (dataManager != null) {
             dataManager.saveAll();
         }
@@ -175,23 +180,24 @@ public final class GardenCore extends JavaPlugin {
         return instance;
     }
 
-    public ConfigManager getConfigManager()         { return configManager; }
-    public DataManager getDataManager()             { return dataManager; }
-    public FiberManager getFiberManager()           { return fiberManager; }
-    public LevelManager getLevelManager()           { return levelManager; }
-    public CropManager getCropManager()             { return cropManager; }
-    public MaterialManager getMaterialManager()     { return materialManager; }
-    public MultiplierManager getMultiplierManager() { return multiplierManager; }
-    public UpgradeManager getUpgradeManager()       { return upgradeManager; }
-    public EventManager getEventManager()           { return eventManager; }
-    public AliasManager getAliasManager()           { return aliasManager; }
-    public ItemManager getItemManager()             { return itemManager; }
-    public AfkZoneManager getAfkZoneManager()       { return afkZoneManager; }
-    public ResearchManager getResearchManager()     { return researchManager; }
-    public ResearchGui getResearchGui()             { return researchGui; }
-    public ElderManager getElderManager()           { return elderManager; }
-    public ElderGui getElderGui()                   { return elderGui; }
-    public PetManager getPetManager()               { return petManager; }
+    public ConfigManager getConfigManager()                   { return configManager; }
+    public DataManager getDataManager()                       { return dataManager; }
+    public FiberManager getFiberManager()                     { return fiberManager; }
+    public LevelManager getLevelManager()                     { return levelManager; }
+    public CropManager getCropManager()                       { return cropManager; }
+    public MaterialManager getMaterialManager()               { return materialManager; }
+    public MultiplierManager getMultiplierManager()           { return multiplierManager; }
+    public UpgradeManager getUpgradeManager()                 { return upgradeManager; }
+    public EventManager getEventManager()                     { return eventManager; }
+    public AliasManager getAliasManager()                     { return aliasManager; }
+    public ItemManager getItemManager()                       { return itemManager; }
+    public AfkZoneManager getAfkZoneManager()                 { return afkZoneManager; }
+    public ResearchManager getResearchManager()               { return researchManager; }
+    public ResearchGui getResearchGui()                       { return researchGui; }
+    public ElderManager getElderManager()                     { return elderManager; }
+    public ElderGui getElderGui()                             { return elderGui; }
+    public PetManager getPetManager()                         { return petManager; }
+    public PetCosmeticManager getPetCosmeticManager()         { return petCosmeticManager; }
 
     public int getPlayerResearchPage(Player player) {
         return researchPageMap.getOrDefault(player.getUniqueId(), 0);

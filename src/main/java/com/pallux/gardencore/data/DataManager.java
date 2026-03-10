@@ -129,7 +129,11 @@ public class DataManager {
     }
 
     /**
-     * Saves and unloads a player's data asynchronously.
+     * Saves and unloads a player's data.
+     * The file write is done synchronously so the data is guaranteed to be on
+     * disk before the player can rejoin and trigger a fresh load — avoiding the
+     * race where an in-flight saveAsync() thread would overwrite the file after
+     * the player's entry was already removed from playerDataMap.
      */
     public void removePlayerData(UUID uuid) {
         PlayerData data = playerDataMap.remove(uuid);
@@ -137,12 +141,10 @@ public class DataManager {
 
         save(data);
 
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            try {
-                dataConfig.save(dataFile);
-            } catch (IOException e) {
-                plugin.getLogger().severe("Could not save data/playerdata.yml on quit: " + e.getMessage());
-            }
-        });
+        try {
+            dataConfig.save(dataFile);
+        } catch (IOException e) {
+            plugin.getLogger().severe("Could not save data/playerdata.yml on quit: " + e.getMessage());
+        }
     }
 }

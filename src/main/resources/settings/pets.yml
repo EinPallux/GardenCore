@@ -5,6 +5,12 @@
 #   pet-lore:      {rarity}, {fiber_bonus}
 #   overview-lore rarity-line: {rarity}, {chance}, {fiber_bonus}
 #   broadcast-message: {player}, {rarity}, {chance}
+#
+# cosmetic.material:     Any Minecraft material name.
+#                        Use PLAYER_HEAD to display a custom skull texture.
+# cosmetic.skull-texture: Base64 skin value (only applies when material is PLAYER_HEAD).
+#   Grab values from https://minecraft-heads.com — click a head → "Value" field.
+#   Leave blank for a plain Steve head.
 # ──────────────────────────────────────────────
 
 pets:
@@ -15,7 +21,7 @@ pets:
   filler:
     material: GRAY_STAINED_GLASS_PANE
 
-  # ── Current pet (slot changes with rarity) ─────
+  # ── Current pet ────────────────────────────────
   pet-slot: 11
   pet-name: "{rarity} &7Pet"
   pet-lore:
@@ -26,7 +32,6 @@ pets:
     - "&7This is your best pet and is"
     - "&7automatically equipped."
 
-  # Shown when no pet has been found yet
   no-pet-material: BARRIER
   no-pet-name: "&7No Pet Found"
   no-pet-lore:
@@ -62,6 +67,9 @@ pets:
       fiber-bonus: 100.0
       chat-color: "&f"
       glass-material: WHITE_STAINED_GLASS_PANE
+      cosmetic:
+        material: PLAYER_HEAD
+        skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA4ZGY2MGM1MTA3NGVlZjI1NDRmZjM4Y2VhZDllMTY2NzVhZTQyNTE5MTYxMDUxODBlMWY4Y2UxOTdhYjNiYyJ9fX0="
 
     uncommon:
       enabled: true
@@ -70,6 +78,9 @@ pets:
       fiber-bonus: 200.0
       chat-color: "&a"
       glass-material: GREEN_STAINED_GLASS_PANE
+      cosmetic:
+        material: PLAYER_HEAD
+        skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzc0NzJkNjA4ODIxZjQ1YTg4MDUzNzZlYzBjNmZmY2I3ODExNzgyOWVhNWY5NjAwNDFjMmEwOWQxMGUwNGNiNCJ9fX0="
 
     rare:
       enabled: true
@@ -78,6 +89,9 @@ pets:
       fiber-bonus: 300.0
       chat-color: "&9"
       glass-material: BLUE_STAINED_GLASS_PANE
+      cosmetic:
+        material: PLAYER_HEAD
+        skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTYzZTY2NDZmMWMwZDQxZmQzYmY1NTg0YTFjZTA0NGY1YzQ2ZDU5ODI1OGRiNDYyMTYxMTc4NTlmNTdhZjE5NyJ9fX0="
 
     epic:
       enabled: true
@@ -86,6 +100,9 @@ pets:
       fiber-bonus: 500.0
       chat-color: "&5"
       glass-material: PURPLE_STAINED_GLASS_PANE
+      cosmetic:
+        material: PLAYER_HEAD
+        skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODllYzVhMzAyMjJkMDY1OWIwZGJlZTg0NGI4ZjUzZWFlNjJmZTk1YjRhMzQ0OGE5ZWY3OTBhN2FlZGIyOTZkOSJ9fX0="
 
     legendary:
       enabled: true
@@ -94,6 +111,9 @@ pets:
       fiber-bonus: 1000.0
       chat-color: "&6"
       glass-material: ORANGE_STAINED_GLASS_PANE
+      cosmetic:
+        material: PLAYER_HEAD
+        skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWRmMmViMjA1YTIzYzExOTZiM2VjZjIxZTY4YzA3NmI2OTZlNzYxNjNhYzhmYzRmYjlmNTMxOGMyYTVlNWIxYSJ9fX0="
 
     mythic:
       enabled: true
@@ -102,6 +122,9 @@ pets:
       fiber-bonus: 2500.0
       chat-color: "&c"
       glass-material: RED_STAINED_GLASS_PANE
+      cosmetic:
+        material: PLAYER_HEAD
+        skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjk1M2IxMmEwOTQ2YjYyOWI0YzA4ODlkNDFmZDI2ZWQyNmZiNzI5ZDRkNTE0YjU5NzI3MTI0YzM3YmI3MGQ4ZCJ9fX0="
 
     divine:
       enabled: true
@@ -110,3 +133,6 @@ pets:
       fiber-bonus: 7500.0
       chat-color: "&d"
       glass-material: PINK_STAINED_GLASS_PANE
+      cosmetic:
+        material: PLAYER_HEAD
+        skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA4ODM2NTBlYTkyOWRiMGVhYmRmNWJjNzU1OTlkOGVmMDBkNzAzNDBjZDFjZTVlMDRhZDk1ZWY4ZWQ4M2I3MyJ9fX0="

@@ -17,11 +17,16 @@ public class PlayerConnectionListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         plugin.getEventManager().addPlayer(event.getPlayer());
+
+        // Spawn pet cosmetic a tick later so player data is fully loaded first
+        plugin.getServer().getScheduler().runTaskLater(plugin,
+                () -> plugin.getPetCosmeticManager().refresh(event.getPlayer()), 5L);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         plugin.getEventManager().removePlayer(event.getPlayer());
+        plugin.getPetCosmeticManager().despawn(event.getPlayer().getUniqueId());
         plugin.getDataManager().removePlayerData(event.getPlayer().getUniqueId());
     }
 }

@@ -2,7 +2,6 @@ package com.pallux.gardencore.managers;
 
 import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.models.PetRarity;
-import com.pallux.gardencore.models.PlayerData;
 import com.pallux.gardencore.utils.ColorUtil;
 import com.pallux.gardencore.utils.NumberUtil;
 import org.bukkit.Material;
@@ -107,13 +106,17 @@ public class PetManager {
     private void awardPet(Player player, PetRarity rarity) {
         plugin.getDataManager().getPlayerData(player.getUniqueId()).setPetRarity(rarity);
         plugin.getDataManager().saveAsync();
+
+        // Refresh the cosmetic so the new rarity's skull appears immediately
+        plugin.getPetCosmeticManager().refresh(player);
+
         broadcastPetFound(player, rarity);
     }
 
     private void broadcastPetFound(Player player, PetRarity rarity) {
         String broadcastTemplate = cfg().getString(
                 "pets.broadcast-message",
-                "&8[&d&lPets&8] {player} &7found a {rarity} &7Pet! &8({chance} chance)"
+                "&5&l✦ {player} &7found a {rarity} &7Pet! &8({chance} chance)"
         );
         if (broadcastTemplate.isEmpty()) return;
 
