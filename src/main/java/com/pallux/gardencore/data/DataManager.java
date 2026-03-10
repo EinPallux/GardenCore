@@ -1,6 +1,7 @@
 package com.pallux.gardencore.data;
 
 import com.pallux.gardencore.GardenCore;
+import com.pallux.gardencore.models.PetRarity;
 import com.pallux.gardencore.models.PlayerData;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -63,6 +64,13 @@ public class DataManager {
                 data.setElderMaterialAmountLevel(dataConfig.getInt(path + "elder.material-amount-level", 0));
                 data.setElderXpGainLevel(dataConfig.getInt(path + "elder.xp-gain-level", 0));
                 data.setElderMaterialChanceLevel(dataConfig.getInt(path + "elder.material-chance-level", 0));
+                // Pet
+                String petName = dataConfig.getString(path + "pet.rarity", "NONE");
+                try {
+                    data.setPetRarity(PetRarity.valueOf(petName));
+                } catch (IllegalArgumentException e) {
+                    data.setPetRarity(PetRarity.NONE);
+                }
 
                 playerDataMap.put(uuid, data);
             } catch (IllegalArgumentException ignored) {}
@@ -104,6 +112,8 @@ public class DataManager {
         dataConfig.set(path + "elder.material-amount-level", data.getElderMaterialAmountLevel());
         dataConfig.set(path + "elder.xp-gain-level", data.getElderXpGainLevel());
         dataConfig.set(path + "elder.material-chance-level", data.getElderMaterialChanceLevel());
+        // Pet
+        dataConfig.set(path + "pet.rarity", data.getPetRarity().name());
     }
 
     public void saveAsync() {
@@ -120,17 +130,13 @@ public class DataManager {
 
     /**
      * Saves and unloads a player's data asynchronously.
-     * The data is written to the config on the main thread (to avoid concurrent map access),
-     * then the file write is dispatched async to avoid blocking on quit.
      */
     public void removePlayerData(UUID uuid) {
         PlayerData data = playerDataMap.remove(uuid);
         if (data == null) return;
 
-        // Update the in-memory YAML config synchronously (safe — main thread)
         save(data);
 
-        // Write to disk asynchronously so the main thread is not blocked on quit
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 dataConfig.save(dataFile);

@@ -36,6 +36,7 @@ public final class GardenCore extends JavaPlugin {
     private ResearchGui researchGui;
     private ElderManager elderManager;
     private ElderGui elderGui;
+    private PetManager petManager;
     private final Map<UUID, Integer> researchPageMap = new ConcurrentHashMap<>();
 
     @Override
@@ -62,6 +63,7 @@ public final class GardenCore extends JavaPlugin {
         researchGui = new ResearchGui(this);
         elderManager = new ElderManager(this);
         elderGui = new ElderGui(this);
+        petManager = new PetManager(this);
 
         registerListeners();
         registerCommands();
@@ -155,6 +157,11 @@ public final class GardenCore extends JavaPlugin {
         if (elderCmd != null) {
             elderCmd.setExecutor(new ElderCommand(this));
         }
+
+        var petsCmd = getCommand("pets");
+        if (petsCmd != null) {
+            petsCmd.setExecutor(new PetsCommand(this));
+        }
     }
 
     private void registerPlaceholders() {
@@ -184,6 +191,7 @@ public final class GardenCore extends JavaPlugin {
     public ResearchGui getResearchGui()             { return researchGui; }
     public ElderManager getElderManager()           { return elderManager; }
     public ElderGui getElderGui()                   { return elderGui; }
+    public PetManager getPetManager()               { return petManager; }
 
     public int getPlayerResearchPage(Player player) {
         return researchPageMap.getOrDefault(player.getUniqueId(), 0);

@@ -89,6 +89,17 @@ garden-menu:
         - ""
         - "&eClick to open!"
 
+    pets:
+      slot: 22
+      material: DRAGON_EGG
+      name: "&5Pets"
+      command: "pets"
+      lore:
+        - "&7Gotta catch em all?"
+        - "&7Pets boost your Fiber Multi."
+        - ""
+        - "&eClick to open!"
+
     islands:
       slot: 34
       material: GRASS_BLOCK
@@ -107,7 +118,6 @@ garden-menu:
     lore: []
 
   placeholders:
-    - slot: 22
     - slot: 23
     - slot: 24
     - slot: 25

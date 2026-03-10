@@ -34,6 +34,9 @@ public class PlayerData {
     private int elderXpGainLevel;
     private int elderMaterialChanceLevel;
 
+    // Pets
+    private PetRarity petRarity;
+
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
         this.fiber = 0;
@@ -57,6 +60,7 @@ public class PlayerData {
         this.elderMaterialAmountLevel = 0;
         this.elderXpGainLevel = 0;
         this.elderMaterialChanceLevel = 0;
+        this.petRarity = PetRarity.NONE;
     }
 
     public UUID getUuid() { return uuid; }
@@ -137,6 +141,10 @@ public class PlayerData {
     public int getElderMaterialChanceLevel() { return elderMaterialChanceLevel; }
     public void setElderMaterialChanceLevel(int v) { this.elderMaterialChanceLevel = v; }
 
+    // Pet getters/setters
+    public PetRarity getPetRarity() { return petRarity != null ? petRarity : PetRarity.NONE; }
+    public void setPetRarity(PetRarity rarity) { this.petRarity = rarity; }
+
     // ── Reset helpers ──────────────────────────────────────────
 
     public void resetUpgrades() {
@@ -170,6 +178,10 @@ public class PlayerData {
         elderMaterialChanceLevel = 0;
     }
 
+    public void resetPet() {
+        petRarity = PetRarity.NONE;
+    }
+
     public void resetAll() {
         fiber = 0;
         xp = 0;
@@ -181,5 +193,6 @@ public class PlayerData {
         resetMaterials();
         resetResearch();
         resetElder();
+        resetPet();
     }
 }

@@ -28,7 +28,7 @@ upgrade-gui:
         - "&7Next Level Cost: &e{cost} Fiber"
         - ""
         - "&7Reduces harvest cooldown by &f0.1s &7per level."
-        - "&7Base: &f1.0s &8→ &7Min: &f0.2s &8(8 levels)"
+        - "&7Base: &f1.0s &8→ &7Min: &f0.2s"
         - ""
         - "&aClick to upgrade!"
 
@@ -42,7 +42,7 @@ upgrade-gui:
         - "&7Next Level Cost: &e{cost} Fiber"
         - ""
         - "&7Adds &f+25x &7to your fiber multiplier per level."
-        - "&8Max: +5,000x (200 levels)"
+        - "&8Max: +5,000x"
         - ""
         - "&aClick to upgrade!"
 
@@ -56,7 +56,7 @@ upgrade-gui:
         - "&7Next Level Cost: &e{cost} Fiber"
         - ""
         - "&7Adds &f+0.15x &7to your material amount multiplier per level."
-        - "&8Max: +15x (100 levels)"
+        - "&8Max: +15x"
         - ""
         - "&aClick to upgrade!"
 
@@ -70,6 +70,6 @@ upgrade-gui:
         - "&7Next Level Cost: &e{cost} Fiber"
         - ""
         - "&7Adds &f+0.04x &7to your material drop chance per level."
-        - "&8Max: +2x (50 levels)"
+        - "&8Max: +2x"
         - ""
         - "&aClick to upgrade!"

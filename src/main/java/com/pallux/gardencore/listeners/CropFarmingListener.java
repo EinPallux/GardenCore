@@ -65,14 +65,15 @@ public class CropFarmingListener implements Listener {
             plugin.getMaterialManager().rollDrops(player);
         }
 
+        // Roll for pet on every crop break
+        plugin.getPetManager().rollForPet(player);
+
         sendFiberTitle(player, earned);
 
         plugin.getDataManager().saveAsync();
     }
 
     private void sendFiberTitle(Player player, double earned) {
-        // Always use NumberUtil.formatRaw so large numbers get K/M/B/T suffixes.
-        // Never cast to int — that silently truncates anything above ~2.1B.
         String amountStr = NumberUtil.formatRaw(earned);
 
         String titleTemplate    = plugin.getConfigManager().getMessage("fiber.harvest-title");

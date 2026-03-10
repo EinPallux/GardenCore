@@ -22,6 +22,7 @@ public class ConfigManager {
     private FileConfiguration gardenMenu;
     private FileConfiguration islandMenu;
     private FileConfiguration elder;
+    private FileConfiguration pets;
 
     public ConfigManager(GardenCore plugin) {
         this.plugin = plugin;
@@ -38,6 +39,7 @@ public class ConfigManager {
         aliases     = loadOrCreate("settings/aliascommands.yml");
         items       = loadOrCreate("settings/items.yml");
         afkZone     = loadOrCreate("settings/afkzone.yml");
+        pets        = loadOrCreate("settings/pets.yml");
         guis        = loadOrCreate("guis/upgradesmenu.yml");
         research    = loadOrCreate("guis/researchmenu.yml");
         gardenMenu  = loadOrCreate("guis/gardenmenu.yml");
@@ -65,6 +67,7 @@ public class ConfigManager {
         aliases     = loadOrCreate("settings/aliascommands.yml");
         items       = loadOrCreate("settings/items.yml");
         afkZone     = loadOrCreate("settings/afkzone.yml");
+        pets        = loadOrCreate("settings/pets.yml");
         guis        = loadOrCreate("guis/upgradesmenu.yml");
         research    = loadOrCreate("guis/researchmenu.yml");
         gardenMenu  = loadOrCreate("guis/gardenmenu.yml");
@@ -110,4 +113,5 @@ public class ConfigManager {
     public FileConfiguration getGardenMenu()     { return gardenMenu; }
     public FileConfiguration getIslandMenu()     { return islandMenu; }
     public FileConfiguration getElderConfig()    { return elder; }
+    public FileConfiguration getPetsConfig()     { return pets; }
 }

@@ -20,7 +20,7 @@ public class MultiplierManager {
     }
 
     // ── Fiber multiplier ──────────────────────────────────────────────────────
-    // Sources: base(1) + upgrades + admin bonus + event + research + elder
+    // Sources: base(1) + upgrades + admin bonus + event + research + elder + pet
     public double getTotalFiberMultiplier(UUID uuid) {
         PlayerData data = plugin.getDataManager().getPlayerData(uuid);
         return 1.0
@@ -28,7 +28,8 @@ public class MultiplierManager {
                 + data.getBonusFiberMultiplier() / 100.0
                 + getEventBonus(EventData.EventType.FIBER_AMOUNT) / 100.0
                 + getResearchFiberBonus(uuid)
-                + plugin.getElderManager().getElderFiberBonus(uuid);
+                + plugin.getElderManager().getElderFiberBonus(uuid)
+                + plugin.getPetManager().getPetFiberBonus(uuid);
     }
 
     // ── Material amount multiplier ────────────────────────────────────────────
@@ -67,8 +68,6 @@ public class MultiplierManager {
         return em.getTotalEventBonus(type);
     }
 
-    // Each completed research adds a flat bonus defined in researchmenu.yml.
-    // Uses fiber-amount-per-research (e.g. 500.0) — identical to what the GUI displays.
     private double getResearchFiberBonus(UUID uuid) {
         int completed = plugin.getDataManager().getPlayerData(uuid).getCompletedResearches();
         if (completed == 0) return 0;

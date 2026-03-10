@@ -57,3 +57,7 @@ commands:
     description: Open the Elder Council perk menu
     usage: /elder
     permission: gc.player
+  pets:
+    description: Open the Pets menu
+    usage: /pets
+    permission: gc.player

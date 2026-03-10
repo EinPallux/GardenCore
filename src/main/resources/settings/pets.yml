@@ -1,0 +1,112 @@
+# ──────────────────────────────────────────────
+#  GardenCore  —  Pets  (/pets)
+# ──────────────────────────────────────────────
+# Lore placeholders:
+#   pet-lore:      {rarity}, {fiber_bonus}
+#   overview-lore rarity-line: {rarity}, {chance}, {fiber_bonus}
+#   broadcast-message: {player}, {rarity}, {chance}
+# ──────────────────────────────────────────────
+
+pets:
+
+  gui-title: "&8Pets Menu"
+  gui-size: 27
+
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+
+  # ── Current pet (slot changes with rarity) ─────
+  pet-slot: 11
+  pet-name: "{rarity} &7Pet"
+  pet-lore:
+    - ""
+    - "&7Rarity: {rarity}"
+    - "&7Fiber Bonus: &#FFD700+{fiber_bonus}x"
+    - ""
+    - "&7This is your best pet and is"
+    - "&7automatically equipped."
+
+  # Shown when no pet has been found yet
+  no-pet-material: BARRIER
+  no-pet-name: "&7No Pet Found"
+  no-pet-lore:
+    - ""
+    - "&7You haven't found a pet yet."
+    - "&7Break crops for a chance to find one!"
+
+  # ── Overview item ──────────────────────────────
+  overview-slot: 15
+  overview-material: DRAGON_EGG
+  overview-name: "&#d4a8ff&l✦ Pet Overview"
+  overview-lore:
+    - ""
+    - "&7Break any crop for a chance to find a pet."
+    - "&7Higher rarity pets replace lower ones."
+    - ""
+    - "&8─── Pet Rarities & Chances ───"
+    - "rarity-line: {rarity} &8| &71/{chance} &8| &#FFD700+{fiber_bonus}x Fiber"
+    - ""
+    - "&8Once you reach a rarity tier you can"
+    - "&8no longer find pets of lower tiers."
+
+  # Set to "" to disable broadcast
+  broadcast-message: "&8[&d&lPets&8] {player} &7found a {rarity} &7Pet! &8({chance} chance)"
+
+  # ── Rarities ───────────────────────────────────
+  rarities:
+
+    common:
+      enabled: true
+      display-name: "Common"
+      one-in-chance: 1000
+      fiber-bonus: 100.0
+      chat-color: "&f"
+      glass-material: WHITE_STAINED_GLASS_PANE
+
+    uncommon:
+      enabled: true
+      display-name: "Uncommon"
+      one-in-chance: 10000
+      fiber-bonus: 200.0
+      chat-color: "&a"
+      glass-material: GREEN_STAINED_GLASS_PANE
+
+    rare:
+      enabled: true
+      display-name: "Rare"
+      one-in-chance: 50000
+      fiber-bonus: 300.0
+      chat-color: "&9"
+      glass-material: BLUE_STAINED_GLASS_PANE
+
+    epic:
+      enabled: true
+      display-name: "Epic"
+      one-in-chance: 150000
+      fiber-bonus: 500.0
+      chat-color: "&5"
+      glass-material: PURPLE_STAINED_GLASS_PANE
+
+    legendary:
+      enabled: true
+      display-name: "Legendary"
+      one-in-chance: 250000
+      fiber-bonus: 1000.0
+      chat-color: "&6"
+      glass-material: ORANGE_STAINED_GLASS_PANE
+
+    mythic:
+      enabled: true
+      display-name: "Mythic"
+      one-in-chance: 750000
+      fiber-bonus: 2500.0
+      chat-color: "&c"
+      glass-material: RED_STAINED_GLASS_PANE
+
+    divine:
+      enabled: true
+      display-name: "Divine"
+      one-in-chance: 10000000
+      fiber-bonus: 7500.0
+      chat-color: "&d"
+      glass-material: PINK_STAINED_GLASS_PANE
