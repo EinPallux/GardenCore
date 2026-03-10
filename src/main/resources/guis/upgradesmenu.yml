@@ -1,7 +1,12 @@
-# GardenCore GUI Configuration
-# All names, lores, materials and slots are fully editable.
-# Placeholders available in lore/name: {level}, {max_level}, {cost}, {value}
-# Color codes: &a, &c, &#FFFFFF etc.
+# GardenCore GUI — Upgrades Menu
+# Placeholders: {level}, {max_level}, {cost}, {value}
+#
+# ── Balance summary ──────────────────────────────────────────────────────────
+# Crop Cooldown:    8 levels · 1.0s → 0.2s    · cost = 200  × level^1.9
+# Fiber Amount:   200 levels · +25x each       · cost = 50   × level^1.9   (total 82M)
+# Material Amount:100 levels · +0.15x each     · cost = 150  × level^1.9   (total 33M)
+# Material Chance: 50 levels · +0.04x each     · cost = 500  × level^2.2   (total 44M)
+# ─────────────────────────────────────────────────────────────────────────────
 
 upgrade-gui:
   title: "&8Upgrades Menu"
@@ -21,7 +26,7 @@ upgrade-gui:
         - "&7Cost: &e{cost} &7Fiber"
         - ""
         - "&7Base: &f1.0s &7→ Min: &f0.2s"
-        - "&7(&f-0.05s &7per level)"
+        - "&7(&f-0.1s &7per level, 8 levels)"
         - ""
         - "&aClick to upgrade!"
 
@@ -34,6 +39,9 @@ upgrade-gui:
         - "&7Multiplier: &a{value}"
         - "&7Cost: &e{cost} &7Fiber"
         - ""
+        - "&7+&f25x &7per level · 200 levels · max &f+5,000x"
+        - "&8Research & Elder add thousands more!"
+        - ""
         - "&aClick to upgrade!"
 
     material_amount:
@@ -45,6 +53,8 @@ upgrade-gui:
         - "&7Multiplier: &a{value}"
         - "&7Cost: &e{cost} &7Fiber"
         - ""
+        - "&7+&f0.15x &7per level · 100 levels · max &f+15x"
+        - ""
         - "&aClick to upgrade!"
 
     material_chance:
@@ -55,5 +65,8 @@ upgrade-gui:
         - "&7Level: &e{level}&7/&e{max_level}"
         - "&7Multiplier: &a{value}"
         - "&7Cost: &e{cost} &7Fiber"
+        - ""
+        - "&7+&f0.04x &7per level · 50 levels · max &f+2x"
+        - "&8Materials won't drop every break."
         - ""
         - "&aClick to upgrade!"
