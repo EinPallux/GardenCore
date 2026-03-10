@@ -1,0 +1,29 @@
+# ──────────────────────────────────────────────
+#  GardenCore  —  Leveling
+# ──────────────────────────────────────────────
+# xp-formula: How much XP is required to reach the next level.
+#   mode: linear    — xp = base * level
+#         flat      — xp = base  (same cost every level)
+#         quadratic — xp = base * level^exponent
+#   base:     Base XP value used in the formula
+#   exponent: Only used when mode is quadratic
+#
+# level-up-title / level-up-subtitle: On-screen title when a player levels up.
+#   Set either to "" to hide it.
+#   Placeholders: {level}
+#
+# broadcast-milestone: Every N levels a server-wide message is sent.
+#   Set to 0 to disable milestone broadcasts entirely.
+# ──────────────────────────────────────────────
+
+leveling:
+
+  xp-formula:
+    mode: linear
+    base: 100.0
+    exponent: 2.0
+
+  level-up-title:    "&#a8ff78&l✦ Level Up!"
+  level-up-subtitle: "&7You reached &a&lLevel {level}&7!"
+
+  broadcast-milestone: 10

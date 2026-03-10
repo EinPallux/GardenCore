@@ -23,6 +23,7 @@ public class ConfigManager {
     private FileConfiguration islandMenu;
     private FileConfiguration elder;
     private FileConfiguration pets;
+    private FileConfiguration leveling;
 
     public ConfigManager(GardenCore plugin) {
         this.plugin = plugin;
@@ -40,6 +41,7 @@ public class ConfigManager {
         items       = loadOrCreate("settings/items.yml");
         afkZone     = loadOrCreate("settings/afkzone.yml");
         pets        = loadOrCreate("settings/pets.yml");
+        leveling    = loadOrCreate("settings/leveling.yml");
         guis        = loadOrCreate("guis/upgradesmenu.yml");
         research    = loadOrCreate("guis/researchmenu.yml");
         gardenMenu  = loadOrCreate("guis/gardenmenu.yml");
@@ -68,6 +70,7 @@ public class ConfigManager {
         items       = loadOrCreate("settings/items.yml");
         afkZone     = loadOrCreate("settings/afkzone.yml");
         pets        = loadOrCreate("settings/pets.yml");
+        leveling    = loadOrCreate("settings/leveling.yml");
         guis        = loadOrCreate("guis/upgradesmenu.yml");
         research    = loadOrCreate("guis/researchmenu.yml");
         gardenMenu  = loadOrCreate("guis/gardenmenu.yml");
@@ -96,22 +99,19 @@ public class ConfigManager {
         return config.getInt("events.duration-minutes", 5);
     }
 
-    public int getLevelMilestone() {
-        return config.getInt("broadcast.level-milestone", 10);
-    }
-
-    public FileConfiguration getConfig()         { return config; }
-    public FileConfiguration getMessages()       { return messages; }
-    public FileConfiguration getCrops()          { return crops; }
-    public FileConfiguration getMaterials()      { return materials; }
-    public FileConfiguration getEventsConfig()   { return events; }
-    public FileConfiguration getAliases()        { return aliases; }
-    public FileConfiguration getGuis()           { return guis; }
-    public FileConfiguration getItems()          { return items; }
-    public FileConfiguration getAfkZone()        { return afkZone; }
-    public FileConfiguration getResearchConfig() { return research; }
-    public FileConfiguration getGardenMenu()     { return gardenMenu; }
-    public FileConfiguration getIslandMenu()     { return islandMenu; }
-    public FileConfiguration getElderConfig()    { return elder; }
-    public FileConfiguration getPetsConfig()     { return pets; }
+    public FileConfiguration getConfig()          { return config; }
+    public FileConfiguration getMessages()        { return messages; }
+    public FileConfiguration getCrops()           { return crops; }
+    public FileConfiguration getMaterials()       { return materials; }
+    public FileConfiguration getEventsConfig()    { return events; }
+    public FileConfiguration getAliases()         { return aliases; }
+    public FileConfiguration getGuis()            { return guis; }
+    public FileConfiguration getItems()           { return items; }
+    public FileConfiguration getAfkZone()         { return afkZone; }
+    public FileConfiguration getResearchConfig()  { return research; }
+    public FileConfiguration getGardenMenu()      { return gardenMenu; }
+    public FileConfiguration getIslandMenu()      { return islandMenu; }
+    public FileConfiguration getElderConfig()     { return elder; }
+    public FileConfiguration getPetsConfig()      { return pets; }
+    public FileConfiguration getLevelingConfig()  { return leveling; }
 }

@@ -28,7 +28,3 @@ features:
 events:
   interval-minutes: 30   # How often a random event starts automatically
   duration-minutes: 5    # How long each event lasts
-
-# ── Leveling ───────────────────────────────────
-broadcast:
-  level-milestone: 10    # Broadcast to all players every X levels (e.g. every 10 levels)

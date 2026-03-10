@@ -92,7 +92,7 @@ garden-menu:
     pets:
       slot: 22
       material: DRAGON_EGG
-      name: "&5Pets"
+      name: "&5&lPets"
       command: "pets"
       lore:
         - "&7Gotta catch em all?"

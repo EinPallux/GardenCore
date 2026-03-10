@@ -15,13 +15,11 @@ fiber:
   set:  "&7Fiber for &e{player} &7set to &a{amount}&7."
   give: "&7Given &a{amount} &7Fiber to &e{player}&7."
   take: "&7Taken &a{amount} &7Fiber from &e{player}&7."
-  # Title shown on-screen when a crop is harvested. {amount} is auto-formatted (e.g. 6.84M).
   harvest-title:    "&#698763+{amount} Fiber"
   harvest-subtitle: ""
 
 # ── Materials ──────────────────────────────────
 material:
-  # Action bar shown when a material drops. Placeholders: {amount}, {material}
   found-actionbar: "&c&lMATERIAL FOUND! &#698763+{amount} &r{material}"
 
 # ── Upgrades ───────────────────────────────────
@@ -35,6 +33,8 @@ upgrades:
 
 # ── Leveling ───────────────────────────────────
 level:
+  level-up: "&#a8ff78&l✦ Level Up! &7You reached &a&lLevel {level}&7!"
+  # Server-wide broadcast every N levels (configured in leveling.yml)
   broadcast: "&#a8ff78&l✦ &e{player} &7has reached &a&lLevel {level}&7!"
 
 # ── Events ─────────────────────────────────────
@@ -63,7 +63,6 @@ islands:
   level-required: "&cYou need Level &e{level} &cto travel to this island!"
 
 # ── Elder Council ──────────────────────────────
-# {bonus} is a multiplier value (e.g. "+100x" at level 1 of Fiber Amount)
 elder:
   purchased:            "&#d4a8ff&l⚗ Elder Perk! &7{perk} is now level &d{level}&7! Total bonus: &#a8ff78+{bonus}x&7."
   max-reached:          "&#ff7a7a{perk} is already fully upgraded!"

@@ -50,7 +50,7 @@ pets:
     - "&8no longer find pets of lower tiers."
 
   # Set to "" to disable broadcast
-  broadcast-message: "&8[&d&lPets&8] {player} &7found a {rarity} &7Pet! &8({chance} chance)"
+  broadcast-message: "&5&l✦ {player} &7found a {rarity} &7Pet! &8({chance} chance)"
 
   # ── Rarities ───────────────────────────────────
   rarities:
