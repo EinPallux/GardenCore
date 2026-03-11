@@ -11,36 +11,23 @@
 prefix: "&#28CA75&lG&#2BC66B&lA&#2EC262&lR&#31BD58&lD&#34B94F&lE&#37B545&lN &7➠&r"
 
 # ── Features ───────────────────────────────────
-# Set any feature to false to disable it server-wide.
 features:
-  no-drop: true            # Prevents players from dropping items
-  no-fall-damage: true     # Disables fall damage
-  no-hunger: true          # Freezes the hunger bar
-  no-block-drops: true     # Crops don't drop physical items when broken
-  no-non-crop-break: true  # Players can only break registered crop blocks
-  command-blocking: true   # Blocks sensitive commands from non-admin's to prevent abuse / unwanted stuff
-
-  # Do not change any of the features below if you don't know what you are doing.
-  # You might break the whole plugin if you change something here.
-  instant-replant: true    # Crops respawn automatically after being broken
-  alias-commands: true     # Register custom command aliases (see aliascommands.yml)
-  crop-farming: true       # Core farming loop — earn fiber by breaking crops
-  material-drops: true     # Crops have a chance to drop crafting materials
-  multipliers: true        # Multiplier system (upgrades, research, elder, events)
-  upgrades: true           # /upgrade command and upgrade GUI
-  events: true             # Scheduled and manual bonus events
-  composters: true         # Placeable composter items that buff nearby players
+  no-drop: true
+  no-fall-damage: true
+  no-hunger: true
+  no-block-drops: true
+  no-non-crop-break: true
+  command-blocking: true
+  instant-replant: true
+  alias-commands: true
+  crop-farming: true
+  material-drops: true
+  multipliers: true
+  upgrades: true
+  events: true
+  composters: true
 
 # ── Events ─────────────────────────────────────
 events:
-  interval-minutes: 30   # How often a random event starts automatically
-  duration-minutes: 5    # How long each event lasts
-
-# ── Composters ─────────────────────────────────
-composters:
-  # How long (in seconds) a placed composter stays active before despawning.
-  # Default: 900 = 15 minutes
-  duration-seconds: 900
-
-  # Block radius around the composter in which players receive the buff.
-  radius: 20.0
+  interval-minutes: 30
+  duration-minutes: 5

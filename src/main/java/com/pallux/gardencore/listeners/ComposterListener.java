@@ -28,7 +28,6 @@ public class ComposterListener implements Listener {
         Player player = event.getPlayer();
         ItemStack item = event.getItemInHand();
 
-        // Must be a COMPOSTER block placed with a custom item
         if (event.getBlock().getType() != Material.COMPOSTER) return;
 
         String itemKey = plugin.getItemManager().getItemKey(item);
@@ -37,28 +36,32 @@ public class ComposterListener implements Listener {
         ComposterData.ComposterType type = ComposterData.ComposterType.fromItemKey(itemKey);
         if (type == null) return;
 
-        // Consume the item in hand (it's a one-use item)
+        // Read duration and radius from the item definition; fall back to sensible defaults
+        int    duration = plugin.getItemManager().getDurationSeconds(itemKey);
+        double radius   = plugin.getItemManager().getRadius(itemKey);
+        if (duration <= 0) duration = 900;
+        if (radius   <= 0) radius   = 20.0;
+
+        // Consume the item
         if (item.getAmount() > 1) {
             item.setAmount(item.getAmount() - 1);
         } else {
-            // Schedule removal on next tick to avoid interfering with the place event
             plugin.getServer().getScheduler().runTaskLater(plugin,
                     () -> player.getInventory().removeItem(item), 1L);
         }
 
+        final int    finalDuration = duration;
+        final double finalRadius   = radius;
         Block block = event.getBlock();
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            plugin.getComposterManager().placeComposter(player, block.getLocation(), type);
 
-            int duration = plugin.getConfigManager().getConfig()
-                    .getInt("composters.duration-seconds", 900);
-            double radius = plugin.getConfigManager().getConfig()
-                    .getDouble("composters.radius", 20.0);
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            plugin.getComposterManager().placeComposter(
+                    player, block.getLocation(), type, finalDuration, finalRadius);
 
             MessageUtil.send(player, "composter.placed", Map.of(
                     "type",     type.getDisplayName(),
-                    "duration", String.valueOf(duration / 60),
-                    "radius",   String.valueOf((int) radius)
+                    "duration", String.valueOf(finalDuration / 60),
+                    "radius",   String.valueOf((int) finalRadius)
             ));
         }, 1L);
     }
@@ -69,10 +72,8 @@ public class ComposterListener implements Listener {
         if (block.getType() != Material.COMPOSTER) return;
         if (!plugin.getComposterManager().isComposter(block.getLocation())) return;
 
-        // Prevent drops and remove the composter data + hologram
         event.setDropItems(false);
         plugin.getComposterManager().removeComposter(block.getLocation());
-
         MessageUtil.send(event.getPlayer(), "composter.removed");
     }
 }

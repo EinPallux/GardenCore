@@ -1,6 +1,7 @@
 package com.pallux.gardencore.listeners;
 
 import com.pallux.gardencore.GardenCore;
+import com.pallux.gardencore.models.ComposterData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,6 +24,11 @@ public class CustomItemListener implements Listener {
         ItemStack item = event.getItem();
         if (item == null) return;
         if (!plugin.getItemManager().isCustomItem(item)) return;
+
+        // Composter items are handled entirely by ComposterListener on block place.
+        // They must not be consumed or executed here on right-click.
+        String key = plugin.getItemManager().getItemKey(item);
+        if (key != null && ComposterData.ComposterType.fromItemKey(key) != null) return;
 
         event.setCancelled(true);
         plugin.getItemManager().executeItem(event.getPlayer(), item);

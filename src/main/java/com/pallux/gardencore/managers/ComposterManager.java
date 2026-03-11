@@ -3,7 +3,6 @@ package com.pallux.gardencore.managers;
 import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.models.ComposterData;
 import com.pallux.gardencore.utils.ColorUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -16,9 +15,7 @@ public class ComposterManager {
 
     private final GardenCore plugin;
 
-    /** block location key → active composter data */
     private final Map<String, ComposterData> activeComposters = new ConcurrentHashMap<>();
-
     private BukkitTask tickTask;
 
     public ComposterManager(GardenCore plugin) {
@@ -30,18 +27,19 @@ public class ComposterManager {
 
     /**
      * Called when a player places a composter item.
-     * Spawns the hologram stands and schedules the despawn.
+     * Both {@code durationSeconds} and {@code radius} come from the item's
+     * own definition in items.yml — config.yml is no longer involved.
      */
-    public void placeComposter(Player player, Location blockLoc, ComposterData.ComposterType type) {
-        int durationSeconds = plugin.getConfigManager().getConfig()
-                .getInt("composters.duration-seconds", 900);
-
+    public void placeComposter(Player player, Location blockLoc,
+                               ComposterData.ComposterType type,
+                               int durationSeconds, double radius) {
         ComposterData data = new ComposterData(
                 blockLoc,
                 player.getName(),
                 type,
                 System.currentTimeMillis(),
-                durationSeconds
+                durationSeconds,
+                radius
         );
 
         spawnHologram(data);
@@ -50,23 +48,17 @@ public class ComposterManager {
 
     // ── Removal ───────────────────────────────────────────────
 
-    /** Removes a composter at the given location (block broken / timer expired). */
     public void removeComposter(Location blockLoc) {
         ComposterData data = activeComposters.remove(key(blockLoc));
         if (data != null) despawnHologram(data);
     }
 
-    /** Returns true if there is an active composter at this location. */
     public boolean isComposter(Location loc) {
         return activeComposters.containsKey(key(loc));
     }
 
     // ── Buff query ────────────────────────────────────────────
 
-    /**
-     * Total fiber bonus (percentage) for a player from all nearby composters.
-     * Applied inside MultiplierManager just like event bonuses.
-     */
     public double getTotalFiberBonus(Location playerLoc) {
         return sumBonus(playerLoc, ComposterData.ComposterType.FIBER_100)
                 + sumBonus(playerLoc, ComposterData.ComposterType.FIBER_250);
@@ -82,14 +74,15 @@ public class ComposterManager {
                 + sumBonus(playerLoc, ComposterData.ComposterType.MATERIAL_150);
     }
 
+    /**
+     * Each composter now carries its own radius — no config.yml lookup needed.
+     */
     private double sumBonus(Location playerLoc, ComposterData.ComposterType type) {
-        double radius = plugin.getConfigManager().getConfig()
-                .getDouble("composters.radius", 20.0);
         double total = 0;
         for (ComposterData data : activeComposters.values()) {
             if (data.getType() != type) continue;
             if (!isSameWorld(playerLoc, data.getBlockLocation())) continue;
-            if (playerLoc.distance(data.getBlockLocation()) <= radius) {
+            if (playerLoc.distance(data.getBlockLocation()) <= data.getRadius()) {
                 total += type.getBonusPercent();
             }
         }
@@ -100,17 +93,11 @@ public class ComposterManager {
 
     private void spawnHologram(ComposterData data) {
         Location base = data.getBlockLocation().clone().add(0.5, 1.0, 0.5);
-
-        // Lines from bottom to top (highest ArmorStand = top line)
         String[] lines = buildLines(data);
         List<ArmorStand> stands = new ArrayList<>();
-
         for (int i = 0; i < lines.length; i++) {
-            Location lineLoc = base.clone().add(0, i * 0.28, 0);
-            ArmorStand stand = spawnTextStand(lineLoc, lines[i]);
-            stands.add(stand);
+            stands.add(spawnTextStand(base.clone().add(0, i * 0.28, 0), lines[i]));
         }
-
         data.setHologramStands(stands);
     }
 
@@ -132,19 +119,10 @@ public class ComposterManager {
         }
     }
 
-    /**
-     * Lines array — index 0 is the BOTTOM line, higher indices are above it.
-     * Order (bottom → top):
-     *   [0] time remaining
-     *   [1] placer name
-     *   [2] type label
-     *   [3] "LUCKY COMPOSTER" header
-     */
+    /** Lines bottom → top: time remaining, placer, type label, header. */
     private String[] buildLines(ComposterData data) {
-        long remaining = data.getRemainingSeconds();
-        String timeStr = formatTime(remaining);
         return new String[]{
-                "&7Expires in: &f" + timeStr,
+                "&7Expires in: &f" + formatTime(data.getRemainingSeconds()),
                 "&7Placed by: &e" + data.getPlacerName(),
                 data.getType().getDisplayColor() + "&l" + data.getType().getDisplayName(),
                 "&#FFD700&l✦ LUCKY COMPOSTER ✦"
@@ -172,28 +150,24 @@ public class ComposterManager {
     // ── Ticker ────────────────────────────────────────────────
 
     private void startTicker() {
-        // Every 20 ticks (1 second): update hologram time, expire finished composters
         tickTask = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
-            List<String> toRemove = new ArrayList<>();
+            List<String> expired = new ArrayList<>();
 
             for (Map.Entry<String, ComposterData> entry : activeComposters.entrySet()) {
                 ComposterData data = entry.getValue();
-
                 if (data.getRemainingSeconds() <= 0) {
-                    toRemove.add(entry.getKey());
-                    // Remove the block from the world
+                    expired.add(entry.getKey());
                     Location loc = data.getBlockLocation();
                     if (loc.getWorld() != null) {
                         plugin.getServer().getScheduler().runTask(plugin,
                                 () -> loc.getBlock().setType(org.bukkit.Material.AIR));
                     }
                 } else {
-                    // Update time display every second
                     updateHologramLines(data);
                 }
             }
 
-            for (String k : toRemove) {
+            for (String k : expired) {
                 ComposterData data = activeComposters.remove(k);
                 if (data != null) despawnHologram(data);
             }
@@ -212,17 +186,13 @@ public class ComposterManager {
     }
 
     private String formatTime(long seconds) {
-        long m = seconds / 60;
-        long s = seconds % 60;
-        if (m > 0) return m + "m " + s + "s";
-        return s + "s";
+        long m = seconds / 60, s = seconds % 60;
+        return m > 0 ? m + "m " + s + "s" : s + "s";
     }
 
     public void shutdown() {
         if (tickTask != null) tickTask.cancel();
-        for (ComposterData data : activeComposters.values()) {
-            despawnHologram(data);
-        }
+        for (ComposterData data : activeComposters.values()) despawnHologram(data);
         activeComposters.clear();
     }
 

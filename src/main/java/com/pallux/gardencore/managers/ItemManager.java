@@ -35,16 +35,19 @@ public class ItemManager {
         if (section == null) return;
 
         for (String key : section.getKeys(false)) {
-            String name = section.getString(key + ".name", key);
-            String matName = section.getString(key + ".material", "PAPER");
+            String name     = section.getString(key + ".name", key);
+            String matName  = section.getString(key + ".material", "PAPER");
             Material material = Material.matchMaterial(matName);
             if (material == null) {
                 plugin.getLogger().warning("Unknown material '" + matName + "' for item '" + key + "' in items.yml");
                 material = Material.PAPER;
             }
-            List<String> lore = section.getStringList(key + ".lore");
-            String command = section.getString(key + ".command", "");
-            items.put(key, new CustomItemModel(key, name, material, lore, command));
+            List<String> lore       = section.getStringList(key + ".lore");
+            String command          = section.getString(key + ".command", "");
+            int    durationSeconds  = section.getInt(key + ".duration-seconds", 0);
+            double radius           = section.getDouble(key + ".radius", 0.0);
+
+            items.put(key, new CustomItemModel(key, name, material, lore, command, durationSeconds, radius));
         }
 
         plugin.getLogger().info("Loaded " + items.size() + " custom items from items.yml");
@@ -79,10 +82,25 @@ public class ItemManager {
         if (stack == null || !stack.hasItemMeta()) return null;
         ItemMeta meta = stack.getItemMeta();
         if (meta == null) return null;
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
-        return pdc.get(namespacedKey, PersistentDataType.STRING);
+        return meta.getPersistentDataContainer().get(namespacedKey, PersistentDataType.STRING);
     }
 
+    /** Returns the active duration in seconds for a composter item, or 0 if not set. */
+    public int getDurationSeconds(String key) {
+        CustomItemModel model = items.get(key);
+        return model != null ? model.getDurationSeconds() : 0;
+    }
+
+    /** Returns the buff radius for a composter item, or 0 if not set. */
+    public double getRadius(String key) {
+        CustomItemModel model = items.get(key);
+        return model != null ? model.getRadius() : 0.0;
+    }
+
+    /**
+     * Executes the right-click command for a custom item.
+     * Composter items are excluded upstream in CustomItemListener and never reach here.
+     */
     public void executeItem(Player player, ItemStack stack) {
         String key = getItemKey(stack);
         if (key == null) return;
@@ -90,7 +108,9 @@ public class ItemManager {
         CustomItemModel model = items.get(key);
         if (model == null) return;
 
-        String cmd = model.getCommand().replace("%player%", player.getName());
+        if (!model.hasCommand()) return;
+
+        String cmd = model.getCommand().replace("%player%", player.getName()).trim();
 
         if (cmd.toLowerCase().startsWith("gca event start ")) {
             String eventKey = cmd.substring("gca event start ".length()).trim();
