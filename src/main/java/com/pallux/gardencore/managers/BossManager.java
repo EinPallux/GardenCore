@@ -109,15 +109,25 @@ public class BossManager {
         long intervalTicks  = (long) intervalMinutes * 60 * 20;
 
         spawnScheduler = plugin.getServer().getScheduler()
-                .runTaskTimer(plugin, this::spawnAllReadyBosses, intervalTicks, intervalTicks);
+                .runTaskTimer(plugin, this::spawnRandomReadyBoss, intervalTicks, intervalTicks);
     }
 
-    /** Spawns every boss whose zone is set and that is not already active. */
-    private void spawnAllReadyBosses() {
+    /** Spawns a single random boss whose zone is set and that is not already active. */
+    private void spawnRandomReadyBoss() {
+        List<BossData> readyBosses = new ArrayList<>();
+
         for (BossData boss : bosses.values()) {
-            if (!boss.isZoneSet() || boss.isActive()) continue;
-            spawnBoss(boss);
+            if (boss.isZoneSet() && !boss.isActive()) {
+                readyBosses.add(boss);
+            }
         }
+
+        if (readyBosses.isEmpty()) {
+            return;
+        }
+
+        BossData chosenBoss = readyBosses.get(random.nextInt(readyBosses.size()));
+        spawnBoss(chosenBoss);
     }
 
     // ── Spawning ───────────────────────────────────────────────
@@ -262,8 +272,8 @@ public class BossManager {
 
     /**
      * Starts a repeating task that:
-     *   1. Every ROAM_INTERVAL_TICKS picks a new random target inside the boss zone.
-     *   2. Every tick smoothly slides the body stand (and name stand) toward the target.
+     * 1. Every ROAM_INTERVAL_TICKS picks a new random target inside the boss zone.
+     * 2. Every tick smoothly slides the body stand (and name stand) toward the target.
      *
      * Both stands move together so the hologram stays above the skull.
      */

@@ -6,7 +6,7 @@
 #   \____|\__,_|_|  \__,_|\___|_| |_|\____\___/|_|  \___|
 # Bosses Config - Plugin made by Pallux @ BBB ( https://builtbybit.com/members/pallux.34066/ )
 # ──────────────────────────────────────────────
-# Bosses spawn automatically every <spawn-interval-minutes> minutes.
+# One random boss spawns automatically every <spawn-interval-minutes> minutes.
 # Each boss is tied to an island zone set via /gca boss set <key>.
 #
 # Per boss:
@@ -21,10 +21,6 @@
 #   reward-command:    Console command run for EACH player who dealt damage
 #                      when the boss is defeated. Use %player% for the name
 #                      and %damage% for the total damage that player dealt.
-#   hologram-format:   Text displayed on the floating name stand above the boss.
-#                      Supports color codes and hex (&#RRGGBB).
-#                      Placeholders: {boss}, {hp}, {max_hp}
-#                      Use \n to add extra lines (each becomes its own stand line).
 #
 # Zone boundaries are set in-game with:
 #   /gca boss set <key>   (requires a WorldEdit / FAWE cuboid selection)
@@ -32,7 +28,7 @@
 # ──────────────────────────────────────────────
 
 # How often a single random boss is chosen to spawn.
-spawn-interval-minutes: 3
+spawn-interval-minutes: 30
 
 bosses:
 
@@ -42,7 +38,7 @@ bosses:
     island-key: "Plains"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA4ZGY2MGM1MTA3NGVlZjI1NDRmZjM4Y2VhZDllMTY2NzVhZTQyNTE5MTYxMDUxODBlMWY4Y2UxOTdhYjNiYyJ9fX0="
     size: 4.0
-    max-health: 50000.0
+    max-health: 500000.0
     duration-seconds: 120
     reward-command: "gems give %player% 1"
     zone:
@@ -60,7 +56,7 @@ bosses:
     island-key: "Savanna"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzc0NzJkNjA4ODIxZjQ1YTg4MDUzNzZlYzBjNmZmY2I3ODExNzgyOWVhNWY5NjAwNDFjMmEwOWQxMGUwNGNiNCJ9fX0="
     size: 4.0
-    max-health: 500000.0
+    max-health: 5000000.0
     duration-seconds: 120
     reward-command: "gems give %player% 2"
     zone:
@@ -78,7 +74,7 @@ bosses:
     island-key: "Flower Field"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTYzZTY2NDZmMWMwZDQxZmQzYmY1NTg0YTFjZTA0NGY1YzQ2ZDU5ODI1OGRiNDYyMTYxMTc4NTlmNTdhZjE5NyJ9fX0="
     size: 4.0
-    max-health: 1000000.0
+    max-health: 10000000.0
     duration-seconds: 120
     reward-command: "gems give %player% 3"
     zone:
@@ -96,7 +92,7 @@ bosses:
     island-key: "Nether Forest"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODllYzVhMzAyMjJkMDY1OWIwZGJlZTg0NGI4ZjUzZWFlNjJmZTk1YjRhMzQ0OGE5ZWY3OTBhN2FlZGIyOTZkOSJ9fX0="
     size: 4.0
-    max-health: 10000000.0
+    max-health: 100000000.0
     duration-seconds: 120
     reward-command: "gems give %player% 3"
     zone:
@@ -114,7 +110,7 @@ bosses:
     island-key: "Coral Reef"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWRmMmViMjA1YTIzYzExOTZiM2VjZjIxZTY4YzA3NmI2OTZlNzYxNjNhYzhmYzRmYjlmNTMxOGMyYTVlNWIxYSJ9fX0="
     size: 4.0
-    max-health: 75000000.0
+    max-health: 750000000.0
     duration-seconds: 120
     reward-command: "gems give %player% 5"
     zone:
@@ -132,7 +128,7 @@ bosses:
     island-key: "Mystic Forest"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjk1M2IxMmEwOTQ2YjYyOWI0YzA4ODlkNDFmZDI2ZWQyNmZiNzI5ZDRkNTE0YjU5NzI3MTI0YzM3YmI3MGQ4ZCJ9fX0="
     size: 4.0
-    max-health: 175000000.0
+    max-health: 1750000000.0
     duration-seconds: 120
     reward-command: "gems give %player% 10"
     zone:
