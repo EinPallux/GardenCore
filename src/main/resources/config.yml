@@ -18,6 +18,9 @@ features:
   no-block-drops: true
   no-non-crop-break: true
   command-blocking: true
+
+# Do NOT change any of these settings below unless you 100%
+# know what you are doing. This can break the server!
   instant-replant: true
   alias-commands: true
   crop-farming: true

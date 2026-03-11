@@ -69,18 +69,16 @@ public class BossManager {
         for (String key : sec.getKeys(false)) {
             String path = "bosses." + key + ".";
 
-            String displayName    = cfg.getString(path + "display-name", key);
-            String islandKey      = cfg.getString(path + "island-key", key);
-            String skullTexture   = cfg.getString(path + "skull-texture", "");
-            double size           = cfg.getDouble(path + "size", 3.0);
-            double maxHealth      = cfg.getDouble(path + "max-health", 10000.0);
-            int durationSeconds   = cfg.getInt(path + "duration-seconds", 300);
-            String rewardCommand  = cfg.getString(path + "reward-command", "");
-            String hologramFormat = cfg.getString(path + "hologram-format",
-                    "{boss}\n&#FF6B6B❤ &7{hp} &8/ {max_hp}");
+            String displayName   = cfg.getString(path + "display-name", key);
+            String islandKey     = cfg.getString(path + "island-key", key);
+            String skullTexture  = cfg.getString(path + "skull-texture", "");
+            double size          = cfg.getDouble(path + "size", 3.0);
+            double maxHealth     = cfg.getDouble(path + "max-health", 10000.0);
+            int durationSeconds  = cfg.getInt(path + "duration-seconds", 300);
+            String rewardCommand = cfg.getString(path + "reward-command", "");
 
             BossData data = new BossData(key, displayName, maxHealth, durationSeconds,
-                    islandKey, skullTexture, size, rewardCommand, hologramFormat);
+                    islandKey, skullTexture, size, rewardCommand);
 
             // Load saved zone
             String world = cfg.getString(path + "zone.world", "");
@@ -167,7 +165,7 @@ public class BossManager {
             );
         });
 
-        // ── Name / health hologram stand ───────────────────────
+        // ── Name hologram stand — shows display-name only ──────
         double nameOffsetY = boss.getSize() * 1.6 + 0.5;
         Location nameLoc = loc.clone().add(0, nameOffsetY, 0);
 
@@ -176,7 +174,7 @@ public class BossManager {
             stand.setGravity(false);
             stand.setCanPickupItems(false);
             stand.setCustomNameVisible(true);
-            stand.setCustomName(buildHealthDisplay(boss));
+            stand.setCustomName(ColorUtil.translate(boss.getDisplayName()));
             stand.setInvulnerable(true);
             stand.setSilent(true);
             stand.setSmall(true);
@@ -240,7 +238,7 @@ public class BossManager {
                 return;
             }
 
-            // Update boss bar progress
+            // Update boss bar progress and title
             BossBar bar = bossBars.get(boss.getKey());
             if (bar != null) {
                 double healthFraction = boss.getCurrentHealth() / boss.getMaxHealth();
@@ -248,11 +246,7 @@ public class BossManager {
                 bar.setTitle(buildBossBarTitle(boss));
             }
 
-            // Update hologram
-            ArmorStand ns = boss.getNameStand();
-            if (ns != null && ns.isValid()) {
-                ns.setCustomName(buildHealthDisplay(boss));
-            }
+            // Hologram stays as display-name only — no update needed
 
         }, 20L, 20L);
 
@@ -370,12 +364,6 @@ public class BossManager {
         boss.setCurrentHealth(boss.getCurrentHealth() - damage);
         boss.getDamageMap().merge(player.getUniqueId(), damage, Double::sum);
 
-        // Immediate hologram update
-        ArmorStand ns = boss.getNameStand();
-        if (ns != null && ns.isValid()) {
-            ns.setCustomName(buildHealthDisplay(boss));
-        }
-
         // Immediate boss bar update
         BossBar bar = bossBars.get(boss.getKey());
         if (bar != null) {
@@ -443,7 +431,10 @@ public class BossManager {
         boss.reset();
     }
 
-    // ── Boss bar / hologram text ───────────────────────────────
+    // ── Boss bar title ─────────────────────────────────────────
+    // Shows: BossName | HP / MaxHP | Time remaining
+    // Format is driven by the "boss.bossbar" message key in messages.yml
+    // Placeholders: {boss}, {hp}, {max_hp}, {time}
 
     private String buildBossBarTitle(BossData boss) {
         String hpStr    = NumberUtil.formatRaw(boss.getCurrentHealth());
@@ -459,19 +450,6 @@ public class BossManager {
                         .replace("{max_hp}", maxHpStr)
                         .replace("{time}",   String.valueOf(remaining))
         );
-    }
-
-    private String buildHealthDisplay(BossData boss) {
-        String hpStr    = NumberUtil.formatRaw(boss.getCurrentHealth());
-        String maxHpStr = NumberUtil.formatRaw(boss.getMaxHealth());
-
-        String formatted = boss.getHologramFormat()
-                .replace("{boss}",   boss.getDisplayName())
-                .replace("{hp}",     hpStr)
-                .replace("{max_hp}", maxHpStr)
-                .replace("\\n", "\n");
-
-        return ColorUtil.translate(formatted);
     }
 
     // ── Skull item builder ─────────────────────────────────────

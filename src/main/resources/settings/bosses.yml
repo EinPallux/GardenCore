@@ -31,21 +31,20 @@
 # They are stored automatically under each boss's zone: block below.
 # ──────────────────────────────────────────────
 
-# How often a boss cycle runs (one boss per zone, staggered 1 min apart)
-spawn-interval-minutes: 30
+# How often a single random boss is chosen to spawn.
+spawn-interval-minutes: 3
 
 bosses:
 
   # ── Tier 1 — Plains (Level 1) ─────────────────
   plains_boss:
-    display-name: "&#a8ff78&lMeadow Shambler &8[PLAINS]"
+    display-name: "&#a8ff78&lMeadow Shambler"
     island-key: "Plains"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA4ZGY2MGM1MTA3NGVlZjI1NDRmZjM4Y2VhZDllMTY2NzVhZTQyNTE5MTYxMDUxODBlMWY4Y2UxOTdhYjNiYyJ9fX0="
     size: 4.0
     max-health: 50000.0
     duration-seconds: 120
     reward-command: "gems give %player% 1"
-    hologram-format: "{boss}\n&#a8ff78❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
@@ -57,14 +56,13 @@ bosses:
 
   # ── Tier 2 — Savanna (Level 10) ───────────────
   savanna_boss:
-    display-name: "&#FFD700&lDust Stalker &8[SAVANNA]"
+    display-name: "&#FFD700&lDust Stalker"
     island-key: "Savanna"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzc0NzJkNjA4ODIxZjQ1YTg4MDUzNzZlYzBjNmZmY2I3ODExNzgyOWVhNWY5NjAwNDFjMmEwOWQxMGUwNGNiNCJ9fX0="
     size: 4.0
     max-health: 500000.0
     duration-seconds: 120
     reward-command: "gems give %player% 2"
-    hologram-format: "{boss}\n&#FFD700❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
@@ -76,14 +74,13 @@ bosses:
 
   # ── Tier 3 — Flower Field (Level 75) ──────────
   flowerfield_boss:
-    display-name: "&#FFB6C1&lBloom Wraith  &8[FLOWER FIELD]"
+    display-name: "&#FFB6C1&lBloom Wraith"
     island-key: "Flower Field"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTYzZTY2NDZmMWMwZDQxZmQzYmY1NTg0YTFjZTA0NGY1YzQ2ZDU5ODI1OGRiNDYyMTYxMTc4NTlmNTdhZjE5NyJ9fX0="
     size: 4.0
     max-health: 1000000.0
     duration-seconds: 120
     reward-command: "gems give %player% 3"
-    hologram-format: "{boss}\n&#FFB6C1❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
@@ -95,14 +92,13 @@ bosses:
 
   # ── Tier 4 — Nether Forest (Level 200) ────────
   netherforest_boss:
-    display-name: "&#FF6B6B&lInfernal Reaper &8[NETHER FOREST]"
+    display-name: "&#FF6B6B&lInfernal Reaper"
     island-key: "Nether Forest"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODllYzVhMzAyMjJkMDY1OWIwZGJlZTg0NGI4ZjUzZWFlNjJmZTk1YjRhMzQ0OGE5ZWY3OTBhN2FlZGIyOTZkOSJ9fX0="
     size: 4.0
     max-health: 10000000.0
     duration-seconds: 120
     reward-command: "gems give %player% 3"
-    hologram-format: "{boss}\n&#FF6B6B❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
@@ -114,14 +110,13 @@ bosses:
 
   # ── Tier 5 — Coral Reef (Level 400) ───────────
   coralreef_boss:
-    display-name: "&#C4A882&lTide Colossus &8[CORAL REEF]"
+    display-name: "&#C4A882&lTide Colossus"
     island-key: "Coral Reef"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWRmMmViMjA1YTIzYzExOTZiM2VjZjIxZTY4YzA3NmI2OTZlNzYxNjNhYzhmYzRmYjlmNTMxOGMyYTVlNWIxYSJ9fX0="
     size: 4.0
     max-health: 75000000.0
     duration-seconds: 120
     reward-command: "gems give %player% 5"
-    hologram-format: "{boss}\n&#C4A882❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
@@ -133,14 +128,13 @@ bosses:
 
   # ── Tier 6 — Mystic Forest (Level 1000) ───────
   mysticforest_boss:
-    display-name: "&#78c8ff&lEternal Arbiter &8[MYSTIC FOREST]"
+    display-name: "&#78c8ff&lEternal Arbiter"
     island-key: "Mystic Forest"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjk1M2IxMmEwOTQ2YjYyOWI0YzA4ODlkNDFmZDI2ZWQyNmZiNzI5ZDRkNTE0YjU5NzI3MTI0YzM3YmI3MGQ4ZCJ9fX0="
     size: 4.0
     max-health: 175000000.0
     duration-seconds: 120
     reward-command: "gems give %player% 10"
-    hologram-format: "{boss}\n&#78c8ff❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
