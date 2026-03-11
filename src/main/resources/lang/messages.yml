@@ -78,6 +78,14 @@ elder:
   not-enough-reed:      "&cYou don't have enough Reed for this perk!"
   not-enough-clover:    "&cYou don't have enough Clover for this perk!"
 
+# ── Boss Encounters ────────────────────────────
+boss:
+  spawned:  "&#FF6B6B&l⚔ Boss Spawned! &7{boss} &7has emerged in &e{island}&7! You have &e{duration} minutes &7to defeat it!"
+  defeated: "&#a8ff78&l⚔ Boss Defeated! &7{boss} &7in &e{island} &7has been slain! &aRewards granted to all participants."
+  expired:  "&#FF6B6B&l⚔ Boss Escaped! &7{boss} &7in &e{island} &7has vanished. &cNo rewards given."
+  bossbar:        "&#FF6B6B⚔ {boss} &8| &c{hp} &7/ {max_hp} HP &8| &e{time}s remaining"
+  hologram-health: "{boss}\n&#FF6B6B❤ &7{hp} &8/ {max_hp}"
+
 # ── Composters ─────────────────────────────────
 composter:
   placed:  "&#a8ff78&l✦ Lucky Composter placed! &7{type} &7is active for &f{duration} minutes &7in a &f{radius} block radius&7."
@@ -91,3 +99,9 @@ admin:
   reset-material:      "&7Materials for &e{player} &7have been reset."
   reset-research:      "&7Research progress for &e{player} &7has been reset."
   reset-elder:         "&7Elder perks for &e{player} &7have been reset."
+  boss-zone-set: "&7Boss zone for &e{key} &7has been saved."
+  boss-spawned: "&7Boss &e{key} &7has been force-spawned."
+  boss-despawned: "&7Boss &e{key} &7has been force-despawned."
+  boss-already-active: "&cBoss &e{key} &cis already active."
+  boss-not-active: "&cBoss &e{key} &cis not currently active."
+  boss-unknown: "&cUnknown boss key &e{key}&c. Check bosses.yml."

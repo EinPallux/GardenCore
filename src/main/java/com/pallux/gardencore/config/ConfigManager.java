@@ -25,6 +25,7 @@ public class ConfigManager {
     private FileConfiguration pets;
     private FileConfiguration leveling;
     private FileConfiguration blockedCommands;
+    private FileConfiguration bosses;
 
     public ConfigManager(GardenCore plugin) {
         this.plugin = plugin;
@@ -44,6 +45,7 @@ public class ConfigManager {
         pets            = loadOrCreate("settings/pets.yml");
         leveling        = loadOrCreate("settings/leveling.yml");
         blockedCommands = loadOrCreate("settings/blocked-commands.yml");
+        bosses          = loadOrCreate("settings/bosses.yml");
         guis            = loadOrCreate("guis/upgradesmenu.yml");
         research        = loadOrCreate("guis/researchmenu.yml");
         gardenMenu      = loadOrCreate("guis/gardenmenu.yml");
@@ -74,6 +76,7 @@ public class ConfigManager {
         pets            = loadOrCreate("settings/pets.yml");
         leveling        = loadOrCreate("settings/leveling.yml");
         blockedCommands = loadOrCreate("settings/blocked-commands.yml");
+        bosses          = loadOrCreate("settings/bosses.yml");
         guis            = loadOrCreate("guis/upgradesmenu.yml");
         research        = loadOrCreate("guis/researchmenu.yml");
         gardenMenu      = loadOrCreate("guis/gardenmenu.yml");
@@ -118,4 +121,5 @@ public class ConfigManager {
     public FileConfiguration getPetsConfig()          { return pets; }
     public FileConfiguration getLevelingConfig()      { return leveling; }
     public FileConfiguration getBlockedCommands()     { return blockedCommands; }
+    public FileConfiguration getBossesConfig()        { return bosses; }
 }

@@ -4,6 +4,7 @@ import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.gui.ConfirmGui;
 import com.pallux.gardencore.managers.ElderManager;
 import com.pallux.gardencore.managers.UpgradeManager;
+import com.pallux.gardencore.models.BossData;
 import com.pallux.gardencore.models.PlayerData;
 import com.pallux.gardencore.utils.ColorUtil;
 import com.pallux.gardencore.utils.MessageUtil;
@@ -55,11 +56,113 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             case "event"   -> handleEvent(sender, args);
             case "item"    -> handleItem(sender, args);
             case "afkzone" -> handleAfkZone(sender, args);
+            case "boss"    -> handleBoss(sender, args);
             case "reload"  -> handleReload(sender);
             default        -> sendHelp(sender);
         }
         return true;
     }
+
+    // ── Boss ──────────────────────────────────────────────────
+
+    private void handleBoss(CommandSender sender, String[] args) {
+        if (args.length < 2) { sendBossHelp(sender); return; }
+        switch (args[1].toLowerCase()) {
+            case "set"     -> handleBossSet(sender, args);
+            case "spawn"   -> handleBossSpawn(sender, args);
+            case "despawn" -> handleBossDespawn(sender, args);
+            default        -> sendBossHelp(sender);
+        }
+    }
+
+    private void handleBossSet(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            MessageUtil.send(sender, "command-console-only");
+            return;
+        }
+        if (args.length < 3) { sendBossHelp(sender); return; }
+
+        String key = args[2].toLowerCase();
+        BossData boss = plugin.getBossManager().getBoss(key);
+        if (boss == null) {
+            err(sender, "Unknown boss key &e" + key + "&c. Check bosses.yml.");
+            return;
+        }
+
+        try {
+            com.sk89q.worldedit.bukkit.WorldEditPlugin we =
+                    (com.sk89q.worldedit.bukkit.WorldEditPlugin)
+                            plugin.getServer().getPluginManager().getPlugin("WorldEdit");
+            if (we == null)
+                we = (com.sk89q.worldedit.bukkit.WorldEditPlugin)
+                        plugin.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit");
+            if (we == null) {
+                err(sender, "WorldEdit / FastAsyncWorldEdit is not installed.");
+                return;
+            }
+
+            com.sk89q.worldedit.regions.Region region =
+                    we.getSession(player).getSelection(we.getSession(player).getSelectionWorld());
+            if (region == null) {
+                err(sender, "You don't have a WorldEdit selection. Use the wand first.");
+                return;
+            }
+
+            com.sk89q.worldedit.math.BlockVector3 min = region.getMinimumPoint();
+            com.sk89q.worldedit.math.BlockVector3 max = region.getMaximumPoint();
+            String worldName = player.getWorld().getName();
+
+            boss.setZone(worldName,
+                    min.getX(), min.getY(), min.getZ(),
+                    max.getX(), max.getY(), max.getZ());
+
+            plugin.getBossManager().saveZone(boss);
+
+            ok(sender, "Boss zone for &e" + key + " &7set in &e" + worldName
+                    + " &7from &e(" + min.getX() + ", " + min.getY() + ", " + min.getZ() + ")"
+                    + " &7to &e(" + max.getX() + ", " + max.getY() + ", " + max.getZ() + ")");
+
+        } catch (Exception e) {
+            err(sender, "Failed to get selection: " + e.getMessage());
+        }
+    }
+
+    private void handleBossSpawn(CommandSender sender, String[] args) {
+        if (args.length < 3) { sendBossHelp(sender); return; }
+        String key = args[2].toLowerCase();
+        BossData boss = plugin.getBossManager().getBoss(key);
+        if (boss == null) {
+            err(sender, "Unknown boss key &e" + key + "&c. Check bosses.yml.");
+            return;
+        }
+        if (boss.isActive()) {
+            err(sender, "Boss &e" + key + " &cis already active.");
+            return;
+        }
+        if (!boss.isZoneSet()) {
+            err(sender, "Boss &e" + key + " &chas no zone set. Use &e/gca boss set " + key + " &cfirst.");
+            return;
+        }
+        boolean spawned = plugin.getBossManager().forceSpawn(key);
+        if (spawned) {
+            ok(sender, "Boss &e" + key + " &7spawned.");
+        } else {
+            err(sender, "Failed to spawn boss &e" + key + "&c.");
+        }
+    }
+
+    private void handleBossDespawn(CommandSender sender, String[] args) {
+        if (args.length < 3) { sendBossHelp(sender); return; }
+        String key = args[2].toLowerCase();
+        boolean despawned = plugin.getBossManager().forceDespawn(key);
+        if (despawned) {
+            ok(sender, "Boss &e" + key + " &7despawned.");
+        } else {
+            err(sender, "Boss &e" + key + " &cis not currently active or does not exist.");
+        }
+    }
+
+    // ── Player ────────────────────────────────────────────────
 
     private void handlePlayer(CommandSender sender, String[] args) {
         if (args.length < 3) { sendPlayerHelp(sender); return; }
@@ -228,7 +331,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 plugin.getDataManager().getPlayerData(target.getUniqueId()).resetAll();
                 plugin.getDataManager().saveAsync();
                 MessageUtil.send(player, "upgrades.reset-all", Map.of("player", name));
-                // Despawn pet cosmetic if the target is online
                 Player onlineTarget = Bukkit.getPlayer(target.getUniqueId());
                 if (onlineTarget != null) {
                     plugin.getPetCosmeticManager().despawn(target.getUniqueId());
@@ -366,8 +468,11 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
     private void handleReload(CommandSender sender) {
         plugin.getConfigManager().reloadAll();
         plugin.getPetCosmeticManager().refreshAll();
+        plugin.getBossManager().loadBosses();
         ok(sender, "All config files reloaded.");
     }
+
+    // ── Help ──────────────────────────────────────────────────
 
     private void sendHelp(CommandSender sender) {
         sender.sendMessage(lines(
@@ -387,6 +492,11 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 "&#FFD700Events",
                 "&e/gca event start &7<key>",
                 "&e/gca event stop",
+                "",
+                "&#FFD700Bosses",
+                "&e/gca boss set     &7<key>  &8— set zone from WorldEdit selection",
+                "&e/gca boss spawn   &7<key>  &8— force-spawn a boss",
+                "&e/gca boss despawn &7<key>  &8— force-despawn a boss",
                 "",
                 "&#FFD700Utility",
                 "&e/gca item <key> <player> &7[amount]",
@@ -413,18 +523,41 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         ));
     }
 
+    private void sendBossHelp(CommandSender sender) {
+        sender.sendMessage(lines(
+                "&8&m                                          ",
+                "&#a8ff78&lGardenCore &7— &7/gca boss <action> <key>",
+                "",
+                "&e set     &7<key>  &8— Set boss zone from WorldEdit selection",
+                "&e spawn   &7<key>  &8— Force-spawn a boss immediately",
+                "&e despawn &7<key>  &8— Force-despawn the active boss",
+                "&8&m                                          "
+        ));
+    }
+
+    // ── Tab completion ────────────────────────────────────────
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("gc.admin")) return List.of();
         if (args.length == 1)
-            return filter(List.of("player", "event", "item", "afkzone", "reload"), args[0]);
+            return filter(List.of("player", "event", "item", "afkzone", "boss", "reload"), args[0]);
         return switch (args[0].toLowerCase()) {
             case "player"  -> tabPlayer(args);
             case "event"   -> tabEvent(args);
             case "item"    -> tabItem(args);
             case "afkzone" -> args.length == 2 ? filter(List.of("set"), args[1]) : List.of();
+            case "boss"    -> tabBoss(args);
             default        -> List.of();
         };
+    }
+
+    private List<String> tabBoss(String[] args) {
+        if (args.length == 2)
+            return filter(List.of("set", "spawn", "despawn"), args[1]);
+        if (args.length == 3)
+            return filter(new ArrayList<>(plugin.getBossManager().getBossKeys()), args[2]);
+        return List.of();
     }
 
     private List<String> tabPlayer(String[] args) {
@@ -441,7 +574,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 default -> List.of();
             };
         }
-        // arg[4] — rarity names when type is "pet"
         if (args.length == 5 && action.equals("set") && args[3].equalsIgnoreCase("pet")) {
             return filter(PET_RARITIES, args[4]);
         }
@@ -460,6 +592,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         if (args.length == 3) return onlinePlayers(args[2]);
         return List.of();
     }
+
+    // ── Helpers ───────────────────────────────────────────────
 
     private void setMaterial(PlayerData d, String type, double v) {
         switch (type) {

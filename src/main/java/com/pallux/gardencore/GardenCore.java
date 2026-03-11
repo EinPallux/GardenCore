@@ -39,6 +39,8 @@ public final class GardenCore extends JavaPlugin {
     private PetManager petManager;
     private PetCosmeticManager petCosmeticManager;
     private ComposterManager composterManager;
+    private BossManager bossManager;
+
     private final Map<UUID, Integer> researchPageMap = new ConcurrentHashMap<>();
 
     @Override
@@ -68,6 +70,7 @@ public final class GardenCore extends JavaPlugin {
         petManager = new PetManager(this);
         petCosmeticManager = new PetCosmeticManager(this);
         composterManager = new ComposterManager(this);
+        bossManager = new BossManager(this);
 
         registerListeners();
         registerCommands();
@@ -80,6 +83,9 @@ public final class GardenCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (bossManager != null) {
+            bossManager.shutdown();
+        }
         if (petCosmeticManager != null) {
             petCosmeticManager.shutdown();
         }
@@ -137,6 +143,7 @@ public final class GardenCore extends JavaPlugin {
         pm.registerEvents(new AfkZoneListener(this), this);
         pm.registerEvents(new ResearchListener(this), this);
         pm.registerEvents(new ElderListener(this), this);
+        pm.registerEvents(new BossListener(this), this);
     }
 
     private void registerCommands() {
@@ -210,6 +217,7 @@ public final class GardenCore extends JavaPlugin {
     public PetManager getPetManager()                         { return petManager; }
     public PetCosmeticManager getPetCosmeticManager()         { return petCosmeticManager; }
     public ComposterManager getComposterManager()             { return composterManager; }
+    public BossManager getBossManager()                       { return bossManager; }
 
     public int getPlayerResearchPage(Player player) {
         return researchPageMap.getOrDefault(player.getUniqueId(), 0);

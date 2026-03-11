@@ -1,0 +1,141 @@
+# ──────────────────────────────────────────────
+#     ____               _             ____
+#   / ___| __ _ _ __ __| | ___ _ __  / ___|___  _ __ ___
+#  | |  _ / _` | '__/ _` |/ _ \ '_ \| |   / _ \| '__/ _ \
+#  | |_| | (_| | | | (_| |  __/ | | | |__| (_) | | |  __/
+#   \____|\__,_|_|  \__,_|\___|_| |_|\____\___/|_|  \___|
+# Bosses Config - Plugin made by Pallux @ BBB ( https://builtbybit.com/members/pallux.34066/ )
+# ──────────────────────────────────────────────
+# Bosses spawn automatically every <spawn-interval-minutes> minutes.
+# Each boss is tied to an island zone set via /gca boss set <key>.
+#
+# Per boss:
+#   display-name:      Name shown in boss bar, hologram and chat
+#   island-key:        Identifier for the island (used in messages)
+#   skull-texture:     Base64 skin value for the giant player-head appearance
+#                      Grab from https://minecraft-heads.com → "Value" field
+#   size:              Scale of the ArmorStand (1.0 = normal, 3.0 = 3x bigger)
+#                      Note: Paper 1.21 supports ArmorStand scale via attributes
+#   max-health:        Total HP the boss has
+#   duration-seconds:  How long the boss stays alive if not killed
+#   reward-command:    Console command run for EACH player who dealt damage
+#                      when the boss is defeated. Use %player% for the name
+#                      and %damage% for the total damage that player dealt.
+#
+# Zone boundaries are set in-game with:
+#   /gca boss set <key>   (requires a WorldEdit / FAWE cuboid selection)
+# They are stored automatically under each boss's zone: block below.
+# ──────────────────────────────────────────────
+
+# How often a boss cycle runs (one boss per zone, staggered 1 min apart)
+spawn-interval-minutes: 30
+
+bosses:
+
+  # ── Tier 1 — Plains (Level 1) ─────────────────
+  plains_boss:
+    display-name: "&#a8ff78&lMeadow Shambler"
+    island-key: "Plains"
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA4ZGY2MGM1MTA3NGVlZjI1NDRmZjM4Y2VhZDllMTY2NzVhZTQyNTE5MTYxMDUxODBlMWY4Y2UxOTdhYjNiYyJ9fX0="
+    size: 3.0
+    max-health: 10000.0
+    duration-seconds: 300
+    reward-command: "eco give %player% 500"
+    zone:
+      world: ""
+      min-x: 0
+      min-y: 0
+      min-z: 0
+      max-x: 0
+      max-y: 0
+      max-z: 0
+
+  # ── Tier 2 — Savanna (Level 10) ───────────────
+  savanna_boss:
+    display-name: "&#FFD700&lDust Stalker"
+    island-key: "Savanna"
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzc0NzJkNjA4ODIxZjQ1YTg4MDUzNzZlYzBjNmZmY2I3ODExNzgyOWVhNWY5NjAwNDFjMmEwOWQxMGUwNGNiNCJ9fX0="
+    size: 3.5
+    max-health: 75000.0
+    duration-seconds: 300
+    reward-command: "eco give %player% 1000"
+    zone:
+      world: ""
+      min-x: 0
+      min-y: 0
+      min-z: 0
+      max-x: 0
+      max-y: 0
+      max-z: 0
+
+  # ── Tier 3 — Flower Field (Level 75) ──────────
+  flowerfield_boss:
+    display-name: "&#FFB6C1&lBloom Wraith"
+    island-key: "Flower Field"
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTYzZTY2NDZmMWMwZDQxZmQzYmY1NTg0YTFjZTA0NGY1YzQ2ZDU5ODI1OGRiNDYyMTYxMTc4NTlmNTdhZjE5NyJ9fX0="
+    size: 4.0
+    max-health: 500000.0
+    duration-seconds: 360
+    reward-command: "eco give %player% 2500"
+    zone:
+      world: ""
+      min-x: 0
+      min-y: 0
+      min-z: 0
+      max-x: 0
+      max-y: 0
+      max-z: 0
+
+  # ── Tier 4 — Nether Forest (Level 200) ────────
+  netherforest_boss:
+    display-name: "&#FF6B6B&lInfernal Reaper"
+    island-key: "Nether Forest"
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODllYzVhMzAyMjJkMDY1OWIwZGJlZTg0NGI4ZjUzZWFlNjJmZTk1YjRhMzQ0OGE5ZWY3OTBhN2FlZGIyOTZkOSJ9fX0="
+    size: 4.5
+    max-health: 3000000.0
+    duration-seconds: 420
+    reward-command: "eco give %player% 5000"
+    zone:
+      world: ""
+      min-x: 0
+      min-y: 0
+      min-z: 0
+      max-x: 0
+      max-y: 0
+      max-z: 0
+
+  # ── Tier 5 — Coral Reef (Level 400) ───────────
+  coralreef_boss:
+    display-name: "&#C4A882&lTide Colossus"
+    island-key: "Coral Reef"
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWRmMmViMjA1YTIzYzExOTZiM2VjZjIxZTY4YzA3NmI2OTZlNzYxNjNhYzhmYzRmYjlmNTMxOGMyYTVlNWIxYSJ9fX0="
+    size: 5.0
+    max-health: 15000000.0
+    duration-seconds: 480
+    reward-command: "eco give %player% 10000"
+    zone:
+      world: ""
+      min-x: 0
+      min-y: 0
+      min-z: 0
+      max-x: 0
+      max-y: 0
+      max-z: 0
+
+  # ── Tier 6 — Mystic Forest (Level 1000) ───────
+  mysticforest_boss:
+    display-name: "&#78c8ff&lEternal Arbiter"
+    island-key: "Mystic Forest"
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjk1M2IxMmEwOTQ2YjYyOWI0YzA4ODlkNDFmZDI2ZWQyNmZiNzI5ZDRkNTE0YjU5NzI3MTI0YzM3YmI3MGQ4ZCJ9fX0="
+    size: 6.0
+    max-health: 100000000.0
+    duration-seconds: 600
+    reward-command: "eco give %player% 25000"
+    zone:
+      world: ""
+      min-x: 0
+      min-y: 0
+      min-z: 0
+      max-x: 0
+      max-y: 0
+      max-z: 0
