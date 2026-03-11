@@ -20,65 +20,65 @@
 events:
 
   # ── Fiber Amount ───────────────────────────────
-  fiber_5:
-    display-name: "&#FFD700+5% Fiber Amount"
-    type: FIBER_AMOUNT
-    value: 5.0
-
-  fiber_10:
-    display-name: "&#FFD700+10% Fiber Amount"
-    type: FIBER_AMOUNT
-    value: 10.0
-
-  fiber_25:
-    display-name: "&#FFD700+25% Fiber Amount"
-    type: FIBER_AMOUNT
-    value: 25.0
-
   fiber_50:
     display-name: "&#FFD700+50% Fiber Amount"
     type: FIBER_AMOUNT
     value: 50.0
 
+  fiber_100:
+    display-name: "&#FFD700+100% Fiber Amount"
+    type: FIBER_AMOUNT
+    value: 100.0
+
+  fiber_250:
+    display-name: "&#FFD700+250% Fiber Amount"
+    type: FIBER_AMOUNT
+    value: 250.0
+
+  fiber_500:
+    display-name: "&#FFD700+500% Fiber Amount"
+    type: FIBER_AMOUNT
+    value: 500.0
+
   # ── Material Amount ────────────────────────────
-  material_amount_5:
-    display-name: "&#a8ff78+5% Material Amount"
+  material_amount_20:
+    display-name: "&#a8ff78+20% Material Amount"
     type: MATERIAL_AMOUNT
-    value: 5.0
+    value: 20.0
 
-  material_amount_10:
-    display-name: "&#a8ff78+10% Material Amount"
+  material_amount_75:
+    display-name: "&#a8ff78+75% Material Amount"
     type: MATERIAL_AMOUNT
-    value: 10.0
+    value: 75.0
 
-  material_amount_25:
-    display-name: "&#a8ff78+25% Material Amount"
+  material_amount_150:
+    display-name: "&#a8ff78+150% Material Amount"
     type: MATERIAL_AMOUNT
-    value: 25.0
+    value: 150.0
 
   # ── Material Chance ────────────────────────────
-  material_chance_025:
-    display-name: "&#78c8ff+0.25% Material Chance"
+  material_chance_10:
+    display-name: "&#78c8ff+10% Material Chance"
     type: MATERIAL_CHANCE
-    value: 0.25
-
-  material_chance_05:
-    display-name: "&#78c8ff+0.5% Material Chance"
-    type: MATERIAL_CHANCE
-    value: 0.5
-
-  # ── XP ────────────────────────────────────────
-  xp_10:
-    display-name: "&#a8d8ff+10% XP"
-    type: XP_AMOUNT
     value: 10.0
 
-  xp_25:
-    display-name: "&#a8d8ff+25% XP"
-    type: XP_AMOUNT
+  material_chance_25:
+    display-name: "&#78c8ff+25% Material Chance"
+    type: MATERIAL_CHANCE
     value: 25.0
 
+  # ── XP ────────────────────────────────────────
   xp_50:
     display-name: "&#a8d8ff+50% XP"
     type: XP_AMOUNT
     value: 50.0
+
+  xp_100:
+    display-name: "&#a8d8ff+100% XP"
+    type: XP_AMOUNT
+    value: 100.0
+
+  xp_250:
+    display-name: "&#a8d8ff+250% XP"
+    type: XP_AMOUNT
+    value: 250.0

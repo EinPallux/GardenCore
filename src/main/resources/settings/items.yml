@@ -20,36 +20,6 @@
 items:
 
   # ── Fiber Event Tickets ────────────────────────
-  ticket_fiber_5:
-    name: "&#FFD700&lEvent Ticket &8— &e+5% Fiber"
-    material: PAPER
-    lore:
-      - "&7Right-click to activate a"
-      - "&#FFD700+5% Fiber Amount &7event for all players."
-      - ""
-      - "&8Single-use."
-    command: "gca event start fiber_5"
-
-  ticket_fiber_10:
-    name: "&#FFD700&lEvent Ticket &8— &e+10% Fiber"
-    material: PAPER
-    lore:
-      - "&7Right-click to activate a"
-      - "&#FFD700+10% Fiber Amount &7event for all players."
-      - ""
-      - "&8Single-use."
-    command: "gca event start fiber_10"
-
-  ticket_fiber_25:
-    name: "&#FFD700&lEvent Ticket &8— &e+25% Fiber"
-    material: PAPER
-    lore:
-      - "&7Right-click to activate a"
-      - "&#FFD700+25% Fiber Amount &7event for all players."
-      - ""
-      - "&8Single-use."
-    command: "gca event start fiber_25"
-
   ticket_fiber_50:
     name: "&#FFD700&lEvent Ticket &8— &e+50% Fiber"
     material: PAPER
@@ -60,79 +30,89 @@ items:
       - "&8Single-use."
     command: "gca event start fiber_50"
 
+  ticket_fiber_100:
+    name: "&#FFD700&lEvent Ticket &8— &e+100% Fiber"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a"
+      - "&#FFD700+100% Fiber Amount &7event for all players."
+      - ""
+      - "&8Single-use."
+    command: "gca event start fiber_100"
+
+  ticket_fiber_250:
+    name: "&#FFD700&lEvent Ticket &8— &e+250% Fiber"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a"
+      - "&#FFD700+250% Fiber Amount &7event for all players."
+      - ""
+      - "&8Single-use."
+    command: "gca event start fiber_250"
+
+  ticket_fiber_500:
+    name: "&#FFD700&lEvent Ticket &8— &e+500% Fiber"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a"
+      - "&#FFD700+500% Fiber Amount &7event for all players."
+      - ""
+      - "&8Single-use."
+    command: "gca event start fiber_500"
+
   # ── Material Amount Event Tickets ─────────────
-  ticket_material_amount_5:
-    name: "&#a8ff78&lEvent Ticket &8— &a+5% Material Amount"
+  ticket_material_amount_20:
+    name: "&#a8ff78&lEvent Ticket &8— &a+20% Material Amount"
     material: PAPER
     lore:
       - "&7Right-click to activate a"
-      - "&#a8ff78+5% Material Amount &7event for all players."
+      - "&#a8ff78+20% Material Amount &7event for all players."
       - ""
       - "&8Single-use."
-    command: "gca event start material_amount_5"
+    command: "gca event start material_amount_20"
 
-  ticket_material_amount_10:
-    name: "&#a8ff78&lEvent Ticket &8— &a+10% Material Amount"
+  ticket_material_amount_75:
+    name: "&#a8ff78&lEvent Ticket &8— &a+75% Material Amount"
     material: PAPER
     lore:
       - "&7Right-click to activate a"
-      - "&#a8ff78+10% Material Amount &7event for all players."
+      - "&#a8ff78+75% Material Amount &7event for all players."
       - ""
       - "&8Single-use."
-    command: "gca event start material_amount_10"
+    command: "gca event start material_amount_75"
 
-  ticket_material_amount_25:
-    name: "&#a8ff78&lEvent Ticket &8— &a+25% Material Amount"
+  ticket_material_amount_150:
+    name: "&#a8ff78&lEvent Ticket &8— &a+150% Material Amount"
     material: PAPER
     lore:
       - "&7Right-click to activate a"
-      - "&#a8ff78+25% Material Amount &7event for all players."
+      - "&#a8ff78+150% Material Amount &7event for all players."
       - ""
       - "&8Single-use."
-    command: "gca event start material_amount_25"
+    command: "gca event start material_amount_150"
 
   # ── Material Chance Event Tickets ──────────────
-  ticket_material_chance_025:
-    name: "&#78c8ff&lEvent Ticket &8— &b+0.25% Material Chance"
+  ticket_material_chance_10:
+    name: "&#78c8ff&lEvent Ticket &8— &b+10% Material Chance"
     material: PAPER
     lore:
       - "&7Right-click to activate a"
-      - "&#78c8ff+0.25% Material Chance &7event for all players."
+      - "&#78c8ff+10% Material Chance &7event for all players."
       - ""
       - "&8Single-use."
-    command: "gca event start material_chance_025"
+    command: "gca event start material_chance_10"
 
-  ticket_material_chance_05:
-    name: "&#78c8ff&lEvent Ticket &8— &b+0.5% Material Chance"
+  ticket_material_chance_25:
+    name: "&#78c8ff&lEvent Ticket &8— &b+25% Material Chance"
     material: PAPER
     lore:
       - "&7Right-click to activate a"
-      - "&#78c8ff+0.5% Material Chance &7event for all players."
+      - "&#78c8ff+25% Material Chance &7event for all players."
       - ""
       - "&8Single-use."
-    command: "gca event start material_chance_05"
+    command: "gca event start material_chance_25"
 
   # ── XP Event Tickets ───────────────────────────
-  ticket_xp_10:
-    name: "&#a8d8ff&lEvent Ticket &8— &b+10% XP"
-    material: PAPER
-    lore:
-      - "&7Right-click to activate a"
-      - "&#a8d8ff+10% XP &7event for all players."
-      - ""
-      - "&8Single-use."
-    command: "gca event start xp_10"
-
-  ticket_xp_25:
-    name: "&#a8d8ff&lEvent Ticket &8— &b+25% XP"
-    material: PAPER
-    lore:
-      - "&7Right-click to activate a"
-      - "&#a8d8ff+25% XP &7event for all players."
-      - ""
-      - "&8Single-use."
-    command: "gca event start xp_25"
-
   ticket_xp_50:
     name: "&#a8d8ff&lEvent Ticket &8— &b+50% XP"
     material: PAPER
@@ -142,3 +122,23 @@ items:
       - ""
       - "&8Single-use."
     command: "gca event start xp_50"
+
+  ticket_xp_100:
+    name: "&#a8d8ff&lEvent Ticket &8— &b+100% XP"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a"
+      - "&#a8d8ff+100% XP &7event for all players."
+      - ""
+      - "&8Single-use."
+    command: "gca event start xp_100"
+
+  ticket_xp_250:
+    name: "&#a8d8ff&lEvent Ticket &8— &b+250% XP"
+    material: PAPER
+    lore:
+      - "&7Right-click to activate a"
+      - "&#a8d8ff+250% XP &7event for all players."
+      - ""
+      - "&8Single-use."
+    command: "gca event start xp_250"
