@@ -22,34 +22,66 @@ public class BossListener implements Listener {
     private final NamespacedKey bossNameKey;
 
     public BossListener(GardenCore plugin) {
-        this.plugin     = plugin;
+        this.plugin      = plugin;
         this.bossKey     = new NamespacedKey(plugin, "gc_boss_key");
         this.bossNameKey = new NamespacedKey(plugin, "gc_boss_name_stand");
     }
 
     /**
-     * ArmorStands do not fire EntityDamageByEntityEvent when attacked by players
-     * in vanilla because they are not living entities that take normal damage.
-     * Instead, a left-click on an ArmorStand fires PlayerInteractAtEntityEvent.
-     * We use that as our "hit" trigger.
+     * PRIMARY HIT HANDLER — EntityDamageByEntityEvent.
+     *
+     * On Paper 1.21, when a player left-clicks an ArmorStand the server fires
+     * EntityDamageByEntityEvent with damage = 0 (because ArmorStands are not
+     * living entities). This is the most reliable trigger for "player attacked
+     * an ArmorStand" across Paper versions.
+     *
+     * We cancel the vanilla damage and route through our own hit logic.
+     */
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof ArmorStand stand)) return;
+        if (!(event.getDamager() instanceof Player player)) return;
+
+        // Always cancel vanilla damage on boss stands to prevent unintended side-effects
+        String key = stand.getPersistentDataContainer().get(bossKey, PersistentDataType.STRING);
+        boolean isNameStand = stand.getPersistentDataContainer().has(bossNameKey, PersistentDataType.BYTE);
+
+        if (key == null && !isNameStand) return; // Not one of ours — leave it alone
+
+        event.setCancelled(true);
+        event.setDamage(0);
+
+        if (isNameStand) return; // Name stand — cancel interaction but do no damage
+
+        BossData boss = plugin.getBossManager().getBoss(key);
+        if (boss == null || !boss.isActive()) return;
+
+        plugin.getBossManager().handleHit(player, boss);
+    }
+
+    /**
+     * SECONDARY HIT HANDLER — PlayerInteractAtEntityEvent (right-click on entity).
+     *
+     * Some Paper builds fire this instead of (or in addition to)
+     * EntityDamageByEntityEvent for certain click styles. We handle it here as
+     * a fallback so both left- and right-click register as hits on the boss.
      */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
     public void onInteractAtEntity(PlayerInteractAtEntityEvent event) {
-        // Only main hand clicks count
         if (event.getHand() != EquipmentSlot.HAND) return;
 
         Entity entity = event.getRightClicked();
         if (!(entity instanceof ArmorStand stand)) return;
 
-        // Cancel interaction so items in hand don't trigger (e.g. placing blocks)
+        // Cancel so items in hand don't trigger extra actions (e.g. placing blocks)
+        boolean isNameStand = stand.getPersistentDataContainer().has(bossNameKey, PersistentDataType.BYTE);
+        String key = stand.getPersistentDataContainer().get(bossKey, PersistentDataType.STRING);
+
+        if (key == null && !isNameStand) return; // Not ours — leave it alone
+
         event.setCancelled(true);
 
-        // Block interactions with the name/health stand
-        if (stand.getPersistentDataContainer().has(bossNameKey, PersistentDataType.BYTE)) return;
-
-        // Check if this is a boss body stand
-        String key = stand.getPersistentDataContainer().get(bossKey, PersistentDataType.STRING);
-        if (key == null) return;
+        if (isNameStand) return;
 
         BossData boss = plugin.getBossManager().getBoss(key);
         if (boss == null || !boss.isActive()) return;
@@ -59,34 +91,8 @@ public class BossListener implements Listener {
     }
 
     /**
-     * PlayerInteractAtEntityEvent covers right-click-on-entity.
-     * For left-click (attack) on ArmorStands, Paper fires EntityDamageByEntityEvent
-     * with a damage of 0. We catch that too so either click style works.
-     */
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
-    public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof ArmorStand stand)) return;
-        if (!(event.getDamager() instanceof Player player)) return;
-
-        // Cancel vanilla damage — we handle it ourselves
-        event.setCancelled(true);
-        event.setDamage(0);
-
-        // Block interactions with the name/health stand
-        if (stand.getPersistentDataContainer().has(bossNameKey, PersistentDataType.BYTE)) return;
-
-        String key = stand.getPersistentDataContainer().get(bossKey, PersistentDataType.STRING);
-        if (key == null) return;
-
-        BossData boss = plugin.getBossManager().getBoss(key);
-        if (boss == null || !boss.isActive()) return;
-
-        plugin.getBossManager().handleHit(player, boss);
-    }
-
-    /**
-     * Also cancel right-click entity events on boss stands to prevent
-     * any unintended interactions (e.g. opening poses, equipping items).
+     * Prevent any other right-click entity interactions on boss stands
+     * (e.g. equipping items, posing).
      */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
     public void onInteractEntity(PlayerInteractEntityEvent event) {

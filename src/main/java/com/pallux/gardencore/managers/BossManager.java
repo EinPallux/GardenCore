@@ -35,8 +35,22 @@ public class BossManager {
     /** Per-boss countdown task */
     private final Map<String, BukkitTask> countdownTasks = new HashMap<>();
 
+    /**
+     * Per-boss roam task — moves the body stand (and name stand) to a new
+     * random position inside the zone every few seconds.
+     */
+    private final Map<String, BukkitTask> roamTasks = new HashMap<>();
+
     /** Main scheduler that fires the spawn cycle */
     private BukkitTask spawnScheduler;
+
+    private final Random random = new Random();
+
+    // ── Roam configuration ────────────────────────────────────
+    /** How often (in ticks) the boss picks a new roam target. 20 ticks = 1 s. */
+    private static final long ROAM_INTERVAL_TICKS = 60L; // every 3 seconds
+    /** How many blocks per tick the stand moves toward its target. */
+    private static final double ROAM_SPEED = 0.15;
 
     public BossManager(GardenCore plugin) {
         this.plugin = plugin;
@@ -55,13 +69,13 @@ public class BossManager {
         for (String key : sec.getKeys(false)) {
             String path = "bosses." + key + ".";
 
-            String displayName   = cfg.getString(path + "display-name", key);
-            String islandKey     = cfg.getString(path + "island-key", key);
-            String skullTexture  = cfg.getString(path + "skull-texture", "");
-            double size          = cfg.getDouble(path + "size", 3.0);
-            double maxHealth     = cfg.getDouble(path + "max-health", 10000.0);
-            int durationSeconds  = cfg.getInt(path + "duration-seconds", 300);
-            String rewardCommand = cfg.getString(path + "reward-command", "");
+            String displayName    = cfg.getString(path + "display-name", key);
+            String islandKey      = cfg.getString(path + "island-key", key);
+            String skullTexture   = cfg.getString(path + "skull-texture", "");
+            double size           = cfg.getDouble(path + "size", 3.0);
+            double maxHealth      = cfg.getDouble(path + "max-health", 10000.0);
+            int durationSeconds   = cfg.getInt(path + "duration-seconds", 300);
+            String rewardCommand  = cfg.getString(path + "reward-command", "");
             String hologramFormat = cfg.getString(path + "hologram-format",
                     "{boss}\n&#FF6B6B❤ &7{hp} &8/ {max_hp}");
 
@@ -112,7 +126,7 @@ public class BossManager {
 
     public boolean spawnBoss(BossData boss) {
         if (boss.isActive()) return false;
-        if (!boss.isZoneSet())  return false;
+        if (!boss.isZoneSet()) return false;
 
         Location loc = boss.getSpawnLocation();
         if (loc == null || loc.getWorld() == null) return false;
@@ -129,7 +143,7 @@ public class BossManager {
             stand.setSilent(true);
             stand.setSmall(false);
 
-            // Lock all equipment slots
+            // Lock all equipment slots so nothing can be placed on it
             for (EquipmentSlot slot : EquipmentSlot.values()) {
                 stand.addEquipmentLock(slot, ArmorStand.LockType.ADDING_OR_CHANGING);
             }
@@ -144,10 +158,8 @@ public class BossManager {
                 // Attribute may not exist on older builds — silently ignore
             }
 
-            // Build and apply the skull helmet
             stand.getEquipment().setHelmet(buildSkullItem(boss));
 
-            // PDC tag so we can identify it on interact
             stand.getPersistentDataContainer().set(
                     new NamespacedKey(plugin, "gc_boss_key"),
                     org.bukkit.persistence.PersistentDataType.STRING,
@@ -156,7 +168,6 @@ public class BossManager {
         });
 
         // ── Name / health hologram stand ───────────────────────
-        // Positioned slightly above the body stand
         double nameOffsetY = boss.getSize() * 1.6 + 0.5;
         Location nameLoc = loc.clone().add(0, nameOffsetY, 0);
 
@@ -202,11 +213,15 @@ public class BossManager {
         // ── Countdown / expiry task ────────────────────────────
         startCountdown(boss);
 
+        // ── Roaming movement task ──────────────────────────────
+        startRoaming(boss);
+
         return true;
     }
 
+    // ── Countdown ─────────────────────────────────────────────
+
     private void startCountdown(BossData boss) {
-        // Cancel any old task for this key
         BukkitTask old = countdownTasks.remove(boss.getKey());
         if (old != null) old.cancel();
 
@@ -220,7 +235,6 @@ public class BossManager {
             long remaining = boss.getDurationSeconds() - elapsed;
 
             if (remaining <= 0) {
-                // Time ran out — despawn with no reward
                 expireBoss(boss);
                 cancelCountdown(boss.getKey());
                 return;
@@ -250,28 +264,119 @@ public class BossManager {
         if (t != null) t.cancel();
     }
 
+    // ── Roaming ────────────────────────────────────────────────
+
+    /**
+     * Starts a repeating task that:
+     *   1. Every ROAM_INTERVAL_TICKS picks a new random target inside the boss zone.
+     *   2. Every tick smoothly slides the body stand (and name stand) toward the target.
+     *
+     * Both stands move together so the hologram stays above the skull.
+     */
+    private void startRoaming(BossData boss) {
+        cancelRoaming(boss.getKey());
+
+        // Mutable state held in arrays so the lambda can capture them
+        final Location[] target   = { null };
+        final long[]     ticksSinceNewTarget = { 0L };
+        final double     nameOffsetY = boss.getSize() * 1.6 + 0.5;
+
+        BukkitTask task = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+            if (!boss.isActive()) {
+                cancelRoaming(boss.getKey());
+                return;
+            }
+
+            ArmorStand body = boss.getBodyStand();
+            ArmorStand ns   = boss.getNameStand();
+
+            if (body == null || !body.isValid()) return;
+
+            // Pick a new roam target periodically
+            ticksSinceNewTarget[0]++;
+            if (target[0] == null || ticksSinceNewTarget[0] >= ROAM_INTERVAL_TICKS) {
+                target[0] = randomLocationInZone(boss, body.getWorld());
+                ticksSinceNewTarget[0] = 0;
+            }
+
+            if (target[0] == null) return;
+
+            Location current = body.getLocation();
+            double dx = target[0].getX() - current.getX();
+            double dz = target[0].getZ() - current.getZ();
+            double dist = Math.sqrt(dx * dx + dz * dz);
+
+            // Already close enough — wait for the next target
+            if (dist < 0.2) return;
+
+            double step = Math.min(ROAM_SPEED, dist);
+            double nx = current.getX() + (dx / dist) * step;
+            double nz = current.getZ() + (dz / dist) * step;
+            // Y stays at zone floor (minY) — we don't need vertical movement
+            double ny = target[0].getY();
+
+            Location newLoc = new Location(current.getWorld(), nx, ny, nz,
+                    current.getYaw(), current.getPitch());
+
+            body.teleport(newLoc);
+
+            // Keep name stand locked above body
+            if (ns != null && ns.isValid()) {
+                ns.teleport(new Location(current.getWorld(), nx, ny + nameOffsetY, nz));
+            }
+
+        }, 1L, 1L);
+
+        roamTasks.put(boss.getKey(), task);
+    }
+
+    private void cancelRoaming(String key) {
+        BukkitTask t = roamTasks.remove(key);
+        if (t != null) t.cancel();
+    }
+
+    /**
+     * Returns a random Location within the boss zone, snapped to the floor (minY).
+     * A small inset keeps the boss away from the very edge of the zone.
+     */
+    private Location randomLocationInZone(BossData boss, World world) {
+        double inset = Math.max(1.0, boss.getSize());
+        double minX  = boss.getMinX() + inset;
+        double maxX  = boss.getMaxX() - inset;
+        double minZ  = boss.getMinZ() + inset;
+        double maxZ  = boss.getMaxZ() - inset;
+
+        // Zone too small for inset — fall back to exact bounds
+        if (minX > maxX) { minX = boss.getMinX(); maxX = boss.getMaxX(); }
+        if (minZ > maxZ) { minZ = boss.getMinZ(); maxZ = boss.getMaxZ(); }
+
+        double x = minX + random.nextDouble() * (maxX - minX);
+        double z = minZ + random.nextDouble() * (maxZ - minZ);
+        double y = boss.getMinY();
+
+        return new Location(world, x, y, z);
+    }
+
     // ── Damage ─────────────────────────────────────────────────
 
     /**
-     * Called by BossListener when a player left-clicks the body stand.
-     * Damage = player's total fiber multiplier.
+     * Called by BossListener when a player attacks the body stand.
+     * Damage = the player's total fiber multiplier.
      */
     public void handleHit(Player player, BossData boss) {
         if (!boss.isActive()) return;
 
         double damage = plugin.getMultiplierManager().getTotalFiberMultiplier(player.getUniqueId());
         boss.setCurrentHealth(boss.getCurrentHealth() - damage);
-
-        // Track damage per player
         boss.getDamageMap().merge(player.getUniqueId(), damage, Double::sum);
 
-        // Update hologram immediately
+        // Immediate hologram update
         ArmorStand ns = boss.getNameStand();
         if (ns != null && ns.isValid()) {
             ns.setCustomName(buildHealthDisplay(boss));
         }
 
-        // Update boss bar immediately
+        // Immediate boss bar update
         BossBar bar = bossBars.get(boss.getKey());
         if (bar != null) {
             double fraction = boss.getCurrentHealth() / boss.getMaxHealth();
@@ -288,22 +393,19 @@ public class BossManager {
 
     private void defeatBoss(BossData boss) {
         cancelCountdown(boss.getKey());
+        cancelRoaming(boss.getKey());
 
-        // Snapshot damage map before reset
         Map<UUID, Double> snapshot = new LinkedHashMap<>(boss.getDamageMap());
-
         despawnBoss(boss);
 
-        // Broadcast defeat
         String defeatMsg = plugin.getConfigManager().getMessage("boss.defeated")
                 .replace("{boss}",   ColorUtil.translate(boss.getDisplayName()))
                 .replace("{island}", boss.getIslandKey());
         plugin.getServer().broadcastMessage(ColorUtil.translate(defeatMsg));
 
-        // Issue rewards to every player who dealt damage
         for (Map.Entry<UUID, Double> entry : snapshot.entrySet()) {
             Player p = Bukkit.getPlayer(entry.getKey());
-            if (p == null) continue; // offline players get nothing
+            if (p == null) continue;
 
             String cmd = boss.getRewardCommand()
                     .replace("%player%", p.getName())
@@ -317,6 +419,7 @@ public class BossManager {
     }
 
     private void expireBoss(BossData boss) {
+        cancelRoaming(boss.getKey());
         despawnBoss(boss);
 
         String expireMsg = plugin.getConfigManager().getMessage("boss.expired")
@@ -328,23 +431,19 @@ public class BossManager {
     // ── Despawn ────────────────────────────────────────────────
 
     private void despawnBoss(BossData boss) {
-        // Remove ArmorStands
         ArmorStand body = boss.getBodyStand();
         if (body != null && body.isValid()) body.remove();
 
         ArmorStand nameStand = boss.getNameStand();
         if (nameStand != null && nameStand.isValid()) nameStand.remove();
 
-        // Remove boss bar
         BossBar bar = bossBars.remove(boss.getKey());
-        if (bar != null) {
-            bar.removeAll();
-        }
+        if (bar != null) bar.removeAll();
 
         boss.reset();
     }
 
-    // ── Boss bar / hologram text builders ──────────────────────
+    // ── Boss bar / hologram text ───────────────────────────────
 
     private String buildBossBarTitle(BossData boss) {
         String hpStr    = NumberUtil.formatRaw(boss.getCurrentHealth());
@@ -362,12 +461,6 @@ public class BossManager {
         );
     }
 
-    /**
-     * Builds the hologram text from the per-boss hologram-format field in bosses.yml.
-     * Placeholders: {boss}, {hp}, {max_hp}
-     * The \n literal in the YAML string is treated as a real newline so multiple
-     * lines can be packed into a single ArmorStand name (legacy display).
-     */
     private String buildHealthDisplay(BossData boss) {
         String hpStr    = NumberUtil.formatRaw(boss.getCurrentHealth());
         String maxHpStr = NumberUtil.formatRaw(boss.getMaxHealth());
@@ -420,14 +513,12 @@ public class BossManager {
 
     // ── Player join/leave ──────────────────────────────────────
 
-    /** Add a joining player to all active boss bars. */
     public void addPlayer(Player player) {
-        for (Map.Entry<String, BossBar> entry : bossBars.entrySet()) {
-            entry.getValue().addPlayer(player);
+        for (BossBar bar : bossBars.values()) {
+            bar.addPlayer(player);
         }
     }
 
-    /** Remove a leaving player from all boss bars. */
     public void removePlayer(Player player) {
         for (BossBar bar : bossBars.values()) {
             bar.removePlayer(player);
@@ -458,12 +549,10 @@ public class BossManager {
 
     // ── Public API ─────────────────────────────────────────────
 
-    /** Returns a BossData by config key, or null if not found. */
     public BossData getBoss(String key) {
         return bosses.get(key);
     }
 
-    /** Finds a BossData whose body ArmorStand matches the given entity UUID. */
     public BossData getBossByStandUUID(UUID standUUID) {
         for (BossData boss : bosses.values()) {
             ArmorStand body = boss.getBodyStand();
@@ -480,18 +569,17 @@ public class BossManager {
         return Collections.unmodifiableSet(bosses.keySet());
     }
 
-    /** Force-spawn a specific boss by key (admin command). */
     public boolean forceSpawn(String key) {
         BossData boss = bosses.get(key);
         if (boss == null) return false;
         return spawnBoss(boss);
     }
 
-    /** Force-despawn a specific boss by key (admin command). */
     public boolean forceDespawn(String key) {
         BossData boss = bosses.get(key);
         if (boss == null || !boss.isActive()) return false;
         cancelCountdown(key);
+        cancelRoaming(key);
         despawnBoss(boss);
         return true;
     }
@@ -501,9 +589,8 @@ public class BossManager {
     public void shutdown() {
         if (spawnScheduler != null) spawnScheduler.cancel();
 
-        for (String key : new ArrayList<>(countdownTasks.keySet())) {
-            cancelCountdown(key);
-        }
+        for (String key : new ArrayList<>(countdownTasks.keySet())) cancelCountdown(key);
+        for (String key : new ArrayList<>(roamTasks.keySet()))      cancelRoaming(key);
 
         for (BossData boss : bosses.values()) {
             if (boss.isActive()) despawnBoss(boss);
