@@ -18,9 +18,13 @@ public class DataManager {
     private File dataFile;
     private YamlConfiguration dataConfig;
 
+    private final Object saveLock = new Object();
+
     public DataManager(GardenCore plugin) {
         this.plugin = plugin;
     }
+
+    // ── Startup load ──────────────────────────────────────────
 
     public void load() {
         File dataFolder = new File(plugin.getDataFolder(), "data");
@@ -39,56 +43,63 @@ public class DataManager {
         for (String uuidStr : dataConfig.getKeys(false)) {
             try {
                 UUID uuid = UUID.fromString(uuidStr);
-                PlayerData data = new PlayerData(uuid);
-                String path = uuidStr + ".";
-
-                data.setFiber(dataConfig.getDouble(path + "fiber", 0));
-                data.setXp(dataConfig.getDouble(path + "xp", 0));
-                data.setLevel(dataConfig.getInt(path + "level", 1));
-                data.setFiberAmountUpgrade(dataConfig.getInt(path + "upgrades.fiber-amount", 0));
-                data.setMaterialAmountUpgrade(dataConfig.getInt(path + "upgrades.material-amount", 0));
-                data.setMaterialChanceUpgrade(dataConfig.getInt(path + "upgrades.material-chance", 0));
-                data.setCropCooldownUpgrade(dataConfig.getInt(path + "upgrades.crop-cooldown", 0));
-                data.setBonusFiberMultiplier(dataConfig.getDouble(path + "bonus.fiber-multiplier", 0));
-                data.setBonusMaterialAmountMultiplier(dataConfig.getDouble(path + "bonus.material-amount-multiplier", 0));
-                data.setBonusMaterialChanceMultiplier(dataConfig.getDouble(path + "bonus.material-chance-multiplier", 0));
-                data.setDriftwood(dataConfig.getDouble(path + "materials.driftwood", 0));
-                data.setMoss(dataConfig.getDouble(path + "materials.moss", 0));
-                data.setReed(dataConfig.getDouble(path + "materials.reed", 0));
-                data.setClover(dataConfig.getDouble(path + "materials.clover", 0));
-                data.setCompletedResearches(dataConfig.getInt(path + "research.completed", 0));
-                data.setActiveResearchIndex(dataConfig.getInt(path + "research.active-index", -1));
-                data.setActiveResearchStart(dataConfig.getLong(path + "research.active-start", 0));
-                // Elder perks
-                data.setElderFiberLevel(dataConfig.getInt(path + "elder.fiber-level", 0));
-                data.setElderMaterialAmountLevel(dataConfig.getInt(path + "elder.material-amount-level", 0));
-                data.setElderXpGainLevel(dataConfig.getInt(path + "elder.xp-gain-level", 0));
-                data.setElderMaterialChanceLevel(dataConfig.getInt(path + "elder.material-chance-level", 0));
-                // Pet
-                String petName = dataConfig.getString(path + "pet.rarity", "NONE");
-                try {
-                    data.setPetRarity(PetRarity.valueOf(petName));
-                } catch (IllegalArgumentException e) {
-                    data.setPetRarity(PetRarity.NONE);
-                }
-
-                playerDataMap.put(uuid, data);
+                playerDataMap.put(uuid, readFromConfig(uuid));
             } catch (IllegalArgumentException ignored) {}
         }
     }
 
-    public void saveAll() {
-        for (PlayerData data : playerDataMap.values()) {
-            save(data);
+    // ── Per-player load / unload ──────────────────────────────
+
+    public void loadPlayer(UUID uuid) {
+        synchronized (saveLock) {
+            // Re-read the file so we always have the latest on-disk state.
+            dataConfig = YamlConfiguration.loadConfiguration(dataFile);
         }
+        PlayerData data = readFromConfig(uuid);
+        playerDataMap.put(uuid, data);
+    }
+    private PlayerData readFromConfig(UUID uuid) {
+        PlayerData data = new PlayerData(uuid);
+        String uuidStr = uuid.toString();
+
+        if (!dataConfig.contains(uuidStr)) return data;
+
+        String path = uuidStr + ".";
+        data.setFiber(dataConfig.getDouble(path + "fiber", 0));
+        data.setXp(dataConfig.getDouble(path + "xp", 0));
+        data.setLevel(dataConfig.getInt(path + "level", 1));
+        data.setFiberAmountUpgrade(dataConfig.getInt(path + "upgrades.fiber-amount", 0));
+        data.setMaterialAmountUpgrade(dataConfig.getInt(path + "upgrades.material-amount", 0));
+        data.setMaterialChanceUpgrade(dataConfig.getInt(path + "upgrades.material-chance", 0));
+        data.setCropCooldownUpgrade(dataConfig.getInt(path + "upgrades.crop-cooldown", 0));
+        data.setBonusFiberMultiplier(dataConfig.getDouble(path + "bonus.fiber-multiplier", 0));
+        data.setBonusMaterialAmountMultiplier(dataConfig.getDouble(path + "bonus.material-amount-multiplier", 0));
+        data.setBonusMaterialChanceMultiplier(dataConfig.getDouble(path + "bonus.material-chance-multiplier", 0));
+        data.setDriftwood(dataConfig.getDouble(path + "materials.driftwood", 0));
+        data.setMoss(dataConfig.getDouble(path + "materials.moss", 0));
+        data.setReed(dataConfig.getDouble(path + "materials.reed", 0));
+        data.setClover(dataConfig.getDouble(path + "materials.clover", 0));
+        data.setCompletedResearches(dataConfig.getInt(path + "research.completed", 0));
+        data.setActiveResearchIndex(dataConfig.getInt(path + "research.active-index", -1));
+        data.setActiveResearchStart(dataConfig.getLong(path + "research.active-start", 0));
+        data.setElderFiberLevel(dataConfig.getInt(path + "elder.fiber-level", 0));
+        data.setElderMaterialAmountLevel(dataConfig.getInt(path + "elder.material-amount-level", 0));
+        data.setElderXpGainLevel(dataConfig.getInt(path + "elder.xp-gain-level", 0));
+        data.setElderMaterialChanceLevel(dataConfig.getInt(path + "elder.material-chance-level", 0));
+
+        String petName = dataConfig.getString(path + "pet.rarity", "NONE");
         try {
-            dataConfig.save(dataFile);
-        } catch (IOException e) {
-            plugin.getLogger().severe("Could not save data/playerdata.yml: " + e.getMessage());
+            data.setPetRarity(PetRarity.valueOf(petName));
+        } catch (IllegalArgumentException e) {
+            data.setPetRarity(PetRarity.NONE);
         }
+
+        return data;
     }
 
-    public void save(PlayerData data) {
+    // ── Internal write helpers ────────────────────────────────
+
+    private void writeToConfig(PlayerData data) {
         String path = data.getUuid().toString() + ".";
         dataConfig.set(path + "fiber", data.getFiber());
         dataConfig.set(path + "xp", data.getXp());
@@ -107,44 +118,58 @@ public class DataManager {
         dataConfig.set(path + "research.completed", data.getCompletedResearches());
         dataConfig.set(path + "research.active-index", data.getActiveResearchIndex());
         dataConfig.set(path + "research.active-start", data.getActiveResearchStart());
-        // Elder perks
         dataConfig.set(path + "elder.fiber-level", data.getElderFiberLevel());
         dataConfig.set(path + "elder.material-amount-level", data.getElderMaterialAmountLevel());
         dataConfig.set(path + "elder.xp-gain-level", data.getElderXpGainLevel());
         dataConfig.set(path + "elder.material-chance-level", data.getElderMaterialChanceLevel());
-        // Pet
         dataConfig.set(path + "pet.rarity", data.getPetRarity().name());
     }
 
-    public void saveAsync() {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, this::saveAll);
+    private void flushToDisk() {
+        try {
+            dataConfig.save(dataFile);
+        } catch (IOException e) {
+            plugin.getLogger().severe("Could not save data/playerdata.yml: " + e.getMessage());
+        }
     }
 
+    // ── Public save API ───────────────────────────────────────
+
+    public void saveAll() {
+        synchronized (saveLock) {
+            for (PlayerData data : playerDataMap.values()) {
+                writeToConfig(data);
+            }
+            flushToDisk();
+        }
+    }
+
+    public void saveAsync() {
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            synchronized (saveLock) {
+                for (PlayerData data : playerDataMap.values()) {
+                    writeToConfig(data);
+                }
+                flushToDisk();
+            }
+        });
+    }
+
+    public void removePlayerData(UUID uuid) {
+        synchronized (saveLock) {
+            PlayerData data = playerDataMap.remove(uuid);
+            if (data == null) return;
+            writeToConfig(data);
+            flushToDisk();
+        }
+    }
+
+    // ── Accessors ─────────────────────────────────────────────
     public PlayerData getPlayerData(UUID uuid) {
         return playerDataMap.computeIfAbsent(uuid, PlayerData::new);
     }
 
     public boolean hasPlayerData(UUID uuid) {
         return playerDataMap.containsKey(uuid);
-    }
-
-    /**
-     * Saves and unloads a player's data.
-     * The file write is done synchronously so the data is guaranteed to be on
-     * disk before the player can rejoin and trigger a fresh load — avoiding the
-     * race where an in-flight saveAsync() thread would overwrite the file after
-     * the player's entry was already removed from playerDataMap.
-     */
-    public void removePlayerData(UUID uuid) {
-        PlayerData data = playerDataMap.remove(uuid);
-        if (data == null) return;
-
-        save(data);
-
-        try {
-            dataConfig.save(dataFile);
-        } catch (IOException e) {
-            plugin.getLogger().severe("Could not save data/playerdata.yml on quit: " + e.getMessage());
-        }
     }
 }
