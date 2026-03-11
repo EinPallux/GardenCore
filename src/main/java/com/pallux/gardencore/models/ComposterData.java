@@ -50,23 +50,33 @@ public class ComposterData {
     private final int durationSeconds;
     private final double radius;
 
+    /**
+     * Hologram lines as configured in items.yml under hologram-lines.
+     * If empty, ComposterManager falls back to its default built-in lines.
+     */
+    private final List<String> hologramLines;
+
     private List<ArmorStand> hologramStands = new ArrayList<>();
 
     public ComposterData(Location blockLocation, String placerName, ComposterType type,
-                         long placedAtMillis, int durationSeconds, double radius) {
+                         long placedAtMillis, int durationSeconds, double radius,
+                         List<String> hologramLines) {
         this.blockLocation  = blockLocation;
         this.placerName     = placerName;
         this.type           = type;
         this.placedAtMillis = placedAtMillis;
         this.durationSeconds = durationSeconds;
         this.radius         = radius;
+        this.hologramLines  = hologramLines != null ? new ArrayList<>(hologramLines) : new ArrayList<>();
     }
 
-    public Location getBlockLocation()      { return blockLocation; }
-    public String getPlacerName()           { return placerName; }
-    public ComposterType getType()          { return type; }
-    public int getDurationSeconds()         { return durationSeconds; }
-    public double getRadius()               { return radius; }
+    public Location getBlockLocation()          { return blockLocation; }
+    public String getPlacerName()               { return placerName; }
+    public ComposterType getType()              { return type; }
+    public int getDurationSeconds()             { return durationSeconds; }
+    public double getRadius()                   { return radius; }
+    public List<String> getHologramLines()      { return hologramLines; }
+    public boolean hasCustomHologramLines()     { return !hologramLines.isEmpty(); }
 
     public long getRemainingSeconds() {
         long elapsed = (System.currentTimeMillis() - placedAtMillis) / 1000L;

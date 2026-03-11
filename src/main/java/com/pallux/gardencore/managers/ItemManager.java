@@ -42,12 +42,14 @@ public class ItemManager {
                 plugin.getLogger().warning("Unknown material '" + matName + "' for item '" + key + "' in items.yml");
                 material = Material.PAPER;
             }
-            List<String> lore       = section.getStringList(key + ".lore");
-            String command          = section.getString(key + ".command", "");
-            int    durationSeconds  = section.getInt(key + ".duration-seconds", 0);
-            double radius           = section.getDouble(key + ".radius", 0.0);
+            List<String> lore          = section.getStringList(key + ".lore");
+            String command             = section.getString(key + ".command", "");
+            int    durationSeconds     = section.getInt(key + ".duration-seconds", 0);
+            double radius              = section.getDouble(key + ".radius", 0.0);
+            List<String> hologramLines = section.getStringList(key + ".hologram-lines");
 
-            items.put(key, new CustomItemModel(key, name, material, lore, command, durationSeconds, radius));
+            items.put(key, new CustomItemModel(key, name, material, lore, command,
+                    durationSeconds, radius, hologramLines));
         }
 
         plugin.getLogger().info("Loaded " + items.size() + " custom items from items.yml");
@@ -95,6 +97,15 @@ public class ItemManager {
     public double getRadius(String key) {
         CustomItemModel model = items.get(key);
         return model != null ? model.getRadius() : 0.0;
+    }
+
+    /**
+     * Returns the configured hologram lines for a composter item.
+     * Returns an empty list if none are configured.
+     */
+    public List<String> getHologramLines(String key) {
+        CustomItemModel model = items.get(key);
+        return model != null ? model.getHologramLines() : List.of();
     }
 
     /**

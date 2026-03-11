@@ -27,23 +27,35 @@ public class ComposterManager {
 
     /**
      * Called when a player places a composter item.
-     * Both {@code durationSeconds} and {@code radius} come from the item's
-     * own definition in items.yml — config.yml is no longer involved.
+     * hologramLines comes from the item's hologram-lines list in items.yml.
+     * If empty, buildLines() falls back to the default built-in lines.
      */
     public void placeComposter(Player player, Location blockLoc,
                                ComposterData.ComposterType type,
-                               int durationSeconds, double radius) {
+                               int durationSeconds, double radius,
+                               List<String> hologramLines) {
         ComposterData data = new ComposterData(
                 blockLoc,
                 player.getName(),
                 type,
                 System.currentTimeMillis(),
                 durationSeconds,
-                radius
+                radius,
+                hologramLines
         );
 
         spawnHologram(data);
         activeComposters.put(key(blockLoc), data);
+    }
+
+    /**
+     * Legacy overload for callers that don't supply hologram lines.
+     * Falls back to built-in default lines.
+     */
+    public void placeComposter(Player player, Location blockLoc,
+                               ComposterData.ComposterType type,
+                               int durationSeconds, double radius) {
+        placeComposter(player, blockLoc, type, durationSeconds, radius, List.of());
     }
 
     // ── Removal ───────────────────────────────────────────────
@@ -74,9 +86,6 @@ public class ComposterManager {
                 + sumBonus(playerLoc, ComposterData.ComposterType.MATERIAL_150);
     }
 
-    /**
-     * Each composter now carries its own radius — no config.yml lookup needed.
-     */
     private double sumBonus(Location playerLoc, ComposterData.ComposterType type) {
         double total = 0;
         for (ComposterData data : activeComposters.values()) {
@@ -95,6 +104,7 @@ public class ComposterManager {
         Location base = data.getBlockLocation().clone().add(0.5, 1.0, 0.5);
         String[] lines = buildLines(data);
         List<ArmorStand> stands = new ArrayList<>();
+        // Lines are ordered bottom → top; spawn from index 0 upward
         for (int i = 0; i < lines.length; i++) {
             stands.add(spawnTextStand(base.clone().add(0, i * 0.28, 0), lines[i]));
         }
@@ -111,6 +121,14 @@ public class ComposterManager {
     private void updateHologramLines(ComposterData data) {
         String[] lines = buildLines(data);
         List<ArmorStand> stands = data.getHologramStands();
+
+        // If the number of lines changed (shouldn't normally happen but be safe), respawn
+        if (stands.size() != lines.length) {
+            despawnHologram(data);
+            spawnHologram(data);
+            return;
+        }
+
         for (int i = 0; i < Math.min(lines.length, stands.size()); i++) {
             ArmorStand stand = stands.get(i);
             if (stand != null && stand.isValid()) {
@@ -119,14 +137,54 @@ public class ComposterManager {
         }
     }
 
-    /** Lines bottom → top: time remaining, placer, type label, header. */
+    /**
+     * Builds the hologram lines array for a composter.
+     *
+     * If the item had hologram-lines configured in items.yml, those are used.
+     * The following placeholders are resolved in each line:
+     *   {time}        — formatted time remaining (e.g. "14m 23s")
+     *   {placer}      — name of the player who placed it
+     *   {type}        — display name of the composter type (e.g. "+100% Fiber")
+     *   {radius}      — buff radius in blocks
+     *   {duration}    — total duration in seconds
+     *
+     * If no custom lines are configured, the default built-in lines are used.
+     * Lines are ordered bottom → top (index 0 = bottom stand).
+     */
     private String[] buildLines(ComposterData data) {
+        String timeRemaining = formatTime(data.getRemainingSeconds());
+        String placer        = data.getPlacerName();
+        String typeName      = data.getType().getDisplayColor() + "&l" + data.getType().getDisplayName();
+        String radius        = String.valueOf((int) data.getRadius());
+        String duration      = String.valueOf(data.getDurationSeconds());
+
+        if (data.hasCustomHologramLines()) {
+            List<String> configured = data.getHologramLines();
+            String[] result = new String[configured.size()];
+            for (int i = 0; i < configured.size(); i++) {
+                result[i] = resolvePlaceholders(configured.get(i),
+                        timeRemaining, placer, typeName, radius, duration);
+            }
+            return result;
+        }
+
+        // Default built-in lines (bottom → top)
         return new String[]{
-                "&7Expires in: &f" + formatTime(data.getRemainingSeconds()),
-                "&7Placed by: &e" + data.getPlacerName(),
-                data.getType().getDisplayColor() + "&l" + data.getType().getDisplayName(),
+                "&7Expires in: &f" + timeRemaining,
+                "&7Placed by: &e" + placer,
+                typeName,
                 "&#FFD700&l✦ LUCKY COMPOSTER ✦"
         };
+    }
+
+    private String resolvePlaceholders(String line, String time, String placer,
+                                       String type, String radius, String duration) {
+        return line
+                .replace("{time}",     time)
+                .replace("{placer}",   placer)
+                .replace("{type}",     type)
+                .replace("{radius}",   radius)
+                .replace("{duration}", duration);
     }
 
     private ArmorStand spawnTextStand(Location loc, String text) {

@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Map;
 
 public class ComposterListener implements Listener {
@@ -23,7 +24,14 @@ public class ComposterListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    /**
+     * Priority HIGHEST, ignoreCancelled = false:
+     *
+     * We intentionally run even when the event has been cancelled (e.g. by WorldGuard)
+     * so that we can un-cancel it when the player is placing a GardenCore composter item.
+     * Non-GardenCore placements are left alone (we return without touching cancellation).
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         ItemStack item = event.getItemInHand();
@@ -36,9 +44,15 @@ public class ComposterListener implements Listener {
         ComposterData.ComposterType type = ComposterData.ComposterType.fromItemKey(itemKey);
         if (type == null) return;
 
-        // Read duration and radius from the item definition; fall back to sensible defaults
-        int    duration = plugin.getItemManager().getDurationSeconds(itemKey);
-        double radius   = plugin.getItemManager().getRadius(itemKey);
+        // This IS a GardenCore composter item — override any external cancellation
+        // (e.g. WorldGuard region protection) and allow the placement.
+        event.setCancelled(false);
+
+        // Read duration, radius and hologram lines from the item definition
+        int    duration      = plugin.getItemManager().getDurationSeconds(itemKey);
+        double radius        = plugin.getItemManager().getRadius(itemKey);
+        List<String> holoLines = plugin.getItemManager().getHologramLines(itemKey);
+
         if (duration <= 0) duration = 900;
         if (radius   <= 0) radius   = 20.0;
 
@@ -46,17 +60,19 @@ public class ComposterListener implements Listener {
         if (item.getAmount() > 1) {
             item.setAmount(item.getAmount() - 1);
         } else {
+            final ItemStack toRemove = item;
             plugin.getServer().getScheduler().runTaskLater(plugin,
-                    () -> player.getInventory().removeItem(item), 1L);
+                    () -> player.getInventory().removeItem(toRemove), 1L);
         }
 
-        final int    finalDuration = duration;
-        final double finalRadius   = radius;
+        final int         finalDuration  = duration;
+        final double      finalRadius    = radius;
+        final List<String> finalHoloLines = holoLines;
         Block block = event.getBlock();
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             plugin.getComposterManager().placeComposter(
-                    player, block.getLocation(), type, finalDuration, finalRadius);
+                    player, block.getLocation(), type, finalDuration, finalRadius, finalHoloLines);
 
             MessageUtil.send(player, "composter.placed", Map.of(
                     "type",     type.getDisplayName(),
