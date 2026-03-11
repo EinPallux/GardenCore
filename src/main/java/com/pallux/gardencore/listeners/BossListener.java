@@ -2,6 +2,7 @@ package com.pallux.gardencore.listeners;
 
 import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.models.BossData;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -9,13 +10,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.persistence.PersistentDataType;
 
 public class BossListener implements Listener {
+
+    /**
+     * Squared reach distance for arm-swing hit detection.
+     * Vanilla survival melee reach is 3 blocks; 4.5 gives a comfortable margin
+     * for the giant boss stands without being exploitably large.
+     */
+    private static final double HIT_REACH_SQ = 4.5 * 4.5;
 
     private final GardenCore plugin;
     private final NamespacedKey bossKey;
@@ -27,45 +36,54 @@ public class BossListener implements Listener {
         this.bossNameKey = new NamespacedKey(plugin, "gc_boss_name_stand");
     }
 
-    /**
-     * PRIMARY HIT HANDLER — EntityDamageByEntityEvent.
-     *
-     * On Paper 1.21, when a player left-clicks an ArmorStand the server fires
-     * EntityDamageByEntityEvent with damage = 0 (because ArmorStands are not
-     * living entities). This is the most reliable trigger for "player attacked
-     * an ArmorStand" across Paper versions.
-     *
-     * We cancel the vanilla damage and route through our own hit logic.
-     */
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
-    public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof ArmorStand stand)) return;
-        if (!(event.getDamager() instanceof Player player)) return;
+    // ── LEFT-CLICK: PlayerAnimationEvent (arm swing) ──────────────────────────
+    //
+    // Why not EntityDamageByEntityEvent?
+    //
+    // The boss body stand is spawned with setInvulnerable(true).
+    // On Paper 1.21, invulnerable entities are protected at the lowest level of
+    // the damage pipeline — EntityDamageByEntityEvent is never fired for them at
+    // all, regardless of EventPriority or ignoreCancelled setting.
+    //
+    // PlayerAnimationEvent fires on EVERY left-click swing and is not gated by
+    // invulnerability, so it is the only reliable left-click hook available.
+    //
+    // We iterate the player's nearby entities and check whether any boss body
+    // stand falls within melee reach. If so, we register the hit.
+    // Only one hit is awarded per swing even if multiple boss stands are nearby.
+    //
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onArmSwing(PlayerAnimationEvent event) {
+        if (event.getAnimationType() != PlayerAnimationType.ARM_SWING) return;
 
-        // Always cancel vanilla damage on boss stands to prevent unintended side-effects
-        String key = stand.getPersistentDataContainer().get(bossKey, PersistentDataType.STRING);
-        boolean isNameStand = stand.getPersistentDataContainer().has(bossNameKey, PersistentDataType.BYTE);
+        Player   player    = event.getPlayer();
+        Location eyeLoc    = player.getEyeLocation();
 
-        if (key == null && !isNameStand) return; // Not one of ours — leave it alone
+        for (Entity nearby : player.getNearbyEntities(5, 5, 5)) {
+            if (!(nearby instanceof ArmorStand stand)) continue;
 
-        event.setCancelled(true);
-        event.setDamage(0);
+            String key = stand.getPersistentDataContainer()
+                    .get(bossKey, PersistentDataType.STRING);
+            if (key == null) continue; // name stands and non-boss stands have no bossKey
 
-        if (isNameStand) return; // Name stand — cancel interaction but do no damage
+            BossData boss = plugin.getBossManager().getBoss(key);
+            if (boss == null || !boss.isActive()) continue;
 
-        BossData boss = plugin.getBossManager().getBoss(key);
-        if (boss == null || !boss.isActive()) return;
+            // Check distance — aim at the vertical centre of the stand
+            Location standCenter = stand.getLocation().clone().add(0, boss.getSize() * 0.5, 0);
+            if (eyeLoc.distanceSquared(standCenter) > HIT_REACH_SQ) continue;
 
-        plugin.getBossManager().handleHit(player, boss);
+            plugin.getBossManager().handleHit(player, boss);
+            break; // one hit per swing
+        }
     }
 
-    /**
-     * SECONDARY HIT HANDLER — PlayerInteractAtEntityEvent (right-click on entity).
-     *
-     * Some Paper builds fire this instead of (or in addition to)
-     * EntityDamageByEntityEvent for certain click styles. We handle it here as
-     * a fallback so both left- and right-click register as hits on the boss.
-     */
+    // ── RIGHT-CLICK: PlayerInteractAtEntityEvent ──────────────────────────────
+    //
+    // Fires when a player right-clicks an entity.
+    // We cancel the event to prevent item-in-hand side effects (placing blocks,
+    // equipping items on the stand, etc.) and route to handleHit.
+    //
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
     public void onInteractAtEntity(PlayerInteractAtEntityEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
@@ -73,33 +91,34 @@ public class BossListener implements Listener {
         Entity entity = event.getRightClicked();
         if (!(entity instanceof ArmorStand stand)) return;
 
-        // Cancel so items in hand don't trigger extra actions (e.g. placing blocks)
-        boolean isNameStand = stand.getPersistentDataContainer().has(bossNameKey, PersistentDataType.BYTE);
-        String key = stand.getPersistentDataContainer().get(bossKey, PersistentDataType.STRING);
+        boolean isNameStand = stand.getPersistentDataContainer()
+                .has(bossNameKey, PersistentDataType.BYTE);
+        String key = stand.getPersistentDataContainer()
+                .get(bossKey, PersistentDataType.STRING);
 
-        if (key == null && !isNameStand) return; // Not ours — leave it alone
+        if (key == null && !isNameStand) return; // not one of ours
 
         event.setCancelled(true);
 
-        if (isNameStand) return;
+        if (isNameStand) return; // block interaction but no hit
 
         BossData boss = plugin.getBossManager().getBoss(key);
         if (boss == null || !boss.isActive()) return;
 
-        Player player = event.getPlayer();
-        plugin.getBossManager().handleHit(player, boss);
+        plugin.getBossManager().handleHit(event.getPlayer(), boss);
     }
 
-    /**
-     * Prevent any other right-click entity interactions on boss stands
-     * (e.g. equipping items, posing).
-     */
+    // ── BLOCK all other right-click interactions on boss stands ───────────────
+    //
+    // Prevents equipping items, posing the stand, etc. via the non-precise
+    // PlayerInteractEntityEvent (fires in addition to PlayerInteractAtEntityEvent).
+    //
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (!(event.getRightClicked() instanceof ArmorStand stand)) return;
 
-        if (stand.getPersistentDataContainer().has(bossKey, PersistentDataType.STRING)
+        if (stand.getPersistentDataContainer().has(bossKey,     PersistentDataType.STRING)
                 || stand.getPersistentDataContainer().has(bossNameKey, PersistentDataType.BYTE)) {
             event.setCancelled(true);
         }
