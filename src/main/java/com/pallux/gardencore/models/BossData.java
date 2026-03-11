@@ -16,6 +16,7 @@ public class BossData {
     private final String skullTexture;
     private final double size;
     private final String rewardCommand;
+    private final String hologramFormat;
 
     // Runtime state
     private ArmorStand bodyStand;
@@ -30,7 +31,8 @@ public class BossData {
     private boolean zoneSet = false;
 
     public BossData(String key, String displayName, double maxHealth, int durationSeconds,
-                    String islandKey, String skullTexture, double size, String rewardCommand) {
+                    String islandKey, String skullTexture, double size, String rewardCommand,
+                    String hologramFormat) {
         this.key = key;
         this.displayName = displayName;
         this.maxHealth = maxHealth;
@@ -40,23 +42,26 @@ public class BossData {
         this.skullTexture = skullTexture;
         this.size = size;
         this.rewardCommand = rewardCommand;
+        this.hologramFormat = hologramFormat != null ? hologramFormat
+                : "{boss}\n&#FF6B6B❤ &7{hp} &8/ {max_hp}";
     }
 
     // ── Getters ────────────────────────────────────────────────
 
-    public String getKey()            { return key; }
-    public String getDisplayName()    { return displayName; }
-    public double getMaxHealth()      { return maxHealth; }
-    public double getCurrentHealth()  { return currentHealth; }
-    public int getDurationSeconds()   { return durationSeconds; }
-    public String getIslandKey()      { return islandKey; }
-    public String getSkullTexture()   { return skullTexture; }
-    public double getSize()           { return size; }
-    public String getRewardCommand()  { return rewardCommand; }
-    public boolean isActive()         { return active; }
-    public long getSpawnedAt()        { return spawnedAt; }
-    public ArmorStand getBodyStand()  { return bodyStand; }
-    public ArmorStand getNameStand()  { return nameStand; }
+    public String getKey()              { return key; }
+    public String getDisplayName()      { return displayName; }
+    public double getMaxHealth()        { return maxHealth; }
+    public double getCurrentHealth()    { return currentHealth; }
+    public int getDurationSeconds()     { return durationSeconds; }
+    public String getIslandKey()        { return islandKey; }
+    public String getSkullTexture()     { return skullTexture; }
+    public double getSize()             { return size; }
+    public String getRewardCommand()    { return rewardCommand; }
+    public String getHologramFormat()   { return hologramFormat; }
+    public boolean isActive()           { return active; }
+    public long getSpawnedAt()          { return spawnedAt; }
+    public ArmorStand getBodyStand()    { return bodyStand; }
+    public ArmorStand getNameStand()    { return nameStand; }
     public Map<UUID, Double> getDamageMap() { return damageMap; }
 
     // Zone

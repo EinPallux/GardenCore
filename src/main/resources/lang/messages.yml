@@ -84,7 +84,6 @@ boss:
   defeated: "&#a8ff78&l⚔ Boss Defeated! &7{boss} &7in &e{island} &7has been slain! &aRewards granted to all participants."
   expired:  "&#FF6B6B&l⚔ Boss Escaped! &7{boss} &7in &e{island} &7has vanished. &cNo rewards given."
   bossbar:        "&#FF6B6B⚔ {boss} &8| &c{hp} &7/ {max_hp} HP &8| &e{time}s remaining"
-  hologram-health: "{boss}\n&#FF6B6B❤ &7{hp} &8/ {max_hp}"
 
 # ── Composters ─────────────────────────────────
 composter:

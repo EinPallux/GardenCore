@@ -14,6 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -54,16 +55,18 @@ public class BossManager {
         for (String key : sec.getKeys(false)) {
             String path = "bosses." + key + ".";
 
-            String displayName    = cfg.getString(path + "display-name", key);
-            String islandKey      = cfg.getString(path + "island-key", key);
-            String skullTexture   = cfg.getString(path + "skull-texture", "");
-            double size           = cfg.getDouble(path + "size", 3.0);
-            double maxHealth      = cfg.getDouble(path + "max-health", 10000.0);
-            int durationSeconds   = cfg.getInt(path + "duration-seconds", 300);
-            String rewardCommand  = cfg.getString(path + "reward-command", "");
+            String displayName   = cfg.getString(path + "display-name", key);
+            String islandKey     = cfg.getString(path + "island-key", key);
+            String skullTexture  = cfg.getString(path + "skull-texture", "");
+            double size          = cfg.getDouble(path + "size", 3.0);
+            double maxHealth     = cfg.getDouble(path + "max-health", 10000.0);
+            int durationSeconds  = cfg.getInt(path + "duration-seconds", 300);
+            String rewardCommand = cfg.getString(path + "reward-command", "");
+            String hologramFormat = cfg.getString(path + "hologram-format",
+                    "{boss}\n&#FF6B6B❤ &7{hp} &8/ {max_hp}");
 
             BossData data = new BossData(key, displayName, maxHealth, durationSeconds,
-                    islandKey, skullTexture, size, rewardCommand);
+                    islandKey, skullTexture, size, rewardCommand, hologramFormat);
 
             // Load saved zone
             String world = cfg.getString(path + "zone.world", "");
@@ -213,7 +216,7 @@ public class BossManager {
                 return;
             }
 
-            long elapsed = (System.currentTimeMillis() - boss.getSpawnedAt()) / 1000L;
+            long elapsed   = (System.currentTimeMillis() - boss.getSpawnedAt()) / 1000L;
             long remaining = boss.getDurationSeconds() - elapsed;
 
             if (remaining <= 0) {
@@ -344,31 +347,38 @@ public class BossManager {
     // ── Boss bar / hologram text builders ──────────────────────
 
     private String buildBossBarTitle(BossData boss) {
-        String hpStr     = NumberUtil.formatRaw(boss.getCurrentHealth());
-        String maxHpStr  = NumberUtil.formatRaw(boss.getMaxHealth());
-        long elapsed     = boss.isActive()
+        String hpStr    = NumberUtil.formatRaw(boss.getCurrentHealth());
+        String maxHpStr = NumberUtil.formatRaw(boss.getMaxHealth());
+        long elapsed    = boss.isActive()
                 ? (System.currentTimeMillis() - boss.getSpawnedAt()) / 1000L : 0;
-        long remaining   = Math.max(0, boss.getDurationSeconds() - elapsed);
+        long remaining  = Math.max(0, boss.getDurationSeconds() - elapsed);
 
         return ColorUtil.translate(
                 plugin.getConfigManager().getMessage("boss.bossbar")
-                        .replace("{boss}",      boss.getDisplayName())
-                        .replace("{hp}",        hpStr)
-                        .replace("{max_hp}",    maxHpStr)
-                        .replace("{time}",      String.valueOf(remaining))
+                        .replace("{boss}",   boss.getDisplayName())
+                        .replace("{hp}",     hpStr)
+                        .replace("{max_hp}", maxHpStr)
+                        .replace("{time}",   String.valueOf(remaining))
         );
     }
 
+    /**
+     * Builds the hologram text from the per-boss hologram-format field in bosses.yml.
+     * Placeholders: {boss}, {hp}, {max_hp}
+     * The \n literal in the YAML string is treated as a real newline so multiple
+     * lines can be packed into a single ArmorStand name (legacy display).
+     */
     private String buildHealthDisplay(BossData boss) {
         String hpStr    = NumberUtil.formatRaw(boss.getCurrentHealth());
         String maxHpStr = NumberUtil.formatRaw(boss.getMaxHealth());
 
-        return ColorUtil.translate(
-                plugin.getConfigManager().getMessage("boss.hologram-health")
-                        .replace("{boss}",    boss.getDisplayName())
-                        .replace("{hp}",      hpStr)
-                        .replace("{max_hp}", maxHpStr)
-        );
+        String formatted = boss.getHologramFormat()
+                .replace("{boss}",   boss.getDisplayName())
+                .replace("{hp}",     hpStr)
+                .replace("{max_hp}", maxHpStr)
+                .replace("\\n", "\n");
+
+        return ColorUtil.translate(formatted);
     }
 
     // ── Skull item builder ─────────────────────────────────────

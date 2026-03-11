@@ -21,6 +21,10 @@
 #   reward-command:    Console command run for EACH player who dealt damage
 #                      when the boss is defeated. Use %player% for the name
 #                      and %damage% for the total damage that player dealt.
+#   hologram-format:   Text displayed on the floating name stand above the boss.
+#                      Supports color codes and hex (&#RRGGBB).
+#                      Placeholders: {boss}, {hp}, {max_hp}
+#                      Use \n to add extra lines (each becomes its own stand line).
 #
 # Zone boundaries are set in-game with:
 #   /gca boss set <key>   (requires a WorldEdit / FAWE cuboid selection)
@@ -41,6 +45,7 @@ bosses:
     max-health: 10000.0
     duration-seconds: 300
     reward-command: "eco give %player% 500"
+    hologram-format: "{boss}\n&#a8ff78❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
@@ -59,6 +64,7 @@ bosses:
     max-health: 75000.0
     duration-seconds: 300
     reward-command: "eco give %player% 1000"
+    hologram-format: "{boss}\n&#FFD700❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
@@ -77,6 +83,7 @@ bosses:
     max-health: 500000.0
     duration-seconds: 360
     reward-command: "eco give %player% 2500"
+    hologram-format: "{boss}\n&#FFB6C1❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
@@ -95,6 +102,7 @@ bosses:
     max-health: 3000000.0
     duration-seconds: 420
     reward-command: "eco give %player% 5000"
+    hologram-format: "{boss}\n&#FF6B6B❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
@@ -113,6 +121,7 @@ bosses:
     max-health: 15000000.0
     duration-seconds: 480
     reward-command: "eco give %player% 10000"
+    hologram-format: "{boss}\n&#C4A882❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
@@ -131,6 +140,7 @@ bosses:
     max-health: 100000000.0
     duration-seconds: 600
     reward-command: "eco give %player% 25000"
+    hologram-format: "{boss}\n&#78c8ff❤ &7{hp} &8/ {max_hp}"
     zone:
       world: ""
       min-x: 0
