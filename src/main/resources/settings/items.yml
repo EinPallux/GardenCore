@@ -15,6 +15,9 @@
 #   lore:     List of lore lines (color codes supported)
 #   command:  Console command to run. Use %player% for the player's name.
 #             Special: "gca event start <event-key>" starts an event directly.
+#
+# Composter items use material: COMPOSTER and have no command.
+# Placing the composter block consumes the item and activates the buff.
 # ──────────────────────────────────────────────
 
 items:
@@ -142,3 +145,86 @@ items:
       - ""
       - "&8Single-use."
     command: "gca event start xp_250"
+
+  # ── Composter Items ────────────────────────────
+  # Place these COMPOSTER blocks to activate a local area buff.
+  # The block despawns automatically after the configured duration.
+  # Items are consumed on placement — single-use.
+
+  composter_fiber_100:
+    name: "&#FFD700&l✦ Lucky Composter &8— &e+100% Fiber"
+    material: COMPOSTER
+    lore:
+      - "&7Place this composter to activate a"
+      - "&#FFD700+100% Fiber Amount &7buff in a &f20 block radius&7."
+      - ""
+      - "&7Duration: &f15 minutes"
+      - "&7Only affects players within range."
+      - ""
+      - "&8Single-use. Place to activate."
+    command: ""
+
+  composter_fiber_250:
+    name: "&#FFD700&l✦ Lucky Composter &8— &e+250% Fiber"
+    material: COMPOSTER
+    lore:
+      - "&7Place this composter to activate a"
+      - "&#FFD700+250% Fiber Amount &7buff in a &f20 block radius&7."
+      - ""
+      - "&7Duration: &f15 minutes"
+      - "&7Only affects players within range."
+      - ""
+      - "&8Single-use. Place to activate."
+    command: ""
+
+  composter_xp_50:
+    name: "&#a8d8ff&l✦ Lucky Composter &8— &b+50% XP"
+    material: COMPOSTER
+    lore:
+      - "&7Place this composter to activate a"
+      - "&#a8d8ff+50% XP &7buff in a &f20 block radius&7."
+      - ""
+      - "&7Duration: &f15 minutes"
+      - "&7Only affects players within range."
+      - ""
+      - "&8Single-use. Place to activate."
+    command: ""
+
+  composter_xp_75:
+    name: "&#a8d8ff&l✦ Lucky Composter &8— &b+75% XP"
+    material: COMPOSTER
+    lore:
+      - "&7Place this composter to activate a"
+      - "&#a8d8ff+75% XP &7buff in a &f20 block radius&7."
+      - ""
+      - "&7Duration: &f15 minutes"
+      - "&7Only affects players within range."
+      - ""
+      - "&8Single-use. Place to activate."
+    command: ""
+
+  composter_material_100:
+    name: "&#a8ff78&l✦ Lucky Composter &8— &a+100% Material Amount"
+    material: COMPOSTER
+    lore:
+      - "&7Place this composter to activate a"
+      - "&#a8ff78+100% Material Amount &7buff in a &f20 block radius&7."
+      - ""
+      - "&7Duration: &f15 minutes"
+      - "&7Only affects players within range."
+      - ""
+      - "&8Single-use. Place to activate."
+    command: ""
+
+  composter_material_150:
+    name: "&#a8ff78&l✦ Lucky Composter &8— &a+150% Material Amount"
+    material: COMPOSTER
+    lore:
+      - "&7Place this composter to activate a"
+      - "&#a8ff78+150% Material Amount &7buff in a &f20 block radius&7."
+      - ""
+      - "&7Duration: &f15 minutes"
+      - "&7Only affects players within range."
+      - ""
+      - "&8Single-use. Place to activate."
+    command: ""

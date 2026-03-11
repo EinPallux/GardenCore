@@ -38,6 +38,7 @@ public final class GardenCore extends JavaPlugin {
     private ElderGui elderGui;
     private PetManager petManager;
     private PetCosmeticManager petCosmeticManager;
+    private ComposterManager composterManager;
     private final Map<UUID, Integer> researchPageMap = new ConcurrentHashMap<>();
 
     @Override
@@ -66,6 +67,7 @@ public final class GardenCore extends JavaPlugin {
         elderGui = new ElderGui(this);
         petManager = new PetManager(this);
         petCosmeticManager = new PetCosmeticManager(this);
+        composterManager = new ComposterManager(this);
 
         registerListeners();
         registerCommands();
@@ -80,6 +82,9 @@ public final class GardenCore extends JavaPlugin {
     public void onDisable() {
         if (petCosmeticManager != null) {
             petCosmeticManager.shutdown();
+        }
+        if (composterManager != null) {
+            composterManager.shutdown();
         }
         if (dataManager != null) {
             dataManager.saveAll();
@@ -122,6 +127,9 @@ public final class GardenCore extends JavaPlugin {
         }
         if (configManager.isFeatureEnabled("command-blocking")) {
             pm.registerEvents(new BlockedCommandListener(this), this);
+        }
+        if (configManager.isFeatureEnabled("composters")) {
+            pm.registerEvents(new ComposterListener(this), this);
         }
 
         pm.registerEvents(new PlayerConnectionListener(this), this);
@@ -201,6 +209,7 @@ public final class GardenCore extends JavaPlugin {
     public ElderGui getElderGui()                             { return elderGui; }
     public PetManager getPetManager()                         { return petManager; }
     public PetCosmeticManager getPetCosmeticManager()         { return petCosmeticManager; }
+    public ComposterManager getComposterManager()             { return composterManager; }
 
     public int getPlayerResearchPage(Player player) {
         return researchPageMap.getOrDefault(player.getUniqueId(), 0);

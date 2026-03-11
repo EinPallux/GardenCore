@@ -4,6 +4,9 @@ import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.models.EventData;
 import com.pallux.gardencore.models.PlayerData;
 import com.pallux.gardencore.utils.NumberUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -20,7 +23,7 @@ public class MultiplierManager {
     }
 
     // ── Fiber multiplier ──────────────────────────────────────────────────────
-    // Sources: base(1) + upgrades + admin bonus + event + research + elder + pet
+    // Sources: base(1) + upgrades + admin bonus + event + research + elder + pet + composter
     public double getTotalFiberMultiplier(UUID uuid) {
         PlayerData data = plugin.getDataManager().getPlayerData(uuid);
         return 1.0
@@ -29,7 +32,8 @@ public class MultiplierManager {
                 + getEventBonus(EventData.EventType.FIBER_AMOUNT) / 100.0
                 + getResearchFiberBonus(uuid)
                 + plugin.getElderManager().getElderFiberBonus(uuid)
-                + plugin.getPetManager().getPetFiberBonus(uuid);
+                + plugin.getPetManager().getPetFiberBonus(uuid)
+                + getComposterFiberBonus(uuid) / 100.0;
     }
 
     // ── Material amount multiplier ────────────────────────────────────────────
@@ -40,7 +44,8 @@ public class MultiplierManager {
                 + data.getBonusMaterialAmountMultiplier() / 100.0
                 + getEventBonus(EventData.EventType.MATERIAL_AMOUNT) / 100.0
                 + getResearchMaterialBonus(uuid)
-                + plugin.getElderManager().getElderMaterialAmountBonus(uuid);
+                + plugin.getElderManager().getElderMaterialAmountBonus(uuid)
+                + getComposterMaterialBonus(uuid) / 100.0;
     }
 
     // ── Material chance multiplier ────────────────────────────────────────────
@@ -57,7 +62,8 @@ public class MultiplierManager {
     public double getTotalXpMultiplier(UUID uuid) {
         return 1.0
                 + getEventBonus(EventData.EventType.XP_AMOUNT) / 100.0
-                + plugin.getElderManager().getElderXpBonus(uuid);
+                + plugin.getElderManager().getElderXpBonus(uuid)
+                + getComposterXpBonus(uuid) / 100.0;
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -82,6 +88,31 @@ public class MultiplierManager {
         double perResearch = plugin.getConfigManager().getResearchConfig()
                 .getDouble("research.material-amount-per-research", 1.0);
         return completed * perResearch;
+    }
+
+    // ── Composter bonus helpers ───────────────────────────────────────────────
+
+    private double getComposterFiberBonus(UUID uuid) {
+        Location loc = getPlayerLocation(uuid);
+        if (loc == null) return 0;
+        return plugin.getComposterManager().getTotalFiberBonus(loc);
+    }
+
+    private double getComposterXpBonus(UUID uuid) {
+        Location loc = getPlayerLocation(uuid);
+        if (loc == null) return 0;
+        return plugin.getComposterManager().getTotalXpBonus(loc);
+    }
+
+    private double getComposterMaterialBonus(UUID uuid) {
+        Location loc = getPlayerLocation(uuid);
+        if (loc == null) return 0;
+        return plugin.getComposterManager().getTotalMaterialAmountBonus(loc);
+    }
+
+    private Location getPlayerLocation(UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        return player != null ? player.getLocation() : null;
     }
 
     public String formatFiberMultiplier(UUID uuid) {

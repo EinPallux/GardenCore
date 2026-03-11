@@ -78,6 +78,11 @@ elder:
   not-enough-reed:      "&cYou don't have enough Reed for this perk!"
   not-enough-clover:    "&cYou don't have enough Clover for this perk!"
 
+# ── Composters ─────────────────────────────────
+composter:
+  placed:  "&#a8ff78&l✦ Lucky Composter placed! &7{type} &7is active for &f{duration} minutes &7in a &f{radius} block radius&7."
+  removed: "&#ff7a7aComposter removed."
+
 # ── Admin ──────────────────────────────────────
 admin:
   reset-confirm-title: "&c&lConfirm Reset"
