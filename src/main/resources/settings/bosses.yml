@@ -36,7 +36,7 @@ bosses:
   plains_boss:
     display-name: "&#a8ff78&lMeadow Shambler"
     island-key: "Plains"
-    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA4ZGY2MGM1MTA3NGVlZjI1NDRmZjM4Y2VhZDllMTY2NzVhZTQyNTE5MTYxMDUxODBlMWY4Y2UxOTdhYjNiYyJ9fX0="
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmZmN2U5NGYzNDc5YTMxYTQ5MWE1YTY5YTRlYjQ5Y2RlMGQwMDIxNDA2NWQ0Y2E5Y2I0ZWRiMjQ2NWM5MTJlYiJ9fX0="
     size: 4.0
     max-health: 500000.0
     duration-seconds: 120
@@ -54,7 +54,7 @@ bosses:
   savanna_boss:
     display-name: "&#FFD700&lDust Stalker"
     island-key: "Savanna"
-    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzc0NzJkNjA4ODIxZjQ1YTg4MDUzNzZlYzBjNmZmY2I3ODExNzgyOWVhNWY5NjAwNDFjMmEwOWQxMGUwNGNiNCJ9fX0="
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjZmMDdjYjMzNDdmMWQzYWFhYWEyMGI0ZDBiM2RjNTBkZWQwOTgwNTExOGNiZjU2Nzk3ZGI4OWIwM2Y1Mzk1In19fQ=="
     size: 4.0
     max-health: 5000000.0
     duration-seconds: 120
@@ -72,7 +72,7 @@ bosses:
   flowerfield_boss:
     display-name: "&#FFB6C1&lBloom Wraith"
     island-key: "Flower Field"
-    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTYzZTY2NDZmMWMwZDQxZmQzYmY1NTg0YTFjZTA0NGY1YzQ2ZDU5ODI1OGRiNDYyMTYxMTc4NTlmNTdhZjE5NyJ9fX0="
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzk1ZmE3MWY0MjlhZTRjMDJmYzFkY2UwZDQ3YTg4ZDI2OWJhMWQ0NDZiZDQ5ZWNlNjFhYjBhMzYxZWY2YzA1YyJ9fX0="
     size: 4.0
     max-health: 10000000.0
     duration-seconds: 120
@@ -90,7 +90,7 @@ bosses:
   netherforest_boss:
     display-name: "&#FF6B6B&lInfernal Reaper"
     island-key: "Nether Forest"
-    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODllYzVhMzAyMjJkMDY1OWIwZGJlZTg0NGI4ZjUzZWFlNjJmZTk1YjRhMzQ0OGE5ZWY3OTBhN2FlZGIyOTZkOSJ9fX0="
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTkzNWU4NzZiOWEzN2I3YTRmNmU1NzQzYTU3ZDYzZTQ4ZjQ1YjEwOTkyNmVhNWQ1MDJkNmU2ZjRmZDMzOWVkIn19fQ=="
     size: 4.0
     max-health: 100000000.0
     duration-seconds: 120
@@ -108,7 +108,7 @@ bosses:
   coralreef_boss:
     display-name: "&#C4A882&lTide Colossus"
     island-key: "Coral Reef"
-    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWRmMmViMjA1YTIzYzExOTZiM2VjZjIxZTY4YzA3NmI2OTZlNzYxNjNhYzhmYzRmYjlmNTMxOGMyYTVlNWIxYSJ9fX0="
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWFlY2NjODE0MTUzZWM3ZWZmMjY2Nzc2YzU2MjNlZDNjMGUwNGVkNTMyNTQ0MjE5ZmU4ZTA4MTkwYjIxNTk2ZSJ9fX0="
     size: 4.0
     max-health: 750000000.0
     duration-seconds: 120
@@ -126,7 +126,7 @@ bosses:
   mysticforest_boss:
     display-name: "&#78c8ff&lEternal Arbiter"
     island-key: "Mystic Forest"
-    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjk1M2IxMmEwOTQ2YjYyOWI0YzA4ODlkNDFmZDI2ZWQyNmZiNzI5ZDRkNTE0YjU5NzI3MTI0YzM3YmI3MGQ4ZCJ9fX0="
+    skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2E5N2I3YmVmZmE4NzY1NzFjNzUwOTUxZTFjOGY5ZjM5ODA4ZmMwNjUxMGNiZWMyNTRjYTRkMjVhZGFlNjY2MCJ9fX0="
     size: 4.0
     max-health: 1750000000.0
     duration-seconds: 120
