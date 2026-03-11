@@ -35,8 +35,6 @@ public class ElderManager {
         this.plugin = plugin;
     }
 
-    // ── Level queries ──────────────────────────────────────────
-
     public int getCurrentLevel(UUID uuid, ElderPerkType type) {
         PlayerData data = plugin.getDataManager().getPlayerData(uuid);
         return switch (type) {
@@ -50,11 +48,6 @@ public class ElderManager {
     public int getMaxLevel(ElderPerkType type) {
         return cfg().getInt("elder-menu.perks." + configKey(type) + ".max-level", 50);
     }
-
-    // ── Cost queries ───────────────────────────────────────────
-    // Config keys in eldermenu.yml: <material>-base and <material>-exponent
-    // Cost formula: round( base x (currentLevel + 1)^exponent )
-    // A base of 0 means that material is not required for this perk.
 
     private double calcCost(ElderPerkType type, int currentLevel, String material) {
         String prefix   = "elder-menu.perks." + configKey(type) + "." + material;
@@ -84,10 +77,6 @@ public class ElderManager {
         return calcCost(type, currentLevel, "clover");
     }
 
-    // ── Bonus value ────────────────────────────────────────────
-    // bonusPerLevel is in multiplier units (e.g. 100.0 means +100x per level).
-    // Never multiply by 100 — it is not a fraction or percentage.
-
     public double getBonusPerLevel(ElderPerkType type) {
         return cfg().getDouble("elder-menu.perks." + configKey(type) + ".bonus-per-level", 1.0);
     }
@@ -95,8 +84,6 @@ public class ElderManager {
     public double getTotalBonus(UUID uuid, ElderPerkType type) {
         return getCurrentLevel(uuid, type) * getBonusPerLevel(type);
     }
-
-    // ── Purchase ───────────────────────────────────────────────
 
     public PurchaseResult tryPurchase(Player player, ElderPerkType type) {
         UUID uuid = player.getUniqueId();
@@ -130,9 +117,8 @@ public class ElderManager {
             case MATERIAL_CHANCE -> data.setElderMaterialChanceLevel(current + 1);
         }
 
-        plugin.getDataManager().saveAsync();
+        plugin.getDataManager().savePlayerAsync(uuid);
 
-        // getTotalBonus is in multiplier units — show as "x" (message uses {bonus}x)
         double newBonus = getTotalBonus(uuid, type);
         MessageUtil.send(player, "elder.purchased", Map.of(
                 "perk",  getDisplayName(type),
@@ -142,8 +128,6 @@ public class ElderManager {
 
         return PurchaseResult.SUCCESS;
     }
-
-    // ── Multiplier accessors (used by MultiplierManager) ───────
 
     public double getElderFiberBonus(UUID uuid) {
         return getTotalBonus(uuid, ElderPerkType.FIBER_AMOUNT);
@@ -160,8 +144,6 @@ public class ElderManager {
     public double getElderXpBonus(UUID uuid) {
         return getTotalBonus(uuid, ElderPerkType.XP_GAIN);
     }
-
-    // ── Helpers ────────────────────────────────────────────────
 
     public String getDisplayName(ElderPerkType type) {
         return switch (type) {

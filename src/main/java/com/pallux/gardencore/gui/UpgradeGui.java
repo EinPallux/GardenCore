@@ -137,7 +137,7 @@ public class UpgradeGui implements Listener {
                 MessageUtil.send(player, "upgrades.not-enough-fiber");
             }
             case SUCCESS -> {
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(player.getUniqueId());
                 build();
             }
         }

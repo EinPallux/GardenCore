@@ -49,7 +49,7 @@ public class UpgradeCommand implements CommandExecutor, TabCompleter {
         switch (result) {
             case MAX_REACHED -> MessageUtil.send(player, "upgrades.max-reached");
             case NOT_ENOUGH_FIBER -> MessageUtil.send(player, "upgrades.not-enough-fiber");
-            case SUCCESS -> plugin.getDataManager().saveAsync();
+            case SUCCESS -> plugin.getDataManager().savePlayerAsync(player.getUniqueId());
         }
 
         return true;

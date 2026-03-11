@@ -78,6 +78,13 @@ public final class GardenCore extends JavaPlugin {
 
         aliasManager.registerAliases();
 
+        // Auto-Save Task: Save all online players safely off the main thread every 5 minutes (6000 ticks)
+        getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+            if (dataManager != null) {
+                dataManager.saveAllAsync();
+            }
+        }, 6000L, 6000L);
+
         getLogger().info("GardenCore has been enabled successfully!");
     }
 
@@ -93,6 +100,7 @@ public final class GardenCore extends JavaPlugin {
             composterManager.shutdown();
         }
         if (dataManager != null) {
+            // Save synchronously on disable to ensure nothing is lost before shutdown finishes
             dataManager.saveAll();
         }
         if (eventManager != null) {

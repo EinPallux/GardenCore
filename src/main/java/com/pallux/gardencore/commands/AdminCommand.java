@@ -63,8 +63,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    // ── Boss ──────────────────────────────────────────────────
-
     private void handleBoss(CommandSender sender, String[] args) {
         if (args.length < 2) { sendBossHelp(sender); return; }
         switch (args[1].toLowerCase()) {
@@ -162,8 +160,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    // ── Player ────────────────────────────────────────────────
-
     private void handlePlayer(CommandSender sender, String[] args) {
         if (args.length < 3) { sendPlayerHelp(sender); return; }
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
@@ -190,29 +186,29 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             case "fiber" -> {
                 double amount = parseDouble(sender, args[4]); if (Double.isNaN(amount)) return;
                 plugin.getFiberManager().setFiber(target.getUniqueId(), amount);
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 MessageUtil.send(sender, "fiber.set", Map.of("player", name, "amount", args[4]));
             }
             case "xp" -> {
                 double amount = parseDouble(sender, args[4]); if (Double.isNaN(amount)) return;
-                data.setXp(amount); plugin.getDataManager().saveAsync();
+                data.setXp(amount); plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 ok(sender, "XP for &e" + name + " &7set to &a" + args[4]);
             }
             case "level" -> {
                 int amount = parseInt(sender, args[4]); if (amount == Integer.MIN_VALUE) return;
-                data.setLevel(Math.max(1, amount)); plugin.getDataManager().saveAsync();
+                data.setLevel(Math.max(1, amount)); plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 ok(sender, "Level for &e" + name + " &7set to &a" + amount);
             }
             case "driftwood", "moss", "reed", "clover" -> {
                 double amount = parseDouble(sender, args[4]); if (Double.isNaN(amount)) return;
-                setMaterial(data, type, Math.max(0, amount)); plugin.getDataManager().saveAsync();
+                setMaterial(data, type, Math.max(0, amount)); plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 ok(sender, capitalize(type) + " for &e" + name + " &7set to &a" + amount);
             }
             case "pet" -> {
                 com.pallux.gardencore.models.PetRarity rarity = parsePetRarity(sender, args[4]);
                 if (rarity == null) return;
                 data.setPetRarity(rarity);
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 Player onlineTarget = Bukkit.getPlayer(target.getUniqueId());
                 if (onlineTarget != null) {
                     if (rarity == com.pallux.gardencore.models.PetRarity.NONE) {
@@ -236,23 +232,23 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             case "fiber" -> {
                 double amount = parseDouble(sender, args[4]); if (Double.isNaN(amount)) return;
                 plugin.getFiberManager().giveFiber(target.getUniqueId(), amount);
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 MessageUtil.send(sender, "fiber.give", Map.of("player", name, "amount", args[4]));
             }
             case "xp" -> {
                 double amount = parseDouble(sender, args[4]); if (Double.isNaN(amount)) return;
-                data.addXp(amount); plugin.getDataManager().saveAsync();
+                data.addXp(amount); plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 ok(sender, "Given &a" + args[4] + " &7XP to &e" + name);
             }
             case "level" -> {
                 int amount = parseInt(sender, args[4]); if (amount == Integer.MIN_VALUE) return;
-                data.setLevel(data.getLevel() + amount); plugin.getDataManager().saveAsync();
+                data.setLevel(data.getLevel() + amount); plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 ok(sender, "Given &a" + amount + " &7level(s) to &e" + name);
             }
             case "driftwood", "moss", "reed", "clover" -> {
                 double amount = parseDouble(sender, args[4]); if (Double.isNaN(amount)) return;
                 if (amount < 0) { MessageUtil.send(sender, "invalid-number"); return; }
-                addMaterial(data, type, amount); plugin.getDataManager().saveAsync();
+                addMaterial(data, type, amount); plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 ok(sender, "Given &a" + args[4] + " &7" + capitalize(type) + " to &e" + name);
             }
             default -> sendPlayerHelp(sender);
@@ -268,23 +264,23 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             case "fiber" -> {
                 double amount = parseDouble(sender, args[4]); if (Double.isNaN(amount)) return;
                 plugin.getFiberManager().takeFiber(target.getUniqueId(), amount);
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 MessageUtil.send(sender, "fiber.take", Map.of("player", name, "amount", args[4]));
             }
             case "xp" -> {
                 double amount = parseDouble(sender, args[4]); if (Double.isNaN(amount)) return;
-                data.setXp(Math.max(0, data.getXp() - amount)); plugin.getDataManager().saveAsync();
+                data.setXp(Math.max(0, data.getXp() - amount)); plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 ok(sender, "Taken &a" + args[4] + " &7XP from &e" + name);
             }
             case "level" -> {
                 int amount = parseInt(sender, args[4]); if (amount == Integer.MIN_VALUE) return;
-                data.setLevel(Math.max(1, data.getLevel() - amount)); plugin.getDataManager().saveAsync();
+                data.setLevel(Math.max(1, data.getLevel() - amount)); plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 ok(sender, "Taken &a" + amount + " &7level(s) from &e" + name);
             }
             case "driftwood", "moss", "reed", "clover" -> {
                 double amount = parseDouble(sender, args[4]); if (Double.isNaN(amount)) return;
                 if (amount < 0) { MessageUtil.send(sender, "invalid-number"); return; }
-                takeMaterial(data, type, amount); plugin.getDataManager().saveAsync();
+                takeMaterial(data, type, amount); plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 ok(sender, "Taken &a" + args[4] + " &7" + capitalize(type) + " from &e" + name);
             }
             default -> sendPlayerHelp(sender);
@@ -304,32 +300,32 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         Runnable action = switch (type) {
             case "upgrades" -> () -> {
                 plugin.getDataManager().getPlayerData(target.getUniqueId()).resetUpgrades();
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 MessageUtil.send(player, "upgrades.reset-upgrades", Map.of("player", name));
             };
             case "fiber" -> () -> {
                 plugin.getDataManager().getPlayerData(target.getUniqueId()).resetFiber();
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 MessageUtil.send(player, "upgrades.reset-fiber", Map.of("player", name));
             };
             case "materials" -> () -> {
                 plugin.getDataManager().getPlayerData(target.getUniqueId()).resetMaterials();
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 MessageUtil.send(player, "admin.reset-material", Map.of("player", name));
             };
             case "research" -> () -> {
                 plugin.getDataManager().getPlayerData(target.getUniqueId()).resetResearch();
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 MessageUtil.send(player, "admin.reset-research", Map.of("player", name));
             };
             case "elder" -> () -> {
                 plugin.getDataManager().getPlayerData(target.getUniqueId()).resetElder();
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 MessageUtil.send(player, "admin.reset-elder", Map.of("player", name));
             };
             case "all" -> () -> {
                 plugin.getDataManager().getPlayerData(target.getUniqueId()).resetAll();
-                plugin.getDataManager().saveAsync();
+                plugin.getDataManager().savePlayerAsync(target.getUniqueId());
                 MessageUtil.send(player, "upgrades.reset-all", Map.of("player", name));
                 Player onlineTarget = Bukkit.getPlayer(target.getUniqueId());
                 if (onlineTarget != null) {
@@ -356,7 +352,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             case MATERIAL_CHANCE -> data.setMaterialChanceUpgrade(level);
             case CROP_COOLDOWN   -> data.setCropCooldownUpgrade(level);
         }
-        plugin.getDataManager().saveAsync();
+        plugin.getDataManager().savePlayerAsync(target.getUniqueId());
         MessageUtil.send(sender, "upgrades.set", Map.of(
                 "upgrade", plugin.getUpgradeManager().getDisplayName(type),
                 "player",  nameOf(target, args[1]),
@@ -380,7 +376,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             case XP_GAIN         -> data.setElderXpGainLevel(level);
             case MATERIAL_CHANCE -> data.setElderMaterialChanceLevel(level);
         }
-        plugin.getDataManager().saveAsync();
+        plugin.getDataManager().savePlayerAsync(target.getUniqueId());
         ok(sender, "Elder perk &e" + plugin.getElderManager().getDisplayName(type)
                 + " &7for &e" + nameOf(target, args[1]) + " &7set to level &a" + level);
     }
@@ -397,7 +393,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             case MATERIAL_CHANCE -> data.addBonusMaterialChanceMultiplier(percent);
             case CROP_COOLDOWN   -> { err(sender, "Bonus multiplier is not supported for Crop Cooldown."); return; }
         }
-        plugin.getDataManager().saveAsync();
+        plugin.getDataManager().savePlayerAsync(target.getUniqueId());
         ok(sender, "Added &a+" + percent + "% &7"
                 + plugin.getUpgradeManager().getDisplayName(type)
                 + " bonus to &e" + nameOf(target, args[1]));
@@ -472,8 +468,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         ok(sender, "All config files reloaded.");
     }
 
-    // ── Help ──────────────────────────────────────────────────
-
     private void sendHelp(CommandSender sender) {
         sender.sendMessage(lines(
                 "&8&m                                          ",
@@ -535,8 +529,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         ));
     }
 
-    // ── Tab completion ────────────────────────────────────────
-
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("gc.admin")) return List.of();
@@ -592,8 +584,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         if (args.length == 3) return onlinePlayers(args[2]);
         return List.of();
     }
-
-    // ── Helpers ───────────────────────────────────────────────
 
     private void setMaterial(PlayerData d, String type, double v) {
         switch (type) {

@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Map;
 import java.util.Optional;
@@ -70,7 +71,13 @@ public class CropFarmingListener implements Listener {
 
         sendFiberTitle(player, earned);
 
-        plugin.getDataManager().saveAsync();
+        // Removed plugin.getDataManager().saveAsync(); - No longer spamming disk I/O!
+    }
+
+    // Fixed Memory Leak: Remove player from the map when they leave
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        lastBreakTime.remove(event.getPlayer().getUniqueId());
     }
 
     private void sendFiberTitle(Player player, double earned) {

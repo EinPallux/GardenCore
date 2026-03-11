@@ -31,6 +31,8 @@ public class PlayerConnectionListener implements Listener {
         plugin.getEventManager().removePlayer(event.getPlayer());
         plugin.getBossManager().removePlayer(event.getPlayer());
         plugin.getPetCosmeticManager().despawn(event.getPlayer().getUniqueId());
-        plugin.getDataManager().removePlayerData(event.getPlayer().getUniqueId());
+
+        // Correctly save and remove their data instance asynchronously
+        plugin.getDataManager().unloadPlayer(event.getPlayer().getUniqueId());
     }
 }

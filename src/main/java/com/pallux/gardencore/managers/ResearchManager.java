@@ -44,7 +44,7 @@ public class ResearchManager {
         data.setCompletedResearches(index + 1);
         data.setActiveResearchIndex(-1);
         data.setActiveResearchStart(0);
-        plugin.getDataManager().saveAsync();
+        plugin.getDataManager().savePlayerAsync(player.getUniqueId());
 
         double fiberPerResearch = plugin.getConfigManager().getResearchConfig()
                 .getDouble("research.fiber-amount-per-research", 500.0);
@@ -90,7 +90,7 @@ public class ResearchManager {
         data.takeFiber(cost);
         data.setActiveResearchIndex(index);
         data.setActiveResearchStart(System.currentTimeMillis());
-        plugin.getDataManager().saveAsync();
+        plugin.getDataManager().savePlayerAsync(player.getUniqueId());
 
         MessageUtil.send(player, "research.started", Map.of(
                 "time", formatDuration(getDurationMs(index) / 1000)
@@ -104,7 +104,7 @@ public class ResearchManager {
 
         data.setActiveResearchIndex(-1);
         data.setActiveResearchStart(0);
-        plugin.getDataManager().saveAsync();
+        plugin.getDataManager().savePlayerAsync(player.getUniqueId());
 
         MessageUtil.send(player, "research.cancelled");
         return true;
@@ -128,14 +128,6 @@ public class ResearchManager {
         return Math.max(0, durationMs - elapsed);
     }
 
-    /**
-     * Cost formula: base-cost × cost-growth^index
-     * Matches researchmenu.yml: base-cost: 500, cost-growth: 1.45
-     *   R1  (index 0) =   500
-     *   R5  (index 4) = 2,210
-     *   R10 (index 9) = 14,167
-     *   R28 (index 27) ≈ 11,373,813
-     */
     public double getCost(int index) {
         double base   = plugin.getConfigManager().getResearchConfig()
                 .getDouble("research.base-cost", 500.0);
