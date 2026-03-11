@@ -182,7 +182,7 @@ items:
       - ""
       - "&8Single-use. Place to activate."
     hologram-lines:
-      - "&7Radius: &a20 Blocks"
+      - "&7Radius: &a{radius} Blocks"
       - "&7Expires in: &f{time}"
       - "&7Placed by: &e{placer}"
       - "&#FFD700&l+100% Fiber Amount"
@@ -202,7 +202,7 @@ items:
       - ""
       - "&8Single-use. Place to activate."
     hologram-lines:
-      - "&7Radius: &a20 Blocks"
+      - "&7Radius: &a{radius} Blocks"
       - "&7Expires in: &f{time}"
       - "&7Placed by: &e{placer}"
       - "&#FFD700&l+250% Fiber Amount"
@@ -222,7 +222,7 @@ items:
       - ""
       - "&8Single-use. Place to activate."
     hologram-lines:
-      - "&7Radius: &a20 Blocks"
+      - "&7Radius: &a{radius} Blocks"
       - "&7Expires in: &f{time}"
       - "&7Placed by: &e{placer}"
       - "&#a8d8ff&l+50% XP"
@@ -242,7 +242,7 @@ items:
       - ""
       - "&8Single-use. Place to activate."
     hologram-lines:
-      - "&7Radius: &a20 Blocks"
+      - "&7Radius: &a{radius} Blocks"
       - "&7Expires in: &f{time}"
       - "&7Placed by: &e{placer}"
       - "&#a8d8ff&l+75% XP"
@@ -262,7 +262,7 @@ items:
       - ""
       - "&8Single-use. Place to activate."
     hologram-lines:
-      - "&7Radius: &a20 Blocks"
+      - "&7Radius: &a{radius} Blocks"
       - "&7Expires in: &f{time}"
       - "&7Placed by: &e{placer}"
       - "&#a8ff78&l+100% Material Amount"
@@ -282,7 +282,7 @@ items:
       - ""
       - "&8Single-use. Place to activate."
     hologram-lines:
-      - "&7Radius: &a20 Blocks"
+      - "&7Radius: &a{radius} Blocks"
       - "&7Expires in: &f{time}"
       - "&7Placed by: &e{placer}"
       - "&#a8ff78&l+150% Material Amount"
