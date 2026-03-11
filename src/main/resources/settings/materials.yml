@@ -1,5 +1,10 @@
 # ──────────────────────────────────────────────
-#  GardenCore  —  Materials
+#    ____               _             ____
+#   / ___| __ _ _ __ __| | ___ _ __  / ___|___  _ __ ___
+#  | |  _ / _` | '__/ _` |/ _ \ '_ \| |   / _ \| '__/ _ \
+#  | |_| | (_| | | | (_| |  __/ | | | |__| (_) | | |  __/
+#   \____|\__,_|_|  \__,_|\___|_| |_|\____\___/|_|  \___|
+# Materials Config - Plugin made by Pallux @ BBB ( https://builtbybit.com/members/pallux.34066/ )
 # ──────────────────────────────────────────────
 # Materials drop randomly when a player breaks a crop.
 # The actual drop chance and amount are scaled by the player's

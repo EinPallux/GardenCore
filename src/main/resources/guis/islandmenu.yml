@@ -1,5 +1,10 @@
 # ──────────────────────────────────────────────
-#  GardenCore  —  Island Menu  (/islands)
+#    ____               _             ____
+#   / ___| __ _ _ __ __| | ___ _ __  / ___|___  _ __ ___
+#  | |  _ / _` | '__/ _` |/ _ \ '_ \| |   / _ \| '__/ _ \
+#  | |_| | (_| | | | (_| |  __/ | | | |__| (_) | | |  __/
+#   \____|\__,_|_|  \__,_|\___|_| |_|\____\___/|_|  \___|
+# Islands Menu Config - Plugin made by Pallux @ BBB ( https://builtbybit.com/members/pallux.34066/ )
 # ──────────────────────────────────────────────
 # Each island button teleports a player to a warp (or runs any command).
 # Locked islands show a different appearance until the player meets the

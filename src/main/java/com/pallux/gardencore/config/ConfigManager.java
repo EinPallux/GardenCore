@@ -24,6 +24,7 @@ public class ConfigManager {
     private FileConfiguration elder;
     private FileConfiguration pets;
     private FileConfiguration leveling;
+    private FileConfiguration blockedCommands;
 
     public ConfigManager(GardenCore plugin) {
         this.plugin = plugin;
@@ -33,20 +34,21 @@ public class ConfigManager {
         plugin.saveDefaultConfig();
         config = plugin.getConfig();
 
-        messages    = loadOrCreate("lang/messages.yml");
-        crops       = loadOrCreate("settings/crops.yml");
-        materials   = loadOrCreate("settings/materials.yml");
-        events      = loadOrCreate("settings/events.yml");
-        aliases     = loadOrCreate("settings/aliascommands.yml");
-        items       = loadOrCreate("settings/items.yml");
-        afkZone     = loadOrCreate("settings/afkzone.yml");
-        pets        = loadOrCreate("settings/pets.yml");
-        leveling    = loadOrCreate("settings/leveling.yml");
-        guis        = loadOrCreate("guis/upgradesmenu.yml");
-        research    = loadOrCreate("guis/researchmenu.yml");
-        gardenMenu  = loadOrCreate("guis/gardenmenu.yml");
-        islandMenu  = loadOrCreate("guis/islandmenu.yml");
-        elder       = loadOrCreate("guis/eldermenu.yml");
+        messages        = loadOrCreate("lang/messages.yml");
+        crops           = loadOrCreate("settings/crops.yml");
+        materials       = loadOrCreate("settings/materials.yml");
+        events          = loadOrCreate("settings/events.yml");
+        aliases         = loadOrCreate("settings/aliascommands.yml");
+        items           = loadOrCreate("settings/items.yml");
+        afkZone         = loadOrCreate("settings/afkzone.yml");
+        pets            = loadOrCreate("settings/pets.yml");
+        leveling        = loadOrCreate("settings/leveling.yml");
+        blockedCommands = loadOrCreate("settings/blocked-commands.yml");
+        guis            = loadOrCreate("guis/upgradesmenu.yml");
+        research        = loadOrCreate("guis/researchmenu.yml");
+        gardenMenu      = loadOrCreate("guis/gardenmenu.yml");
+        islandMenu      = loadOrCreate("guis/islandmenu.yml");
+        elder           = loadOrCreate("guis/eldermenu.yml");
     }
 
     private FileConfiguration loadOrCreate(String name) {
@@ -62,20 +64,21 @@ public class ConfigManager {
         plugin.reloadConfig();
         config = plugin.getConfig();
 
-        messages    = loadOrCreate("lang/messages.yml");
-        crops       = loadOrCreate("settings/crops.yml");
-        materials   = loadOrCreate("settings/materials.yml");
-        events      = loadOrCreate("settings/events.yml");
-        aliases     = loadOrCreate("settings/aliascommands.yml");
-        items       = loadOrCreate("settings/items.yml");
-        afkZone     = loadOrCreate("settings/afkzone.yml");
-        pets        = loadOrCreate("settings/pets.yml");
-        leveling    = loadOrCreate("settings/leveling.yml");
-        guis        = loadOrCreate("guis/upgradesmenu.yml");
-        research    = loadOrCreate("guis/researchmenu.yml");
-        gardenMenu  = loadOrCreate("guis/gardenmenu.yml");
-        islandMenu  = loadOrCreate("guis/islandmenu.yml");
-        elder       = loadOrCreate("guis/eldermenu.yml");
+        messages        = loadOrCreate("lang/messages.yml");
+        crops           = loadOrCreate("settings/crops.yml");
+        materials       = loadOrCreate("settings/materials.yml");
+        events          = loadOrCreate("settings/events.yml");
+        aliases         = loadOrCreate("settings/aliascommands.yml");
+        items           = loadOrCreate("settings/items.yml");
+        afkZone         = loadOrCreate("settings/afkzone.yml");
+        pets            = loadOrCreate("settings/pets.yml");
+        leveling        = loadOrCreate("settings/leveling.yml");
+        blockedCommands = loadOrCreate("settings/blocked-commands.yml");
+        guis            = loadOrCreate("guis/upgradesmenu.yml");
+        research        = loadOrCreate("guis/researchmenu.yml");
+        gardenMenu      = loadOrCreate("guis/gardenmenu.yml");
+        islandMenu      = loadOrCreate("guis/islandmenu.yml");
+        elder           = loadOrCreate("guis/eldermenu.yml");
     }
 
     public boolean isFeatureEnabled(String feature) {
@@ -83,7 +86,7 @@ public class ConfigManager {
     }
 
     public String getPrefix() {
-        return config.getString("prefix", "&8[&a&lGardenCore&8]&r");
+        return config.getString("prefix", "&a&lGARDEN &8➠&r");
     }
 
     public String getMessage(String path) {
@@ -99,19 +102,20 @@ public class ConfigManager {
         return config.getInt("events.duration-minutes", 5);
     }
 
-    public FileConfiguration getConfig()          { return config; }
-    public FileConfiguration getMessages()        { return messages; }
-    public FileConfiguration getCrops()           { return crops; }
-    public FileConfiguration getMaterials()       { return materials; }
-    public FileConfiguration getEventsConfig()    { return events; }
-    public FileConfiguration getAliases()         { return aliases; }
-    public FileConfiguration getGuis()            { return guis; }
-    public FileConfiguration getItems()           { return items; }
-    public FileConfiguration getAfkZone()         { return afkZone; }
-    public FileConfiguration getResearchConfig()  { return research; }
-    public FileConfiguration getGardenMenu()      { return gardenMenu; }
-    public FileConfiguration getIslandMenu()      { return islandMenu; }
-    public FileConfiguration getElderConfig()     { return elder; }
-    public FileConfiguration getPetsConfig()      { return pets; }
-    public FileConfiguration getLevelingConfig()  { return leveling; }
+    public FileConfiguration getConfig()              { return config; }
+    public FileConfiguration getMessages()            { return messages; }
+    public FileConfiguration getCrops()               { return crops; }
+    public FileConfiguration getMaterials()           { return materials; }
+    public FileConfiguration getEventsConfig()        { return events; }
+    public FileConfiguration getAliases()             { return aliases; }
+    public FileConfiguration getGuis()                { return guis; }
+    public FileConfiguration getItems()               { return items; }
+    public FileConfiguration getAfkZone()             { return afkZone; }
+    public FileConfiguration getResearchConfig()      { return research; }
+    public FileConfiguration getGardenMenu()          { return gardenMenu; }
+    public FileConfiguration getIslandMenu()          { return islandMenu; }
+    public FileConfiguration getElderConfig()         { return elder; }
+    public FileConfiguration getPetsConfig()          { return pets; }
+    public FileConfiguration getLevelingConfig()      { return leveling; }
+    public FileConfiguration getBlockedCommands()     { return blockedCommands; }
 }

@@ -1,5 +1,10 @@
 # ──────────────────────────────────────────────
-#  GardenCore  —  Main Configuration
+#    ____               _             ____
+#   / ___| __ _ _ __ __| | ___ _ __  / ___|___  _ __ ___
+#  | |  _ / _` | '__/ _` |/ _ \ '_ \| |   / _ \| '__/ _ \
+#  | |_| | (_| | | | (_| |  __/ | | | |__| (_) | | |  __/
+#   \____|\__,_|_|  \__,_|\___|_| |_|\____\___/|_|  \___|
+# Main (config.yml) Config - Plugin made by Pallux @ BBB ( https://builtbybit.com/members/pallux.34066/ )
 # ──────────────────────────────────────────────
 
 # Prefix shown before every plugin message.
@@ -13,6 +18,7 @@ features:
   no-hunger: true          # Freezes the hunger bar
   no-block-drops: true     # Crops don't drop physical items when broken
   no-non-crop-break: true  # Players can only break registered crop blocks
+  command-blocking: true   # Blocks sensitive commands from non-admin's to prevent abuse / unwanted stuff
 
 # Do not change any of the features below if you don't know what you are doing.
 # You might break the whole plugin if you change something here.

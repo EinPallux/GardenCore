@@ -120,6 +120,9 @@ public final class GardenCore extends JavaPlugin {
         if (configManager.isFeatureEnabled("crop-farming")) {
             pm.registerEvents(new CropFarmingListener(this), this);
         }
+        if (configManager.isFeatureEnabled("command-blocking")) {
+            pm.registerEvents(new BlockedCommandListener(this), this);
+        }
 
         pm.registerEvents(new PlayerConnectionListener(this), this);
         pm.registerEvents(new CustomItemListener(this), this);
