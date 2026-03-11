@@ -32,6 +32,70 @@ permissions:
     description: Bypass the no-non-crop-break feature (allows breaking any block)
     default: op
 
+  # ── Donor / Premium Rank Multiplier Bonuses ───────────────────────────────
+  # Grant these permissions to a rank or player to give them a percentage
+  # bonus on top of all in-game multipliers. Replace XXX with any whole or
+  # decimal number (e.g. 10, 25, 50, 100).
+  #
+  # Multiple nodes of the same type stack additively.
+  # Examples:
+  #   gc.multi.fiber_amount.donor.50     → +50% Fiber Amount multiplier
+  #   gc.multi.material_amount.donor.25  → +25% Material Amount multiplier
+  #   gc.multi.xp.donor.100             → +100% XP multiplier
+  #   gc.multi.material_chance.donor.10  → +10% Material Chance multiplier
+
+  gc.multi.fiber_amount.donor.10:
+    description: "+10% bonus to the Fiber Amount multiplier"
+    default: false
+  gc.multi.fiber_amount.donor.25:
+    description: "+25% bonus to the Fiber Amount multiplier"
+    default: false
+  gc.multi.fiber_amount.donor.50:
+    description: "+50% bonus to the Fiber Amount multiplier"
+    default: false
+  gc.multi.fiber_amount.donor.100:
+    description: "+100% bonus to the Fiber Amount multiplier"
+    default: false
+
+  gc.multi.material_amount.donor.10:
+    description: "+10% bonus to the Material Amount multiplier"
+    default: false
+  gc.multi.material_amount.donor.25:
+    description: "+25% bonus to the Material Amount multiplier"
+    default: false
+  gc.multi.material_amount.donor.50:
+    description: "+50% bonus to the Material Amount multiplier"
+    default: false
+  gc.multi.material_amount.donor.100:
+    description: "+100% bonus to the Material Amount multiplier"
+    default: false
+
+  gc.multi.xp.donor.10:
+    description: "+10% bonus to the XP multiplier"
+    default: false
+  gc.multi.xp.donor.25:
+    description: "+25% bonus to the XP multiplier"
+    default: false
+  gc.multi.xp.donor.50:
+    description: "+50% bonus to the XP multiplier"
+    default: false
+  gc.multi.xp.donor.100:
+    description: "+100% bonus to the XP multiplier"
+    default: false
+
+  gc.multi.material_chance.donor.10:
+    description: "+10% bonus to the Material Chance multiplier"
+    default: false
+  gc.multi.material_chance.donor.25:
+    description: "+25% bonus to the Material Chance multiplier"
+    default: false
+  gc.multi.material_chance.donor.50:
+    description: "+50% bonus to the Material Chance multiplier"
+    default: false
+  gc.multi.material_chance.donor.100:
+    description: "+100% bonus to the Material Chance multiplier"
+    default: false
+
 commands:
   upgrade:
     description: Open the upgrade GUI or upgrade a specific perk
