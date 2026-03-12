@@ -4,32 +4,127 @@ import com.pallux.gardencore.GardenCore;
 import com.pallux.gardencore.models.ComposterData;
 import com.pallux.gardencore.utils.ColorUtil;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ComposterManager {
 
     private final GardenCore plugin;
-
     private final Map<String, ComposterData> activeComposters = new ConcurrentHashMap<>();
     private BukkitTask tickTask;
 
+    private final File dataFile;
+    private final NamespacedKey holoKey;
+
     public ComposterManager(GardenCore plugin) {
         this.plugin = plugin;
+        this.dataFile = new File(plugin.getDataFolder(), "composters.yml");
+        this.holoKey = new NamespacedKey(plugin, "gc_composter_hologram");
+
+        loadComposters();
         startTicker();
+    }
+
+    // ── Persistence ───────────────────────────────────────────
+
+    private void loadComposters() {
+        if (!dataFile.exists()) return;
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(dataFile);
+        if (!config.contains("composters")) return;
+
+        for (String key : config.getConfigurationSection("composters").getKeys(false)) {
+            String path = "composters." + key + ".";
+            String worldName = config.getString(path + "world");
+            if (worldName == null || plugin.getServer().getWorld(worldName) == null) continue;
+
+            int x = config.getInt(path + "x");
+            int y = config.getInt(path + "y");
+            int z = config.getInt(path + "z");
+            Location loc = new Location(plugin.getServer().getWorld(worldName), x, y, z);
+
+            String placer = config.getString(path + "placer");
+            String typeStr = config.getString(path + "type");
+            ComposterData.ComposterType type;
+            try {
+                type = ComposterData.ComposterType.valueOf(typeStr);
+            } catch (Exception e) {
+                continue; // Skip if invalid type
+            }
+
+            long placedAt = config.getLong(path + "placedAt");
+            int duration = config.getInt(path + "duration");
+            double radius = config.getDouble(path + "radius");
+            List<String> holoLines = config.getStringList(path + "holoLines");
+
+            ComposterData data = new ComposterData(loc, placer, type, placedAt, duration, radius, holoLines);
+
+            if (data.getRemainingSeconds() > 0) {
+                // Clean up any leftover holograms from before the restart/crash
+                cleanupOldHolograms(loc);
+
+                spawnHologram(data);
+                activeComposters.put(key(loc), data);
+            } else {
+                // Expired while the server was offline
+                plugin.getServer().getScheduler().runTask(plugin, () -> loc.getBlock().setType(org.bukkit.Material.AIR));
+            }
+        }
+    }
+
+    private void saveComposters() {
+        YamlConfiguration config = new YamlConfiguration();
+        for (Map.Entry<String, ComposterData> entry : activeComposters.entrySet()) {
+            // Replace colons and dots to create a safe YAML path key
+            String safeKey = entry.getKey().replace(":", "_").replace(".", "_");
+            ComposterData data = entry.getValue();
+            String path = "composters." + safeKey + ".";
+
+            config.set(path + "world", data.getBlockLocation().getWorld().getName());
+            config.set(path + "x", data.getBlockLocation().getBlockX());
+            config.set(path + "y", data.getBlockLocation().getBlockY());
+            config.set(path + "z", data.getBlockLocation().getBlockZ());
+            config.set(path + "placer", data.getPlacerName());
+            config.set(path + "type", data.getType().name());
+            config.set(path + "placedAt", data.getPlacedAtMillis());
+            config.set(path + "duration", data.getDurationSeconds());
+            config.set(path + "radius", data.getRadius());
+            config.set(path + "holoLines", data.getHologramLines());
+        }
+        try {
+            config.save(dataFile);
+        } catch (IOException e) {
+            plugin.getLogger().severe("Could not save composters.yml: " + e.getMessage());
+        }
+    }
+
+    private void cleanupOldHolograms(Location loc) {
+        int cx = loc.getBlockX() >> 4;
+        int cz = loc.getBlockZ() >> 4;
+
+        // Load the chunk if it isn't loaded so we can access the entities inside it
+        if (!loc.getWorld().isChunkLoaded(cx, cz)) {
+            loc.getWorld().loadChunk(cx, cz);
+        }
+
+        for (Entity entity : loc.getWorld().getNearbyEntities(loc, 2, 5, 2)) {
+            if (entity instanceof ArmorStand && entity.getPersistentDataContainer().has(holoKey, PersistentDataType.BYTE)) {
+                entity.remove();
+            }
+        }
     }
 
     // ── Placement ─────────────────────────────────────────────
 
-    /**
-     * Called when a player places a composter item.
-     * hologramLines comes from the item's hologram-lines list in items.yml.
-     * If empty, buildLines() falls back to the default built-in lines.
-     */
     public void placeComposter(Player player, Location blockLoc,
                                ComposterData.ComposterType type,
                                int durationSeconds, double radius,
@@ -46,12 +141,9 @@ public class ComposterManager {
 
         spawnHologram(data);
         activeComposters.put(key(blockLoc), data);
+        saveComposters(); // Save immediately in case of a crash
     }
 
-    /**
-     * Legacy overload for callers that don't supply hologram lines.
-     * Falls back to built-in default lines.
-     */
     public void placeComposter(Player player, Location blockLoc,
                                ComposterData.ComposterType type,
                                int durationSeconds, double radius) {
@@ -62,7 +154,10 @@ public class ComposterManager {
 
     public void removeComposter(Location blockLoc) {
         ComposterData data = activeComposters.remove(key(blockLoc));
-        if (data != null) despawnHologram(data);
+        if (data != null) {
+            despawnHologram(data);
+            saveComposters(); // Save immediately
+        }
     }
 
     public boolean isComposter(Location loc) {
@@ -137,20 +232,6 @@ public class ComposterManager {
         }
     }
 
-    /**
-     * Builds the hologram lines array for a composter.
-     *
-     * If the item had hologram-lines configured in items.yml, those are used.
-     * The following placeholders are resolved in each line:
-     *   {time}        — formatted time remaining (e.g. "14m 23s")
-     *   {placer}      — name of the player who placed it
-     *   {type}        — display name of the composter type (e.g. "+100% Fiber")
-     *   {radius}      — buff radius in blocks
-     *   {duration}    — total duration in seconds
-     *
-     * If no custom lines are configured, the default built-in lines are used.
-     * Lines are ordered bottom → top (index 0 = bottom stand).
-     */
     private String[] buildLines(ComposterData data) {
         String timeRemaining = formatTime(data.getRemainingSeconds());
         String placer        = data.getPlacerName();
@@ -197,9 +278,10 @@ public class ComposterManager {
             stand.setInvulnerable(true);
             stand.setSilent(true);
             stand.setSmall(true);
+            stand.setPersistent(false); // Make sure it isn't saved natively into the chunk
             stand.getPersistentDataContainer().set(
-                    new org.bukkit.NamespacedKey(plugin, "gc_composter_hologram"),
-                    org.bukkit.persistence.PersistentDataType.BYTE,
+                    holoKey,
+                    PersistentDataType.BYTE,
                     (byte) 1
             );
         });
@@ -225,9 +307,12 @@ public class ComposterManager {
                 }
             }
 
-            for (String k : expired) {
-                ComposterData data = activeComposters.remove(k);
-                if (data != null) despawnHologram(data);
+            if (!expired.isEmpty()) {
+                for (String k : expired) {
+                    ComposterData data = activeComposters.remove(k);
+                    if (data != null) despawnHologram(data);
+                }
+                saveComposters(); // Only hit disk if an expiration occurred
             }
         }, 20L, 20L);
     }
@@ -250,6 +335,7 @@ public class ComposterManager {
 
     public void shutdown() {
         if (tickTask != null) tickTask.cancel();
+        saveComposters();
         for (ComposterData data : activeComposters.values()) despawnHologram(data);
         activeComposters.clear();
     }

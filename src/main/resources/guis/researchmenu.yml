@@ -39,7 +39,7 @@ research:
 
   # Cost: base-cost × cost-growth^index
   base-cost: 500
-  cost-growth: 1.45
+  cost-growth: 2.25
 
   # Flat bonus added to multipliers per completed research
   fiber-amount-per-research: 500.0

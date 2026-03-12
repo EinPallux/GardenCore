@@ -73,6 +73,7 @@ public class ComposterData {
     public Location getBlockLocation()          { return blockLocation; }
     public String getPlacerName()               { return placerName; }
     public ComposterType getType()              { return type; }
+    public long getPlacedAtMillis()             { return placedAtMillis; } // <-- Added Getter
     public int getDurationSeconds()             { return durationSeconds; }
     public double getRadius()                   { return radius; }
     public List<String> getHologramLines()      { return hologramLines; }
