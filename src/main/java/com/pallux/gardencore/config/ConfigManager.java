@@ -66,22 +66,37 @@ public class ConfigManager {
         plugin.reloadConfig();
         config = plugin.getConfig();
 
-        messages        = loadOrCreate("lang/messages.yml");
-        crops           = loadOrCreate("settings/crops.yml");
-        materials       = loadOrCreate("settings/materials.yml");
-        events          = loadOrCreate("settings/events.yml");
-        aliases         = loadOrCreate("settings/aliascommands.yml");
-        items           = loadOrCreate("settings/items.yml");
-        afkZone         = loadOrCreate("settings/afkzone.yml");
-        pets            = loadOrCreate("settings/pets.yml");
-        leveling        = loadOrCreate("settings/leveling.yml");
-        blockedCommands = loadOrCreate("settings/blocked-commands.yml");
-        bosses          = loadOrCreate("settings/bosses.yml");
-        guis            = loadOrCreate("guis/upgradesmenu.yml");
-        research        = loadOrCreate("guis/researchmenu.yml");
-        gardenMenu      = loadOrCreate("guis/gardenmenu.yml");
-        islandMenu      = loadOrCreate("guis/islandmenu.yml");
-        elder           = loadOrCreate("guis/eldermenu.yml");
+        // Load into the existing instances so that any cached references in other managers update!
+        reloadExisting(messages, "lang/messages.yml");
+        reloadExisting(crops, "settings/crops.yml");
+        reloadExisting(materials, "settings/materials.yml");
+        reloadExisting(events, "settings/events.yml");
+        reloadExisting(aliases, "settings/aliascommands.yml");
+        reloadExisting(items, "settings/items.yml");
+        reloadExisting(afkZone, "settings/afkzone.yml");
+        reloadExisting(pets, "settings/pets.yml");
+        reloadExisting(leveling, "settings/leveling.yml");
+        reloadExisting(blockedCommands, "settings/blocked-commands.yml");
+        reloadExisting(bosses, "settings/bosses.yml");
+        reloadExisting(guis, "guis/upgradesmenu.yml");
+        reloadExisting(research, "guis/researchmenu.yml");
+        reloadExisting(gardenMenu, "guis/gardenmenu.yml");
+        reloadExisting(islandMenu, "guis/islandmenu.yml");
+        reloadExisting(elder, "guis/eldermenu.yml");
+    }
+
+    private void reloadExisting(FileConfiguration configuration, String name) {
+        if (configuration == null) return;
+        File file = new File(plugin.getDataFolder(), name);
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            plugin.saveResource(name, false);
+        }
+        try {
+            configuration.load(file);
+        } catch (Exception e) {
+            plugin.getLogger().severe("Failed to reload " + name + ": " + e.getMessage());
+        }
     }
 
     public boolean isFeatureEnabled(String feature) {
@@ -89,7 +104,7 @@ public class ConfigManager {
     }
 
     public String getPrefix() {
-        return config.getString("prefix", "&a&lGARDEN &8➠&r");
+        return config.getString("prefix", "&a&lGARDEN &8\u27A4&r");
     }
 
     public String getMessage(String path) {
