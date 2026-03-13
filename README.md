@@ -6,7 +6,7 @@
 
 Crop farming · Upgrades · Research · Elder Council · Pets · Bosses · Events · Composters · AFK Zones
 
-[![Paper](https://img.shields.io/badge/Paper-1.21.4-00aa00?style=flat-square)](https://papermc.io)
+[![Paper](https://img.shields.io/badge/Paper-1.21.11-00aa00?style=flat-square)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21-orange?style=flat-square)](https://adoptium.net)
 
 </div>
@@ -25,7 +25,7 @@ Every system is driven by YAML config files, so you can tune values, costs, mess
 
 | Requirement | Version |
 |---|---|
-| [Paper](https://papermc.io/downloads) | 1.21.4 |
+| [Paper](https://papermc.io/downloads) | 1.21.11 |
 | Java | 21 |
 
 ### Optional (but recommended)
