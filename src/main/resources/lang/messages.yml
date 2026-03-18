@@ -90,6 +90,10 @@ composter:
   placed:  "&#a8ff78&l✦ Lucky Composter placed! &7{type} &7is active for &f{duration} minutes &7in a &f{radius} block radius&7."
   removed: "&#ff7a7aComposter removed."
 
+# ── Mob Spawns ─────────────────────────────────
+mob-spawns:
+  crop-muncher-spawned: "&#ff4444&l☠ A Crop Muncher has appeared! &7Quick, defeat it for bonus Fiber!"
+
 # ── Admin ──────────────────────────────────────
 admin:
   reset-confirm-title: "&c&lConfirm Reset"

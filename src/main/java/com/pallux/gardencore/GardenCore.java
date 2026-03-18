@@ -40,6 +40,7 @@ public final class GardenCore extends JavaPlugin {
     private PetCosmeticManager petCosmeticManager;
     private ComposterManager composterManager;
     private BossManager bossManager;
+    private MobSpawnManager mobSpawnManager;
 
     private final Map<UUID, Integer> researchPageMap = new ConcurrentHashMap<>();
 
@@ -71,6 +72,7 @@ public final class GardenCore extends JavaPlugin {
         petCosmeticManager = new PetCosmeticManager(this);
         composterManager = new ComposterManager(this);
         bossManager = new BossManager(this);
+        mobSpawnManager = new MobSpawnManager(this);
 
         registerListeners();
         registerCommands();
@@ -90,6 +92,9 @@ public final class GardenCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (mobSpawnManager != null) {
+            mobSpawnManager.shutdown();
+        }
         if (bossManager != null) {
             bossManager.shutdown();
         }
@@ -152,6 +157,7 @@ public final class GardenCore extends JavaPlugin {
         pm.registerEvents(new ResearchListener(this), this);
         pm.registerEvents(new ElderListener(this), this);
         pm.registerEvents(new BossListener(this), this);
+        pm.registerEvents(new MobSpawnListener(this), this);
     }
 
     private void registerCommands() {
@@ -226,6 +232,7 @@ public final class GardenCore extends JavaPlugin {
     public PetCosmeticManager getPetCosmeticManager()         { return petCosmeticManager; }
     public ComposterManager getComposterManager()             { return composterManager; }
     public BossManager getBossManager()                       { return bossManager; }
+    public MobSpawnManager getMobSpawnManager()               { return mobSpawnManager; }
 
     public int getPlayerResearchPage(Player player) {
         return researchPageMap.getOrDefault(player.getUniqueId(), 0);

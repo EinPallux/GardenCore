@@ -69,6 +69,9 @@ public class CropFarmingListener implements Listener {
         // Roll for pet on every crop break
         plugin.getPetManager().rollForPet(player);
 
+        // Roll for Crop Muncher spawn
+        plugin.getMobSpawnManager().rollForCropMuncher(player);
+
         sendFiberTitle(player, earned);
 
         // Removed plugin.getDataManager().saveAsync(); - No longer spamming disk I/O!

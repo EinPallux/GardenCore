@@ -26,6 +26,7 @@ public class ConfigManager {
     private FileConfiguration leveling;
     private FileConfiguration blockedCommands;
     private FileConfiguration bosses;
+    private FileConfiguration mobSpawns;
 
     public ConfigManager(GardenCore plugin) {
         this.plugin = plugin;
@@ -46,6 +47,7 @@ public class ConfigManager {
         leveling        = loadOrCreate("settings/leveling.yml");
         blockedCommands = loadOrCreate("settings/blocked-commands.yml");
         bosses          = loadOrCreate("settings/bosses.yml");
+        mobSpawns       = loadOrCreate("settings/mobspawns.yml");
         guis            = loadOrCreate("guis/upgradesmenu.yml");
         research        = loadOrCreate("guis/researchmenu.yml");
         gardenMenu      = loadOrCreate("guis/gardenmenu.yml");
@@ -78,6 +80,7 @@ public class ConfigManager {
         reloadExisting(leveling, "settings/leveling.yml");
         reloadExisting(blockedCommands, "settings/blocked-commands.yml");
         reloadExisting(bosses, "settings/bosses.yml");
+        reloadExisting(mobSpawns, "settings/mobspawns.yml");
         reloadExisting(guis, "guis/upgradesmenu.yml");
         reloadExisting(research, "guis/researchmenu.yml");
         reloadExisting(gardenMenu, "guis/gardenmenu.yml");
@@ -137,4 +140,5 @@ public class ConfigManager {
     public FileConfiguration getLevelingConfig()      { return leveling; }
     public FileConfiguration getBlockedCommands()     { return blockedCommands; }
     public FileConfiguration getBossesConfig()        { return bosses; }
+    public FileConfiguration getMobSpawnsConfig()     { return mobSpawns; }
 }

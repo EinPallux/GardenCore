@@ -1,0 +1,64 @@
+# ──────────────────────────────────────────────
+#     ____               _             ____
+#   / ___| __ _ _ __ __| | ___ _ __  / ___|___  _ __ ___
+#  | |  _ / _` | '__/ _` |/ _ \ '_ \| |   / _ \| '__/ _ \
+#  | |_| | (_| | | | (_| |  __/ | | | |__| (_) | | |  __/
+#   \____|\__,_|_|  \__,_|\___|_| |_|\____\___/|_|  \___|
+# Mob Spawns Config - Plugin made by Pallux @ BBB ( https://builtbybit.com/members/pallux.34066/ )
+# ──────────────────────────────────────────────
+# Special mobs can spawn while a player farms crops.
+# Only the player who triggered the spawn can damage and kill the mob.
+# The mob despawns automatically if not killed within the configured time.
+#
+# crop-muncher:
+#   enabled:              Whether the Crop Muncher feature is active
+#   spawn-chance:         Percentage chance to spawn per crop break (0.0 – 100.0)
+#   display-name:         Name shown in the top hologram line
+#   health:               Total hits required to kill the Crop Muncher
+#   despawn-seconds:      Seconds before the mob despawns if not killed
+#   fiber-multiplier:     Fiber reward = player's total fiber multiplier × this value
+#
+#   armor:
+#     chestplate-color:   Hex RGB color for the leather chestplate (e.g. 2E6B1F)
+#     leggings-color:     Hex RGB color for the leather leggings
+#     boots-color:        Hex RGB color for the leather boots
+#
+#   hologram:
+#     line-spacing:       Vertical gap between hologram lines (in blocks)
+#
+#     line-1:  Top line    — mob name + health indicator
+#     line-2:  Middle line — time remaining until despawn
+#     line-3:  Bottom line — player who triggered the spawn
+#
+#     Placeholders available in each line:
+#       {name}          display-name value (with color codes applied)
+#       {hp_color}      color code that shifts green→yellow→red based on HP
+#       {hp_dot}        single █ colored by {hp_color}
+#       {hp}            current hits remaining
+#       {max_hp}        maximum hits (= health setting)
+#       {time}          seconds remaining until despawn
+#       {player}        name of the player who triggered the spawn
+# ──────────────────────────────────────────────
+
+mob-spawns:
+  enabled: true
+
+  crop-muncher:
+    enabled: true
+    spawn-chance: 0.01
+    display-name: "&#ff4444&lCrop Muncher"
+    health: 20
+    despawn-seconds: 15
+    fiber-multiplier: 0.01
+
+    armor:
+      chestplate-color: "2E6B1F"
+      leggings-color:   "1A4710"
+      boots-color:      "1A4710"
+
+    hologram:
+      line-spacing: 0.28
+
+      line-1: "{name} {hp_color}{hp_dot} {hp}&8/{max_hp}"
+      line-2: "&7⏱ &f{time}s"
+      line-3: "&8Triggered by: &e{player}"
